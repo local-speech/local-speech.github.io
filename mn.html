@@ -292,40 +292,79 @@
     </footer>
 
 <!-- Payment Modal -->
-<div id="payModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;backdrop-filter:blur(4px)">
-  <div style="background:#fff;border-radius:16px;padding:36px 32px;max-width:420px;width:90%;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.15)">
-    <button onclick="document.getElementById('payModal').style.display='none'" style="position:absolute;top:12px;right:16px;background:none;border:none;font-size:22px;cursor:pointer;color:#999">✕</button>
-    <h3 style="font-size:18px;margin-bottom:4px;text-align:center">Төлбөр шилжүүлэх</h3>
-    <p style="font-size:12px;color:#888;text-align:center;margin-bottom:20px">Доорх данс руу шилжүүлээд мэдээллээ бөглөнө үү</p>
-
-    <div style="background:#f7f7f7;border:1px solid #e5e5e5;border-radius:10px;padding:16px;margin-bottom:16px">
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px"><span style="color:#888">Банк</span><strong>Хаанбанк</strong></div>
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px"><span style="color:#888">Данс</span><strong>5400780646</strong></div>
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px"><span style="color:#888">Нэр</span><strong>Д.Баттулга</strong></div>
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px"><span style="color:#888">Дүн</span><strong style="color:#e8453c">9,000₮</strong></div>
-      <div style="display:flex;justify-content:space-between;font-size:13px;align-items:center"><span style="color:#888">Гүйлгээний утга</span><strong id="payCode" style="color:#16a34a;font-size:15px;letter-spacing:1px"></strong></div>
+<style>
+  .pay-overlay{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.45);align-items:center;justify-content:center;backdrop-filter:blur(6px);animation:payFadeIn .25s ease}
+  @keyframes payFadeIn{from{opacity:0}to{opacity:1}}
+  .pay-card{background:#fff;border-radius:20px;padding:0;max-width:400px;width:92%;position:relative;box-shadow:0 24px 80px rgba(0,0,0,0.18);overflow:hidden;animation:paySlideUp .3s ease}
+  @keyframes paySlideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  .pay-close{position:absolute;top:14px;right:14px;background:rgba(0,0,0,0.05);border:none;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;color:#666;transition:all .2s;display:flex;align-items:center;justify-content:center}
+  .pay-close:hover{background:rgba(0,0,0,0.1);color:#333}
+  .pay-header{background:linear-gradient(135deg,#0f172a,#1e293b);padding:28px 28px 22px;color:#fff}
+  .pay-header h3{font-size:17px;font-weight:700;margin-bottom:3px}
+  .pay-header p{font-size:12px;color:rgba(255,255,255,0.5)}
+  .pay-amount{font-size:32px;font-weight:800;color:#fff;margin-top:12px;letter-spacing:-1px}
+  .pay-amount s{font-size:18px;opacity:0.35;font-weight:400;margin-right:6px}
+  .pay-body{padding:24px 28px 28px}
+  .pay-info{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+  .pay-info-item{background:#f8fafc;border-radius:10px;padding:12px 14px}
+  .pay-info-item .pay-label{font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px}
+  .pay-info-item .pay-value{font-size:13px;font-weight:700;color:#1e293b}
+  .pay-code-box{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1.5px solid #bbf7d0;border-radius:12px;padding:14px;text-align:center;margin-bottom:18px}
+  .pay-code-box .pay-label{font-size:10px;color:#16a34a;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+  .pay-code-box .pay-code-val{font-size:22px;font-weight:800;color:#15803d;letter-spacing:2px}
+  .pay-code-box .pay-code-hint{font-size:10px;color:#6b7280;margin-top:4px}
+  .pay-field{margin-bottom:14px}
+  .pay-field label{font-size:11px;color:#64748b;font-weight:600;display:block;margin-bottom:5px}
+  .pay-field input{width:100%;padding:11px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;transition:border-color .2s;background:#f8fafc}
+  .pay-field input:focus{border-color:#16a34a;background:#fff}
+  .pay-submit{width:100%;padding:14px;background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:4px}
+  .pay-submit:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(22,163,74,0.3)}
+  .pay-submit:disabled{opacity:0.6;transform:none;box-shadow:none}
+  .pay-success{display:none;text-align:center;padding:32px 28px}
+  .pay-success-icon{width:64px;height:64px;background:linear-gradient(135deg,#dcfce7,#bbf7d0);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:28px}
+  .pay-success h3{font-size:18px;font-weight:700;color:#1e293b;margin-bottom:6px}
+  .pay-success p{font-size:13px;color:#64748b;line-height:1.6}
+</style>
+<div id="payModal" class="pay-overlay">
+  <div class="pay-card">
+    <button class="pay-close" onclick="document.getElementById('payModal').style.display='none'">✕</button>
+    <div id="payForm">
+      <div class="pay-header">
+        <h3>AISpeech + All-in-One Converter</h3>
+        <p>Насан туршийн лиценз</p>
+        <div class="pay-amount"><s>27,000₮</s> 9,000₮</div>
+      </div>
+      <div class="pay-body">
+        <div class="pay-info">
+          <div class="pay-info-item"><div class="pay-label">Банк</div><div class="pay-value">Хаанбанк</div></div>
+          <div class="pay-info-item"><div class="pay-label">Данс</div><div class="pay-value">5400780646</div></div>
+          <div class="pay-info-item"><div class="pay-label">Нэр</div><div class="pay-value">Д.Баттулга</div></div>
+          <div class="pay-info-item"><div class="pay-label">Дүн</div><div class="pay-value" style="color:#e8453c">9,000₮</div></div>
+        </div>
+        <div class="pay-code-box">
+          <div class="pay-label">Гүйлгээний утга</div>
+          <div class="pay-code-val" id="payCode"></div>
+          <div class="pay-code-hint">Энэ кодыг гүйлгээний утгад заавал бичнэ үү</div>
+        </div>
+        <div class="pay-field">
+          <label>Имэйл хаяг</label>
+          <input type="email" id="payEmail" placeholder="example@gmail.com">
+        </div>
+        <div class="pay-field">
+          <label>Утасны дугаар</label>
+          <input type="tel" id="payPhone" placeholder="99112233">
+        </div>
+        <button class="pay-submit" id="paySubmit" onclick="submitPayment()">Шилжүүлсэн ✓</button>
+      </div>
     </div>
-
-    <p style="font-size:11px;color:#e8453c;text-align:center;margin-bottom:16px">⚠ Гүйлгээний утгад дээрх кодыг заавал бичнэ үү</p>
-
-    <div style="margin-bottom:12px">
-      <label style="font-size:12px;color:#888;display:block;margin-bottom:4px">Имэйл хаяг</label>
-      <input type="email" id="payEmail" placeholder="example@gmail.com" style="width:100%;padding:10px 14px;border:1px solid #e5e5e5;border-radius:8px;font-size:14px;outline:none">
-    </div>
-    <div style="margin-bottom:20px">
-      <label style="font-size:12px;color:#888;display:block;margin-bottom:4px">Утасны дугаар</label>
-      <input type="tel" id="payPhone" placeholder="99112233" style="width:100%;padding:10px 14px;border:1px solid #e5e5e5;border-radius:8px;font-size:14px;outline:none">
-    </div>
-
-    <button id="paySubmit" onclick="submitPayment()" style="width:100%;padding:14px;background:#16a34a;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s">Шилжүүлсэн ✓</button>
-
-    <div id="paySuccess" style="display:none;text-align:center;padding:20px 0">
-      <div style="font-size:36px;margin-bottom:8px">✅</div>
-      <h3 style="font-size:16px;margin-bottom:6px">Баярлалаа!</h3>
-      <p style="font-size:13px;color:#888">24 цагийн дотор таны имэйл рүү лицензийн түлхүүр илгээгдэнэ.</p>
+    <div class="pay-success" id="paySuccess">
+      <div class="pay-success-icon">✓</div>
+      <h3>Амжилттай бүртгэгдлээ!</h3>
+      <p>Таны захиалгыг хүлээн авлаа.<br>24 цагийн дотор имэйл рүү чинь лицензийн түлхүүр илгээгдэнэ.</p>
     </div>
   </div>
 </div>
+<iframe name="payFrame" style="display:none"></iframe>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
@@ -345,19 +384,22 @@
     var btn = document.getElementById('paySubmit');
     btn.disabled = true; btn.textContent = 'Илгээж байна...';
 
-    var formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLScBeTfkDj0vzYjT6fkwC8oCjAFXDdmtghfasIE7eLO4GdhfUw/formResponse';
-    var data = new URLSearchParams();
-    data.append('entry.413665365', phone);
-    data.append('entry.1131290276', email + ' | ' + code);
+    var form = document.createElement('form');
+    form.method = 'POST';
+    form.action = 'https://docs.google.com/forms/d/e/1FAIpQLScBeTfkDj0vzYjT6fkwC8oCjAFXDdmtghfasIE7eLO4GdhfUw/formResponse';
+    form.target = 'payFrame';
 
-    fetch(formUrl, { method: 'POST', body: data, mode: 'no-cors' }).then(function() {
-      document.getElementById('paySubmit').style.display = 'none';
-      document.querySelectorAll('#payModal input, #payModal label, #payModal p').forEach(function(el) { el.style.display = 'none'; });
+    var f1 = document.createElement('input'); f1.name = 'entry.413665365'; f1.value = phone; form.appendChild(f1);
+    var f2 = document.createElement('input'); f2.name = 'entry.1131290276'; f2.value = email + ' | ' + code; form.appendChild(f2);
+
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+
+    setTimeout(function() {
+      document.getElementById('payForm').style.display = 'none';
       document.getElementById('paySuccess').style.display = 'block';
-    }).catch(function() {
-      btn.disabled = false; btn.textContent = 'Шилжүүлсэн ✓';
-      alert('Алдаа гарлаа. Дахин оролдоно уу.');
-    });
+    }, 800);
   };
 })();
 
