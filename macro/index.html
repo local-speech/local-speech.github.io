@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Текст бэлдэц — Macro Text Expander | SoPro</title>
+<meta name="description" content="Богино товчлолоор бэлэн текст бичнэ. ;данс гэж бичээд space дарахад банкны мэдээлэл шууд бичигдэнэ.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--green:#00ff41;--dim:#0a5c1e;--bg:#0a0a0a;--card:#111;--border:#1a3a1a}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--green);font-family:'JetBrains Mono',monospace;overflow-x:hidden;position:relative}
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;
+background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(0,0,0,0) 2px,rgba(0,255,65,0.015) 2px,rgba(0,255,65,0.015) 4px);
+}
+body::after{content:'';position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9998;
+background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,0.4) 100%);
+}
+::selection{background:var(--green);color:var(--bg)}
+a{color:var(--green);text-decoration:none}
+
+/* scrollbar */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--dim);border-radius:3px}
+
+/* cursor blink */
+@keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
+.cursor{display:inline-block;width:10px;height:1.1em;background:var(--green);animation:blink 1s step-end infinite;vertical-align:text-bottom;margin-left:2px}
+
+/* flicker */
+@keyframes flicker{0%{opacity:0.97}5%{opacity:0.95}10%{opacity:0.98}15%{opacity:0.96}20%{opacity:0.99}50%{opacity:0.96}80%{opacity:0.98}100%{opacity:0.97}}
+.screen{animation:flicker 4s infinite}
+
+/* glow */
+.glow{text-shadow:0 0 5px var(--green),0 0 15px rgba(0,255,65,0.3)}
+.glow-strong{text-shadow:0 0 5px var(--green),0 0 20px rgba(0,255,65,0.5),0 0 40px rgba(0,255,65,0.2)}
+
+/* NAV */
+nav{position:fixed;top:0;width:100%;z-index:100;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;
+background:rgba(10,10,10,0.9);border-bottom:1px solid var(--border);backdrop-filter:blur(8px)}
+nav .logo{font-size:14px;font-weight:700;letter-spacing:1px}
+nav .logo span{color:var(--dim)}
+nav .links{display:flex;gap:20px;font-size:13px}
+nav .links a:hover{text-decoration:underline}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:80px 24px 40px;text-align:center}
+.hero-pre{font-size:13px;color:var(--dim);margin-bottom:16px;letter-spacing:2px}
+.hero h1{font-size:clamp(28px,5vw,52px);font-weight:700;line-height:1.3;margin-bottom:8px}
+.hero h1 .highlight{color:#fff;background:var(--green);padding:0 8px;display:inline-block}
+.hero-sub{font-size:clamp(14px,2vw,18px);color:#6fad6f;margin-bottom:40px;max-width:600px}
+
+/* typing demo */
+.demo-box{background:#000;border:1px solid var(--border);border-radius:8px;padding:24px 32px;max-width:700px;width:100%;text-align:left;position:relative;margin-bottom:40px}
+.demo-box::before{content:'TERMINAL';position:absolute;top:-10px;left:16px;background:var(--bg);padding:0 8px;font-size:10px;color:var(--dim);letter-spacing:2px}
+.demo-prompt{color:var(--dim);font-size:13px;margin-bottom:4px}
+.demo-line{font-size:clamp(16px,2.5vw,22px);min-height:1.5em;word-break:break-all;line-height:1.6}
+.demo-output{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:14px;color:#6fad6f;line-height:1.7;min-height:60px;white-space:pre-wrap}
+
+/* CTA */
+.cta-row{display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:center}
+.btn{display:inline-block;padding:14px 32px;border:2px solid var(--green);color:var(--green);font-family:inherit;font-size:15px;font-weight:700;
+background:transparent;cursor:pointer;position:relative;transition:all .2s;letter-spacing:1px}
+.btn:hover{background:var(--green);color:var(--bg)}
+.btn::before{content:'> ';opacity:0.5}
+.btn-primary{background:var(--green);color:var(--bg)}
+.btn-primary:hover{background:#00cc33;border-color:#00cc33}
+
+.price-tag{font-size:14px}
+.price-old{text-decoration:line-through;color:#555;margin-right:8px}
+.price-new{font-size:24px;font-weight:700}
+
+/* SECTIONS */
+section{padding:80px 24px;max-width:900px;margin:0 auto}
+.section-title{font-size:13px;color:var(--dim);letter-spacing:3px;margin-bottom:8px}
+h2{font-size:clamp(22px,3.5vw,36px);margin-bottom:32px;font-weight:700}
+
+/* HOW IT WORKS */
+.steps{display:grid;gap:24px}
+.step{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:24px;position:relative;overflow:hidden}
+.step::before{content:attr(data-num);position:absolute;top:12px;right:16px;font-size:48px;font-weight:700;color:rgba(0,255,65,0.06)}
+.step-trigger{font-size:20px;font-weight:700;margin-bottom:4px}
+.step-arrow{color:var(--dim);font-size:13px;margin-bottom:8px}
+.step-result{font-size:13px;color:#6fad6f;line-height:1.6;white-space:pre-wrap}
+
+/* FEATURES */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.feat{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px}
+.feat-icon{font-size:24px;margin-bottom:8px}
+.feat-title{font-weight:700;margin-bottom:4px;font-size:15px}
+.feat-desc{font-size:13px;color:#6fad6f;line-height:1.5}
+
+/* INTERACTIVE DEMO */
+.try-section{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:32px;max-width:700px;margin:0 auto}
+.try-input-wrap{display:flex;gap:8px;align-items:center;margin-bottom:16px}
+.try-input-wrap label{color:var(--dim);font-size:14px;white-space:nowrap}
+.try-input{flex:1;background:#000;border:1px solid var(--border);color:var(--green);font-family:inherit;font-size:16px;padding:10px 14px;border-radius:4px;outline:none}
+.try-input:focus{border-color:var(--green);box-shadow:0 0 8px rgba(0,255,65,0.15)}
+.try-output{background:#000;border:1px solid var(--border);border-radius:4px;padding:16px;min-height:80px;font-size:14px;color:#6fad6f;line-height:1.6;white-space:pre-wrap}
+.try-hint{font-size:12px;color:var(--dim);margin-top:12px}
+.try-triggers{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.try-triggers button{background:transparent;border:1px solid var(--border);color:var(--green);font-family:inherit;font-size:13px;padding:6px 12px;border-radius:4px;cursor:pointer;transition:all .15s}
+.try-triggers button:hover{background:var(--green);color:var(--bg)}
+
+/* TARGET */
+.target-list{list-style:none;display:grid;gap:8px}
+.target-list li{padding:8px 0;border-bottom:1px solid var(--border);font-size:14px}
+.target-list li::before{content:'> ';color:var(--dim)}
+
+/* PRICE SECTION */
+.price-section{text-align:center}
+.price-card{background:var(--card);border:2px solid var(--green);border-radius:8px;padding:40px;max-width:400px;margin:0 auto 24px;position:relative}
+.price-card::before{content:'BEST DEAL';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--green);color:var(--bg);font-size:11px;font-weight:700;padding:2px 12px;border-radius:4px;letter-spacing:1px}
+.price-card .amount{font-size:48px;font-weight:700}
+.price-card .amount sup{font-size:20px}
+.price-card .original{font-size:16px;color:#555;text-decoration:line-through;margin-bottom:8px}
+.price-card .label{font-size:13px;color:#6fad6f;margin-top:8px}
+.price-card .forever{font-size:12px;color:var(--dim);margin-top:4px}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:24px;text-align:center;font-size:12px;color:var(--dim)}
+
+/* MOBILE */
+@media(max-width:600px){
+  nav{padding:10px 16px}
+  nav .links{gap:12px;font-size:12px}
+  .demo-box{padding:16px}
+  section{padding:60px 16px}
+  .btn{padding:12px 20px;font-size:13px}
+  .price-card{padding:28px 20px}
+  .price-card .amount{font-size:36px}
+  .try-input-wrap{flex-direction:column;align-items:stretch}
+  .try-input-wrap label{margin-bottom:4px}
+}
+</style>
+</head>
+<body class="screen">
+
+<nav>
+  <div class="logo">SOPRO<span>/macro</span></div>
+  <div class="links">
+    <a href="/">Нүүр</a>
+    <a href="#demo">Туршиж үзэх</a>
+    <a href="#price">Үнэ</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-pre">// WINDOWS DESKTOP APP</div>
+  <h1 class="glow-strong">Текст бэлдэц</h1>
+  <p class="hero-sub">Богино товчлол бичээд space дар. Бэлэн текст шууд бичигдэнэ. Аль ч програмд.</p>
+
+  <div class="demo-box">
+    <div class="demo-prompt">user@desktop:~$</div>
+    <div class="demo-line" id="heroLine"><span class="cursor"></span></div>
+    <div class="demo-output" id="heroOutput"></div>
+  </div>
+
+  <div class="cta-row">
+    <a href="#price" class="btn btn-primary">Худалдаж авах</a>
+    <div class="price-tag">
+      <span class="price-old">27,000₮</span>
+      <span class="price-new glow">9,000₮</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">// HOW_IT_WORKS</div>
+  <h2>Яаж ажилладаг вэ?</h2>
+  <div class="steps">
+    <div class="step" data-num="01">
+      <div class="step-trigger glow">;данс</div>
+      <div class="step-arrow">↓ space дарахад →</div>
+      <div class="step-result">Хаан банк
+5765 **** **** 1234
+Батболд Дорж
+Утас: 9911-2233</div>
+    </div>
+    <div class="step" data-num="02">
+      <div class="step-trigger glow">;мэнд</div>
+      <div class="step-arrow">↓ space дарахад →</div>
+      <div class="step-result">Сайн байна уу,
+Манай дэлгүүрээс худалдан авсанд баярлалаа!
+Таны захиалга 24 цагийн дотор хүргэгдэх болно. 🙏</div>
+    </div>
+    <div class="step" data-num="03">
+      <div class="step-trigger glow">;имэйл</div>
+      <div class="step-arrow">↓ space дарахад →</div>
+      <div class="step-result">Эрхэм хэрэглэгч танд,
+
+Таны хүсэлтийг хүлээн авлаа.
+Бид ажлын 1-2 өдрийн дотор хариу өгөх болно.
+
+Хүндэтгэсэн,
+Хэрэглэгчийн тусламжийн баг</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">// FEATURES</div>
+  <h2>Онцлогууд</h2>
+  <div class="features-grid">
+    <div class="feat">
+      <div class="feat-icon">⌨️</div>
+      <div class="feat-title">Аль ч програмд</div>
+      <div class="feat-desc">Messenger, Chrome, Word, Excel — бүх програмд ажиллана. Keyboard hook суурьтай.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">⚡</div>
+      <div class="feat-title">Шууд л бичигдэнэ</div>
+      <div class="feat-desc">Товчлол бичээд space дарахад тэр дор нь. Хүлээлт 0.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">♾️</div>
+      <div class="feat-title">Хязгааргүй бэлдэц</div>
+      <div class="feat-desc">Хүссэн хэдэн ч товчлол үүсгэнэ. Банкны мэдээлэл, мэндчилгээ, загвар имэйл...</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🔒</div>
+      <div class="feat-title">Бүрэн оффлайн</div>
+      <div class="feat-desc">Интернэт шаардахгүй. Таны бүх өгөгдөл зөвхөн таны компьютерт.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🪶</div>
+      <div class="feat-title">Хөнгөн, хурдан</div>
+      <div class="feat-desc">RAM ~10MB. Компьютерийг удаашруулахгүй. Арын процесст ажиллана.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🛠️</div>
+      <div class="feat-title">Хялбар тохируулга</div>
+      <div class="feat-desc">Товчлол нэмэх, засах, устгах — энгийн интерфейс.</div>
+    </div>
+  </div>
+</section>
+
+<section id="demo">
+  <div class="section-title">// TRY_IT</div>
+  <h2>Туршиж үзэх</h2>
+  <div class="try-section">
+    <div class="try-triggers">
+      <button onclick="tryTrigger(';данс')">;данс</button>
+      <button onclick="tryTrigger(';мэнд')">;мэнд</button>
+      <button onclick="tryTrigger(';имэйл')">;имэйл</button>
+    </div>
+    <div class="try-input-wrap">
+      <label>$&gt;</label>
+      <input class="try-input" id="tryInput" type="text" placeholder="Товчлол бичээд space дарна уу..." autocomplete="off" spellcheck="false">
+    </div>
+    <div class="try-output" id="tryOutput">// Товчлолын жагсаалт: ;данс, ;мэнд, ;имэйл</div>
+    <div class="try-hint">Дээрх товчнуудыг дарах эсвэл ;данс гэж бичээд space дарна уу</div>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">// TARGET_USERS</div>
+  <h2>Хэнд зориулсан бэ?</h2>
+  <ul class="target-list">
+    <li>Онлайн худалдаачид — данс, хаяг, баярлалаа мессеж давтдаг</li>
+    <li>Хэрэглэгчийн үйлчилгээ — ижил хариуг өдөрт 100 удаа бичдэг</li>
+    <li>Оффисын ажилтнууд — имэйл загвар, тайлбар, гарын үсэг</li>
+    <li>Програмист хөгжүүлэгчид — code snippet, git commit, template</li>
+    <li>Хэн ч — нэг л текстийг дахин дахин бичдэг хүн бүрт</li>
+  </ul>
+</section>
+
+<section id="price" class="price-section">
+  <div class="section-title">// PRICING</div>
+  <h2>Үнэ</h2>
+  <div class="price-card">
+    <div class="original">27,000₮</div>
+    <div class="amount glow-strong">9,000<sup>₮</sup></div>
+    <div class="label">Нэг удаагийн төлбөр. Бүх үед ашиглана.</div>
+    <div class="forever">// no subscription, no hidden fees</div>
+  </div>
+  <a href="/" class="btn btn-primary" style="font-size:16px;padding:16px 40px">Худалдаж авах</a>
+  <p style="margin-top:16px;font-size:12px;color:var(--dim)">Худалдан авсны дараа шууд татаж суулгана</p>
+</section>
+
+<footer>
+  <p>&copy; 2025 SoPro &mdash; <a href="/">aispeech.com</a></p>
+  <p style="margin-top:4px">Бүх эрх хуулиар хамгаалагдсан.</p>
+</footer>
+
+<script>
+/* === MACROS === */
+const macros = {
+  ';данс': 'Хаан банк\n5765 **** **** 1234\nБатболд Дорж\nУтас: 9911-2233',
+  ';мэнд': 'Сайн байна уу,\nМанай дэлгүүрээс худалдан авсанд баярлалаа!\nТаны захиалга 24 цагийн дотор хүргэгдэх болно. \u{1F64F}',
+  ';имэйл': 'Эрхэм хэрэглэгч танд,\n\nТаны хүсэлтийг хүлээн авлаа.\nБид ажлын 1-2 өдрийн дотор хариу өгөх болно.\n\nХүндэтгэсэн,\nХэрэглэгчийн тусламжийн баг'
+};
+
+/* === HERO TYPING ANIMATION === */
+const heroLine = document.getElementById('heroLine');
+const heroOutput = document.getElementById('heroOutput');
+const demos = [
+  { trigger: ';данс', output: macros[';данс'] },
+  { trigger: ';мэнд', output: macros[';мэнд'] },
+  { trigger: ';имэйл', output: macros[';имэйл'] }
+];
+let demoIdx = 0;
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function heroAnim() {
+  while (true) {
+    const d = demos[demoIdx % demos.length];
+    demoIdx++;
+    heroLine.innerHTML = '<span class="cursor"></span>';
+    heroOutput.textContent = '';
+
+    await sleep(800);
+
+    // type trigger
+    for (let i = 0; i < d.trigger.length; i++) {
+      heroLine.innerHTML = d.trigger.slice(0, i + 1) + '<span class="cursor"></span>';
+      await sleep(120);
+    }
+
+    await sleep(300);
+
+    // type space — trigger disappears, output appears
+    heroLine.innerHTML = d.trigger + ' <span class="cursor"></span>';
+    await sleep(200);
+
+    // expand
+    heroLine.innerHTML = '<span style="color:var(--dim)">[expanded]</span> <span class="cursor"></span>';
+    let out = '';
+    for (let i = 0; i < d.output.length; i++) {
+      out += d.output[i];
+      heroOutput.textContent = out;
+      await sleep(8);
+    }
+
+    await sleep(3000);
+  }
+}
+heroAnim();
+
+/* === INTERACTIVE DEMO === */
+const tryInput = document.getElementById('tryInput');
+const tryOutput = document.getElementById('tryOutput');
+
+tryInput.addEventListener('keydown', function(e) {
+  if (e.key === ' ') {
+    const val = this.value.trim();
+    if (macros[val]) {
+      e.preventDefault();
+      this.value = '';
+      expandOutput(macros[val]);
+    }
+  }
+});
+
+function tryTrigger(t) {
+  tryInput.value = '';
+  expandOutput(macros[t]);
+  tryInput.focus();
+}
+
+function expandOutput(text) {
+  tryOutput.textContent = '';
+  let i = 0;
+  function tick() {
+    if (i < text.length) {
+      tryOutput.textContent += text[i];
+      i++;
+      setTimeout(tick, 10);
+    }
+  }
+  tick();
+}
+</script>
+</body>
+</html>

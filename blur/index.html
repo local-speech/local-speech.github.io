@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Нууц баллагч — PII Blurrer & Anonymizer</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;700;900&display=swap');
+
+:root{
+  --cyan:#00f0ff;--cyan-dim:#00f0ff44;--bg:#080c14;--bg2:#0d1220;
+  --card:#111827;--text:#e0e7ff;--red:#ff2255;--green:#00ff88;
+}
+
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden;position:relative}
+
+/* SCANLINE OVERLAY */
+body::after{
+  content:'';position:fixed;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;z-index:9999;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,240,255,.015) 2px,rgba(0,240,255,.015) 4px);
+}
+
+/* MATRIX RAIN CANVAS */
+#matrix-bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:.08}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 32px;
+  display:flex;justify-content:space-between;align-items:center;
+  background:rgba(8,12,20,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--cyan-dim)}
+nav a{color:var(--cyan);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:14px;
+  display:flex;align-items:center;gap:8px;transition:.2s}
+nav a:hover{text-shadow:0 0 12px var(--cyan)}
+.nav-logo{font-weight:700;font-size:18px;letter-spacing:2px}
+.nav-back{opacity:.7}
+.nav-back:hover{opacity:1}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;z-index:1;padding:120px 24px 80px;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:100px;
+  border:1px solid var(--cyan-dim);background:rgba(0,240,255,.06);font-size:13px;
+  font-family:'JetBrains Mono',monospace;color:var(--cyan);margin-bottom:24px;
+  animation:pulse-border 2s infinite}
+@keyframes pulse-border{0%,100%{border-color:var(--cyan-dim)}50%{border-color:var(--cyan)}}
+
+.hero h1{font-size:clamp(36px,6vw,72px);font-weight:900;line-height:1.1;margin-bottom:16px}
+.hero h1 .cyan{color:var(--cyan);text-shadow:0 0 30px rgba(0,240,255,.4)}
+.hero h1 .glitch{position:relative;display:inline-block}
+.hero h1 .glitch::before,.hero h1 .glitch::after{
+  content:attr(data-text);position:absolute;top:0;left:0;width:100%;height:100%;
+}
+.hero h1 .glitch::before{animation:glitch1 3s infinite;color:var(--red);clip-path:inset(0 0 65% 0);transform:translate(-2px)}
+.hero h1 .glitch::after{animation:glitch2 3s infinite;color:var(--cyan);clip-path:inset(65% 0 0 0);transform:translate(2px)}
+@keyframes glitch1{0%,90%,100%{opacity:0}92%,94%{opacity:1;transform:translate(-3px,-1px)}93%,95%{transform:translate(3px,1px)}}
+@keyframes glitch2{0%,88%,100%{opacity:0}90%,93%{opacity:1;transform:translate(2px,2px)}91%,94%{transform:translate(-2px,-1px)}}
+
+.hero-sub{font-size:clamp(16px,2.5vw,22px);opacity:.7;max-width:640px;margin:0 auto 40px;line-height:1.6}
+.hero-hotkey{display:inline-flex;align-items:center;gap:8px;margin-bottom:40px}
+.key-badge{background:var(--card);border:1px solid var(--cyan);border-radius:6px;padding:6px 14px;
+  font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;color:var(--cyan);
+  box-shadow:0 2px 0 var(--cyan),0 0 20px rgba(0,240,255,.15);text-shadow:0 0 8px var(--cyan)}
+.hero-hotkey span{opacity:.5;font-size:14px}
+
+/* SCANNING HERO ANIMATION */
+.scan-demo{position:relative;max-width:600px;width:100%;margin:0 auto 48px;
+  background:var(--card);border:1px solid #1e293b;border-radius:12px;padding:32px;
+  font-family:'JetBrains Mono',monospace;font-size:14px;line-height:2;text-align:left;overflow:hidden}
+.scan-demo::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--cyan);box-shadow:0 0 20px var(--cyan),0 0 60px var(--cyan);
+  animation:scanLine 3s ease-in-out infinite}
+@keyframes scanLine{0%{top:0;opacity:1}50%{top:100%;opacity:.6}51%{opacity:0}100%{top:0;opacity:0}}
+.scan-demo .pii{position:relative;color:var(--red);transition:.4s}
+.scan-demo .pii.blurred{filter:blur(6px);color:var(--cyan);user-select:none}
+.scan-demo .pii.blurred::after{content:'██████';position:absolute;left:0;top:0;
+  color:var(--cyan);filter:none;font-weight:700;animation:flicker .1s infinite alternate}
+@keyframes flicker{to{opacity:.7}}
+
+/* CTA BUTTONS */
+.cta-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn-primary{background:var(--cyan);color:var(--bg);font-weight:700;font-size:18px;
+  padding:16px 40px;border-radius:8px;border:none;cursor:pointer;
+  font-family:'Inter',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+  box-shadow:0 0 30px rgba(0,240,255,.3);transition:.3s;position:relative;overflow:hidden}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(0,240,255,.5)}
+.btn-primary::after{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:linear-gradient(transparent,rgba(255,255,255,.15),transparent);
+  transform:rotate(45deg);animation:btn-shine 3s infinite}
+@keyframes btn-shine{0%,100%{transform:translateX(-100%) rotate(45deg)}50%{transform:translateX(100%) rotate(45deg)}}
+.btn-outline{border:1px solid var(--cyan);color:var(--cyan);background:transparent;
+  font-weight:600;font-size:16px;padding:14px 32px;border-radius:8px;cursor:pointer;
+  font-family:'Inter',sans-serif;text-decoration:none;transition:.3s}
+.btn-outline:hover{background:rgba(0,240,255,.1)}
+
+/* PRICE */
+.price-block{margin:40px 0;text-align:center}
+.price-old{font-size:20px;text-decoration:line-through;opacity:.4;margin-right:12px}
+.price-new{font-size:48px;font-weight:900;color:var(--cyan);text-shadow:0 0 20px rgba(0,240,255,.4)}
+.price-new small{font-size:20px;opacity:.6}
+.price-discount{display:inline-block;background:var(--red);color:#fff;font-size:13px;font-weight:700;
+  padding:4px 12px;border-radius:4px;margin-left:12px;vertical-align:super}
+
+/* LIVE DEMO SECTION */
+.demo-section{position:relative;z-index:1;padding:80px 24px;text-align:center}
+.demo-section h2{font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:12px}
+.demo-section h2 .cyan{color:var(--cyan)}
+.demo-section p{opacity:.6;margin-bottom:40px;font-size:16px}
+
+.demo-card{max-width:520px;margin:0 auto;background:var(--bg2);border:1px solid #1e293b;
+  border-radius:16px;overflow:hidden;position:relative}
+.demo-card-header{background:#1a2332;padding:12px 20px;display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid #1e293b}
+.demo-card-header .dot{width:8px;height:8px;border-radius:50%}
+.demo-card-header .dot.r{background:#ff5f57}.demo-card-header .dot.y{background:#ffbd2e}.demo-card-header .dot.g{background:#28c840}
+.demo-card-header span{font-size:12px;opacity:.4;font-family:'JetBrains Mono',monospace;margin-left:auto}
+
+.demo-card-body{padding:32px;text-align:left;font-size:15px;line-height:2;
+  font-family:'JetBrains Mono',monospace;position:relative}
+.demo-card-body .field{margin-bottom:4px}
+.demo-card-body .label{opacity:.4;font-size:12px}
+.demo-card-body .value{color:var(--text)}
+.demo-card-body .sensitive{color:var(--red);transition:all .5s;position:relative;cursor:default}
+.demo-card-body .sensitive.redacted{filter:blur(7px);color:var(--cyan)}
+.demo-card-body .sensitive.redacted::before{content:'';position:absolute;inset:-2px -6px;
+  background:rgba(0,240,255,.08);border-radius:4px;border:1px solid var(--cyan-dim)}
+
+.demo-btn{margin-top:32px;background:transparent;border:2px solid var(--cyan);color:var(--cyan);
+  padding:12px 32px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:14px;
+  cursor:pointer;transition:.3s;display:inline-flex;align-items:center;gap:8px}
+.demo-btn:hover{background:var(--cyan);color:var(--bg)}
+.demo-btn .icon{font-size:18px}
+.demo-status{margin-top:16px;font-size:13px;font-family:'JetBrains Mono',monospace;
+  color:var(--cyan);opacity:0;transition:.3s}
+.demo-status.show{opacity:1}
+
+/* FEATURES */
+.features{position:relative;z-index:1;padding:80px 24px}
+.features h2{text-align:center;font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:48px}
+.features h2 .cyan{color:var(--cyan)}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;max-width:1000px;margin:0 auto}
+.feature-card{background:var(--card);border:1px solid #1e293b;border-radius:12px;padding:28px;
+  transition:.3s;position:relative;overflow:hidden}
+.feature-card:hover{border-color:var(--cyan-dim);transform:translateY(-4px);
+  box-shadow:0 8px 30px rgba(0,240,255,.08)}
+.feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:0;transition:.3s}
+.feature-card:hover::before{opacity:1}
+.feature-icon{font-size:32px;margin-bottom:16px;display:block}
+.feature-card h3{font-size:18px;font-weight:700;margin-bottom:8px}
+.feature-card p{font-size:14px;opacity:.6;line-height:1.6}
+
+/* HOW IT WORKS */
+.how{position:relative;z-index:1;padding:80px 24px;text-align:center}
+.how h2{font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:48px}
+.how h2 .cyan{color:var(--cyan)}
+.how-steps{display:flex;justify-content:center;gap:48px;flex-wrap:wrap;max-width:900px;margin:0 auto}
+.how-step{flex:1;min-width:200px;max-width:260px}
+.how-step-num{width:48px;height:48px;border-radius:50%;border:2px solid var(--cyan);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 16px;
+  font-family:'JetBrains Mono',monospace;font-weight:700;font-size:20px;color:var(--cyan)}
+.how-step h3{font-size:16px;font-weight:700;margin-bottom:8px}
+.how-step p{font-size:14px;opacity:.5;line-height:1.5}
+.how-arrow{align-self:center;color:var(--cyan);opacity:.3;font-size:24px;padding-top:20px}
+
+/* CTA BOTTOM */
+.cta-bottom{position:relative;z-index:1;padding:80px 24px;text-align:center;
+  background:linear-gradient(180deg,transparent,rgba(0,240,255,.03),transparent)}
+.cta-bottom h2{font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:16px}
+.cta-bottom h2 .cyan{color:var(--cyan)}
+.cta-bottom p{opacity:.5;margin-bottom:40px;font-size:16px}
+
+/* FOOTER */
+footer{position:relative;z-index:1;border-top:1px solid #1e293b;padding:24px;text-align:center;
+  font-size:13px;opacity:.3;font-family:'JetBrains Mono',monospace}
+
+/* GLITCH TEXT ANIMATION */
+.glitch-chars{display:inline}
+.glitch-char{display:inline-block;animation:charGlitch 4s infinite;animation-delay:var(--d,0s)}
+@keyframes charGlitch{
+  0%,92%,100%{opacity:1;transform:none;color:inherit}
+  93%{opacity:.6;transform:translateX(2px) skewX(10deg);color:var(--cyan)}
+  94%{opacity:.8;transform:translateX(-1px);color:var(--red)}
+  95%{opacity:1;transform:none;color:inherit}
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  nav{padding:12px 16px}
+  .scan-demo{font-size:12px;padding:20px}
+  .how-arrow{display:none}
+  .how-steps{gap:32px}
+  .cta-row{flex-direction:column;align-items:center}
+}
+</style>
+</head>
+<body>
+
+<canvas id="matrix-bg"></canvas>
+
+<nav>
+  <a href="/" class="nav-back">← Буцах</a>
+  <a href="#" class="nav-logo">🛡️ НУУЦ БАЛЛАГЧ</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <span style="color:var(--green)">●</span> OFFLINE &bull; REGEX-POWERED &bull; WINDOWS
+  </div>
+  <h1>
+    <span class="glitch" data-text="Нууц баллагч">Нууц баллагч</span><br>
+    <span class="cyan">PII Blurrer</span>
+  </h1>
+  <p class="hero-sub">
+    Таны дэлгэцэн дээрх утасны дугаар, регистрийн дугаар, дансны дугаар, имэйл зэрэг хувийн мэдээллийг
+    <strong style="color:var(--cyan)">шууд илрүүлж</strong>, автоматаар бүдгэрүүлнэ.
+  </p>
+  <div class="hero-hotkey">
+    <span>Нэг товшилт:</span>
+    <span class="key-badge">Alt</span>
+    <span style="color:var(--cyan);font-weight:700">+</span>
+    <span class="key-badge">B</span>
+  </div>
+
+  <!-- SCANNING DEMO IN HERO -->
+  <div class="scan-demo" id="heroScan">
+    <div>Нэр: Бат-Эрдэнэ Дорж</div>
+    <div>Утас: <span class="pii" data-orig="9911-2233">9911-2233</span></div>
+    <div>РД: <span class="pii" data-orig="УБ99042517">УБ99042517</span></div>
+    <div>Данс: <span class="pii" data-orig="5000-1234-5678">5000-1234-5678</span></div>
+    <div>Имэйл: <span class="pii" data-orig="bat@mail.mn">bat@mail.mn</span></div>
+  </div>
+
+  <div class="price-block">
+    <span class="price-old">27,000₮</span>
+    <span class="price-new">9,000<small>₮</small></span>
+    <span class="price-discount">-67%</span>
+  </div>
+
+  <div class="cta-row">
+    <a href="#" class="btn-primary">🛒 Худалдаж авах</a>
+    <a href="#demo" class="btn-outline">▶ Туршиж үзэх</a>
+  </div>
+</section>
+
+<!-- LIVE DEMO -->
+<section class="demo-section" id="demo">
+  <h2>Туршиж <span class="cyan">үзээрэй</span></h2>
+  <p>Доорх мэдээллийг товшоод бүдгэрүүлэлтийг ажиллуулаарай</p>
+
+  <div class="demo-card">
+    <div class="demo-card-header">
+      <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      <span>id_card.png — 1920x1080</span>
+    </div>
+    <div class="demo-card-body" id="demoBody">
+      <div class="field"><span class="label">ИРГЭНИЙ ҮНЭМЛЭХ</span></div>
+      <div class="field">Овог: <span class="value">Баатар</span></div>
+      <div class="field">Нэр: <span class="value">Тэмүүлэн</span></div>
+      <div class="field">Регистр: <span class="sensitive" data-v="ТА96112205">ТА96112205</span></div>
+      <div class="field">Утас: <span class="sensitive" data-v="8800-5533">8800-5533</span></div>
+      <div class="field">Данс (Хаан): <span class="sensitive" data-v="5589-1100-2277">5589-1100-2277</span></div>
+      <div class="field">Имэйл: <span class="sensitive" data-v="temuulen@gmail.com">temuulen@gmail.com</span></div>
+    </div>
+  </div>
+  <button class="demo-btn" id="demoBtn" onclick="runDemo()">
+    <span class="icon">🔍</span> <span id="demoBtnText">Alt+B — Скан хийх</span>
+  </button>
+  <div class="demo-status" id="demoStatus"></div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <h2>Яагаад <span class="cyan">Нууц баллагч</span>?</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <span class="feature-icon">🔒</span>
+      <h3>100% Оффлайн</h3>
+      <p>Сервер рүү юу ч илгээхгүй. Таны мэдээлэл зөвхөн таны компьютерт үлдэнэ.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">⚡</span>
+      <h3>Шууд илрүүлэлт</h3>
+      <p>Regex-д суурилсан хурдан илрүүлэлт — нэг секундын дотор бүх PII-г олно.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🇲🇳</span>
+      <h3>Монгол загвар</h3>
+      <p>РД (УБ99042517), монгол утасны дугаар, хаан/голомт банкны данс зэргийг таньна.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🖥️</span>
+      <h3>Дэлгэцийн зураг</h3>
+      <p>Alt+B дарахад дэлгэцийн зургийг авч, PII-г автоматаар бүдгэрүүлнэ.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">📋</span>
+      <h3>Текст горим</h3>
+      <p>Clipboard дээрх текстэн мэдээллийг мөн илрүүлж баллана.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🎯</span>
+      <h3>Regex тохируулга</h3>
+      <p>Өөрийн pattern нэмж, байгууллагынхаа тусгай мэдээллийг ч хамгаална.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how">
+  <h2>Хэрхэн <span class="cyan">ажилладаг</span>?</h2>
+  <div class="how-steps">
+    <div class="how-step">
+      <div class="how-step-num">1</div>
+      <h3>Alt+B дарна</h3>
+      <p>Дэлгэцийн агшинг авна эсвэл clipboard текстийг уншина</p>
+    </div>
+    <div class="how-arrow">→</div>
+    <div class="how-step">
+      <div class="how-step-num">2</div>
+      <h3>PII илрүүлнэ</h3>
+      <p>Regex pattern-ууд утас, РД, данс, имэйлийг шууд олно</p>
+    </div>
+    <div class="how-arrow">→</div>
+    <div class="how-step">
+      <div class="how-step-num">3</div>
+      <h3>Бүдгэрүүлнэ</h3>
+      <p>Олдсон мэдээллийг blur хийж, аюулгүй хувилбарыг хадгална</p>
+    </div>
+  </div>
+</section>
+
+<!-- BOTTOM CTA -->
+<section class="cta-bottom">
+  <h2>Мэдээллээ <span class="cyan">хамгаалаарай</span></h2>
+  <p>Нэг удаагийн төлбөрөөр насан туршдаа ашиглах</p>
+  <div class="price-block">
+    <span class="price-old">27,000₮</span>
+    <span class="price-new">9,000<small>₮</small></span>
+    <span class="price-discount">-67%</span>
+  </div>
+  <div class="cta-row">
+    <a href="#" class="btn-primary">🛒 Худалдаж авах</a>
+  </div>
+</section>
+
+<footer>© 2025 SoPro. Бүх эрх хуулиар хамгаалагдсан.</footer>
+
+<script>
+// === MATRIX RAIN ===
+(function(){
+  const c=document.getElementById('matrix-bg'),ctx=c.getContext('2d');
+  let w,h,cols,drops;
+  const chars='01アイウエオカキクケコ░▒▓█нууц'.split('');
+  function init(){w=c.width=window.innerWidth;h=c.height=window.innerHeight;
+    cols=Math.floor(w/18);drops=Array(cols).fill(1)}
+  init();window.addEventListener('resize',init);
+  function draw(){
+    ctx.fillStyle='rgba(8,12,20,.06)';ctx.fillRect(0,0,w,h);
+    ctx.fillStyle='#00f0ff';ctx.font='14px JetBrains Mono';
+    for(let i=0;i<cols;i++){
+      const t=chars[Math.floor(Math.random()*chars.length)];
+      ctx.fillText(t,i*18,drops[i]*18);
+      if(drops[i]*18>h&&Math.random()>.975)drops[i]=0;
+      drops[i]++
+    }
+  }
+  setInterval(draw,50)
+})();
+
+// === HERO AUTO-SCAN ===
+(function(){
+  const pii=document.querySelectorAll('#heroScan .pii');
+  let blurred=false;
+  function toggle(){
+    blurred=!blurred;
+    pii.forEach((el,i)=>{
+      setTimeout(()=>el.classList.toggle('blurred',blurred),i*200)
+    })
+  }
+  setInterval(toggle,4000);
+  setTimeout(toggle,1500)
+})();
+
+// === LIVE DEMO ===
+let demoActive=false;
+function runDemo(){
+  const items=document.querySelectorAll('#demoBody .sensitive');
+  const btn=document.getElementById('demoBtn');
+  const status=document.getElementById('demoStatus');
+  const btnText=document.getElementById('demoBtnText');
+  demoActive=!demoActive;
+
+  if(demoActive){
+    btnText.textContent='Сэргээх';
+    status.textContent='🔍 Скан хийж байна...';
+    status.classList.add('show');
+    items.forEach((el,i)=>{
+      setTimeout(()=>{
+        el.classList.add('redacted');
+        status.textContent=`✅ ${i+1}/${items.length} PII илэрсэн — бүдгэрүүлсэн`;
+      },(i+1)*500)
+    });
+  } else {
+    items.forEach(el=>el.classList.remove('redacted'));
+    btnText.textContent='Alt+B — Скан хийх';
+    status.classList.remove('show');
+  }
+}
+
+// === GLITCH CHARACTERS ===
+document.querySelectorAll('.glitch-chars').forEach(el=>{
+  const text=el.textContent;el.innerHTML='';
+  [...text].forEach((ch,i)=>{
+    const s=document.createElement('span');s.className='glitch-char';
+    s.textContent=ch;s.style.setProperty('--d',(Math.random()*5).toFixed(2)+'s');
+    el.appendChild(s)
+  })
+});
+
+// === RANDOM GLITCH on sensitive text ===
+(function(){
+  const glitchChars='█▓▒░#@$%&*!?';
+  function glitchText(){
+    const targets=document.querySelectorAll('#demoBody .sensitive:not(.redacted)');
+    if(!targets.length)return;
+    const target=targets[Math.floor(Math.random()*targets.length)];
+    const orig=target.dataset.v;
+    const arr=[...orig];
+    const idx=Math.floor(Math.random()*arr.length);
+    arr[idx]=glitchChars[Math.floor(Math.random()*glitchChars.length)];
+    target.textContent=arr.join('');
+    setTimeout(()=>{if(!target.classList.contains('redacted'))target.textContent=orig},100);
+  }
+  setInterval(glitchText,800)
+})();
+</script>
+</body>
+</html>

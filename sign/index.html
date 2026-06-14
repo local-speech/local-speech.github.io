@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Гарын үсэг & Тамга наагч — Instant Signature & Stamp Overlay</title>
+    <meta name="description" content="Ctrl+Shift+S дарж гарын үсэг, тамгаа аль ч баримт бичиг дээр шууд тавина. Офлайн, хурдан, найдвартай.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #faf8f3;
+            --cream-dark: #f0ece3;
+            --ink: #2c2417;
+            --ink-light: #5a4d3a;
+            --ink-muted: #8a7d6b;
+            --gold: #c9a84c;
+            --gold-light: #dcc06e;
+            --gold-dark: #a8882e;
+            --red: #b44a3e;
+            --paper-line: rgba(44,36,23,0.06);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: var(--cream);
+            color: var(--ink);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Paper texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Horizontal ruled lines like paper */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent,
+                transparent 39px,
+                var(--paper-line) 39px,
+                var(--paper-line) 40px
+            );
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.5;
+        }
+
+        .page-content { position: relative; z-index: 1; }
+
+        /* Nav */
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 24px 24px 0;
+        }
+        nav a {
+            color: var(--ink-muted);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: color .2s;
+        }
+        nav a:hover { color: var(--ink); }
+        .nav-brand {
+            font-family: 'Caveat', cursive;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--ink) !important;
+            letter-spacing: -0.5px;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+        /* ========== HERO ========== */
+        .hero {
+            text-align: center;
+            padding: 80px 24px 60px;
+            position: relative;
+        }
+
+        .pen-canvas {
+            width: 320px;
+            height: 100px;
+            margin: 0 auto 32px;
+        }
+
+        .pen-canvas svg { width: 100%; height: 100%; overflow: visible; }
+
+        .sig-path {
+            fill: none;
+            stroke: var(--ink);
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 600;
+            stroke-dashoffset: 600;
+            animation: drawSig 3s ease forwards 0.5s;
+        }
+
+        .pen-tip {
+            opacity: 0;
+            animation: showPen 0.1s ease forwards 0.4s;
+        }
+
+        .pen-move {
+            animation: movePen 3s ease forwards 0.5s;
+        }
+
+        @keyframes drawSig {
+            to { stroke-dashoffset: 0; }
+        }
+        @keyframes showPen {
+            to { opacity: 1; }
+        }
+        @keyframes movePen {
+            0% { transform: translate(30px, 55px) rotate(-45deg); }
+            25% { transform: translate(100px, 35px) rotate(-40deg); }
+            50% { transform: translate(170px, 55px) rotate(-50deg); }
+            75% { transform: translate(230px, 30px) rotate(-42deg); }
+            100% { transform: translate(290px, 50px) rotate(-45deg); opacity: 0; }
+        }
+
+        /* Underline after signature */
+        .sig-underline {
+            fill: none;
+            stroke: var(--gold);
+            stroke-width: 1.5;
+            stroke-dasharray: 300;
+            stroke-dashoffset: 300;
+            animation: drawSig 1s ease forwards 3.5s;
+            opacity: 0.6;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(201,168,76,0.1);
+            border: 1px solid rgba(201,168,76,0.25);
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gold-dark);
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+        }
+
+        .hero h1 .accent {
+            font-family: 'Caveat', cursive;
+            color: var(--gold);
+            font-size: 1.15em;
+            letter-spacing: 0;
+        }
+
+        .hero .subtitle {
+            font-size: 17px;
+            color: var(--ink-light);
+            max-width: 520px;
+            margin: 0 auto 12px;
+        }
+
+        .hotkey-display {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin: 16px auto 32px;
+            font-size: 14px;
+            color: var(--ink-muted);
+        }
+        .key {
+            display: inline-block;
+            background: #fff;
+            border: 1px solid rgba(44,36,23,0.15);
+            border-bottom: 3px solid rgba(44,36,23,0.15);
+            border-radius: 5px;
+            padding: 3px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: 'Inter', monospace;
+            color: var(--ink);
+            line-height: 1.4;
+        }
+        .key-plus {
+            font-size: 11px;
+            color: var(--ink-muted);
+            margin: 0 2px;
+        }
+
+        /* CTA Buttons */
+        .cta-row {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 15px 36px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all .25s;
+            text-decoration: none;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(201,168,76,0.3);
+        }
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(201,168,76,0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--ink);
+            border: 1.5px solid rgba(44,36,23,0.2);
+        }
+        .btn-outline:hover {
+            border-color: var(--gold);
+            color: var(--gold-dark);
+        }
+
+        .price-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        .price-old {
+            font-size: 16px;
+            color: var(--ink-muted);
+            text-decoration: line-through;
+        }
+        .price-new {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--ink);
+        }
+        .price-label {
+            font-size: 12px;
+            color: var(--ink-muted);
+        }
+        .price-save {
+            display: inline-block;
+            background: rgba(180,74,62,0.1);
+            color: var(--red);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 12px;
+        }
+
+        /* ========== INTERACTIVE DEMO ========== */
+        .demo-section {
+            padding: 60px 0;
+        }
+        .demo-section h2 {
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--ink-muted);
+            margin-bottom: 8px;
+        }
+        .demo-section .section-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 32px;
+        }
+
+        .demo-container {
+            max-width: 680px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid rgba(44,36,23,0.1);
+            box-shadow: 0 20px 60px rgba(44,36,23,0.08);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .demo-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: #fdfcf9;
+            border-bottom: 1px solid rgba(44,36,23,0.08);
+            font-size: 12px;
+            color: var(--ink-muted);
+        }
+        .demo-dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: rgba(44,36,23,0.1);
+        }
+        .demo-dot:nth-child(1) { background: #e8695a; }
+        .demo-dot:nth-child(2) { background: #e8c95a; }
+        .demo-dot:nth-child(3) { background: #6ace6a; }
+        .demo-filename {
+            margin-left: auto;
+            font-weight: 500;
+        }
+
+        .demo-page {
+            position: relative;
+            padding: 40px;
+            min-height: 400px;
+            cursor: crosshair;
+            user-select: none;
+            font-size: 14px;
+            color: var(--ink-light);
+            line-height: 2;
+        }
+
+        .demo-page p {
+            margin-bottom: 16px;
+        }
+        .demo-page .doc-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 4px;
+        }
+        .demo-page .doc-date {
+            font-size: 12px;
+            color: var(--ink-muted);
+            margin-bottom: 20px;
+        }
+        .demo-sig-line {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 16px;
+        }
+        .demo-sig-box {
+            text-align: center;
+            width: 45%;
+        }
+        .demo-sig-box .line {
+            border-bottom: 1.5px solid var(--ink);
+            margin-bottom: 6px;
+            height: 50px;
+        }
+        .demo-sig-box .label {
+            font-size: 11px;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .demo-hint {
+            text-align: center;
+            padding: 12px;
+            background: rgba(201,168,76,0.08);
+            border-top: 1px solid rgba(201,168,76,0.15);
+            font-size: 13px;
+            color: var(--gold-dark);
+            font-weight: 500;
+        }
+
+        /* Placed stamps/signatures in demo */
+        .placed-stamp {
+            position: absolute;
+            pointer-events: none;
+            animation: stampDrop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes stampDrop {
+            0% { transform: scale(1.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Floating stamp preview */
+        .stamp-cursor {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.7;
+            display: none;
+        }
+
+        /* ========== FEATURES ========== */
+        .features-section {
+            padding: 60px 0;
+        }
+        .features-section h2 {
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--ink-muted);
+            margin-bottom: 8px;
+        }
+        .features-section .section-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 40px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: #fff;
+            border: 1px solid rgba(44,36,23,0.08);
+            border-radius: 12px;
+            padding: 28px;
+            transition: all .3s;
+        }
+        .feature-card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 8px 30px rgba(201,168,76,0.1);
+        }
+        .feature-icon {
+            width: 44px;
+            height: 44px;
+            background: rgba(201,168,76,0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            font-size: 20px;
+        }
+        .feature-card h3 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .feature-card p {
+            font-size: 13px;
+            color: var(--ink-muted);
+            line-height: 1.7;
+        }
+
+        /* ========== HOW IT WORKS ========== */
+        .steps-section {
+            padding: 60px 0;
+        }
+        .steps-section h2 {
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--ink-muted);
+            margin-bottom: 8px;
+        }
+        .steps-section .section-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 40px;
+        }
+
+        .steps-list {
+            display: flex;
+            gap: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .step-item {
+            flex: 1;
+            min-width: 200px;
+            max-width: 280px;
+            text-align: center;
+            position: relative;
+        }
+        .step-num {
+            font-family: 'Caveat', cursive;
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--gold);
+            opacity: 0.4;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        .step-item h3 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .step-item p {
+            font-size: 13px;
+            color: var(--ink-muted);
+            line-height: 1.6;
+        }
+
+        /* Arrow between steps */
+        .step-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: -14px;
+            top: 30px;
+            width: 8px;
+            height: 8px;
+            border-right: 2px solid var(--gold);
+            border-bottom: 2px solid var(--gold);
+            transform: rotate(-45deg);
+            opacity: 0.3;
+        }
+
+        /* ========== TARGET ========== */
+        .target-section {
+            padding: 60px 0;
+            text-align: center;
+        }
+        .target-section h2 {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--ink-muted);
+            margin-bottom: 8px;
+        }
+        .target-section .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 32px;
+        }
+        .target-cards {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .target-card {
+            background: #fff;
+            border: 1px solid rgba(44,36,23,0.08);
+            border-radius: 12px;
+            padding: 24px 28px;
+            flex: 1;
+            min-width: 200px;
+            text-align: left;
+        }
+        .target-card .emoji { font-size: 28px; margin-bottom: 10px; }
+        .target-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+        .target-card p { font-size: 13px; color: var(--ink-muted); }
+
+        /* ========== CTA SECTION ========== */
+        .cta-section {
+            padding: 80px 24px;
+            text-align: center;
+        }
+        .cta-section .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .cta-section .subtitle {
+            font-size: 15px;
+            color: var(--ink-muted);
+            margin-bottom: 28px;
+        }
+
+        /* ========== FOOTER ========== */
+        footer {
+            text-align: center;
+            padding: 40px 24px;
+            font-size: 12px;
+            color: var(--ink-muted);
+            border-top: 1px solid rgba(44,36,23,0.08);
+        }
+        footer a {
+            color: var(--ink-muted);
+            text-decoration: none;
+            transition: color .2s;
+        }
+        footer a:hover { color: var(--gold); }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .hero { padding: 50px 20px 40px; }
+            .hero h1 { font-size: 1.8rem; }
+            .pen-canvas { width: 240px; height: 75px; }
+            .demo-page { padding: 24px; min-height: 320px; }
+            .demo-sig-line { flex-direction: column; gap: 20px; }
+            .demo-sig-box { width: 100%; }
+            .step-item:not(:last-child)::after { display: none; }
+            .price-new { font-size: 26px; }
+            .features-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 1.5rem; }
+            .cta-row { flex-direction: column; align-items: center; }
+            .btn { width: 100%; max-width: 300px; justify-content: center; }
+        }
+
+        /* Scroll animations */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Gold separator */
+        .gold-sep {
+            width: 40px;
+            height: 2px;
+            background: var(--gold);
+            margin: 0 auto 40px;
+            opacity: 0.4;
+        }
+    </style>
+</head>
+<body>
+<div class="page-content">
+
+    <!-- Nav -->
+    <nav class="container">
+        <a href="/" class="nav-brand">SoPro</a>
+        <div style="display:flex;gap:20px;align-items:center;">
+            <a href="/">Бүтээгдэхүүнүүд</a>
+            <a href="#demo">Туршиж үзэх</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="pen-canvas">
+            <svg viewBox="0 0 320 100" xmlns="http://www.w3.org/2000/svg">
+                <!-- Signature path -->
+                <path class="sig-path" d="M30,60 C40,30 60,30 70,50 C80,70 90,25 110,40 C130,55 125,30 140,35 C155,40 150,60 165,45 C180,30 185,55 200,40 C215,25 210,55 230,35 C245,20 260,50 275,45 C285,42 290,50 295,48" />
+                <!-- Gold underline -->
+                <line class="sig-underline" x1="25" y1="75" x2="300" y2="75" />
+                <!-- Pen nib -->
+                <g class="pen-tip pen-move">
+                    <path d="M0,0 L-3,-14 L0,-11 L3,-14 Z" fill="var(--ink)" />
+                    <rect x="-3" y="-28" width="6" height="16" rx="1" fill="var(--gold-dark)" />
+                </g>
+            </svg>
+        </div>
+
+        <div class="hero-badge">Windows Desktop Апп</div>
+
+        <h1>Гарын үсэг & <span class="accent">Тамга</span> наагч</h1>
+        <p class="subtitle">Аль ч баримт бичиг дээр нэг товшилтоор гарын үсэг, тамгаа тавина. Офлайн, хурдан, аюулгүй.</p>
+
+        <div class="hotkey-display">
+            <span class="key">Ctrl</span>
+            <span class="key-plus">+</span>
+            <span class="key">Shift</span>
+            <span class="key-plus">+</span>
+            <span class="key">S</span>
+            <span style="margin-left:8px;">дарахад л болоо</span>
+        </div>
+
+        <div class="price-row">
+            <span class="price-old">27,000₮</span>
+            <span class="price-new">9,000₮</span>
+            <span class="price-save">-67%</span>
+        </div>
+
+        <div class="cta-row">
+            <a href="#" class="btn btn-gold">Худалдаж авах</a>
+            <a href="#demo" class="btn btn-outline">Туршиж үзэх</a>
+        </div>
+        <p class="price-label">Нэг удаагийн төлбөр. Сар бүрийн төлбөргүй.</p>
+    </section>
+
+    <!-- Interactive Demo -->
+    <section class="demo-section container fade-up" id="demo">
+        <h2>Интерактив жишээ</h2>
+        <p class="section-title">Баримт бичиг дээр дарж туршаарай</p>
+
+        <div class="demo-container">
+            <div class="demo-toolbar">
+                <span class="demo-dot"></span>
+                <span class="demo-dot"></span>
+                <span class="demo-dot"></span>
+                <span class="demo-filename">Гэрээ_2025.pdf</span>
+            </div>
+            <div class="demo-page" id="demoPage">
+                <p class="doc-title">ХӨДӨЛМӨРИЙН ГЭРЭЭ</p>
+                <p class="doc-date">2025 оны 06-р сарын 15</p>
+                <p>Энэхүү гэрээг нэг талаас "Ажил олгогч" — "SoPro" ХХК-ийн захирал Б.Баттулга, нөгөө талаас "Ажилтан" — нар харилцан тохиролцож байгуулав.</p>
+                <p>Гэрээний хугацаа: 2025.06.15 — 2026.06.15</p>
+                <p style="font-size:12px;color:var(--ink-muted);margin-top:8px;">1-р зүйл. Ажилтан өөрийн мэргэжлийн дагуу ажил үүргийг гүйцэтгэнэ.</p>
+                <div class="demo-sig-line">
+                    <div class="demo-sig-box">
+                        <div class="line"></div>
+                        <div class="label">Ажил олгогч</div>
+                    </div>
+                    <div class="demo-sig-box">
+                        <div class="line"></div>
+                        <div class="label">Ажилтан</div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo-hint" id="demoHint">
+                ☝ Баримт бичиг дээр товшоод гарын үсэг тавиарай
+            </div>
+        </div>
+
+        <div style="text-align:center;margin-top:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+            <button onclick="setStampMode('signature')" class="stamp-btn active" id="btnSig" style="background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:8px;padding:8px 16px;font-size:12px;cursor:pointer;font-weight:600;color:var(--gold-dark);">✍ Гарын үсэг</button>
+            <button onclick="setStampMode('stamp')" class="stamp-btn" id="btnStamp" style="background:#fff;border:1px solid rgba(44,36,23,0.1);border-radius:8px;padding:8px 16px;font-size:12px;cursor:pointer;font-weight:500;color:var(--ink-muted);">◉ Тамга</button>
+            <button onclick="clearStamps()" style="background:#fff;border:1px solid rgba(44,36,23,0.1);border-radius:8px;padding:8px 16px;font-size:12px;cursor:pointer;font-weight:500;color:var(--ink-muted);">✕ Арилгах</button>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features-section container fade-up">
+        <h2>Боломжууд</h2>
+        <p class="section-title">Яагаад энэ апп вэ?</p>
+        <div class="gold-sep"></div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🖼</div>
+                <h3>PNG Overlay</h3>
+                <p>Гарын үсэг, тамгаа PNG зургаар хадгалж, аль ч програм дээр тунгалаг давхарлана.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🖱</div>
+                <h3>Чирж байрлуулах</h3>
+                <p>Гарын үсгээ хулганаар чирж зөв байрлалд хялбар тавина. Хэмжээг өөрчлөх боломжтой.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🖥</div>
+                <h3>Бүх дэлгэц дээр</h3>
+                <p>PDF, Word, Excel, вэб хуудас — аль ч нээлттэй цонхон дээр ажиллана.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Бүрэн офлайн</h3>
+                <p>Интернет холболт шаардахгүй. Таны гарын үсэг зөвхөн таны компьютерт хадгалагдана.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Хурдан хандалт</h3>
+                <p>Ctrl+Shift+S дарахад 0.5 секундэд бэлэн болно. Ажлын урсгалыг тасалдуулахгүй.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📁</div>
+                <h3>Олон загвар</h3>
+                <p>Гарын үсэг, тамга, лого — олон загварыг хадгалж, сонгож хэрэглэнэ.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="steps-section container fade-up">
+        <h2>Хэрхэн ажилладаг</h2>
+        <p class="section-title">3 алхамд бүгд бэлэн</p>
+        <div class="gold-sep"></div>
+
+        <div class="steps-list">
+            <div class="step-item">
+                <div class="step-num">1</div>
+                <h3>Зургаа оруулах</h3>
+                <p>Гарын үсэг эсвэл тамгаа зургаар (PNG) хадгалж аппд оруулна</p>
+            </div>
+            <div class="step-item">
+                <div class="step-num">2</div>
+                <h3>Товчлуур дарах</h3>
+                <p>Аль ч баримт бичиг нээлттэй байхад Ctrl+Shift+S дарна</p>
+            </div>
+            <div class="step-item">
+                <div class="step-num">3</div>
+                <h3>Товшиж тавих</h3>
+                <p>Гарын үсгийг хүссэн байрлалд товшиж тавина. Дууслаа!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Target audience -->
+    <section class="target-section container fade-up">
+        <h2>Хэнд зориулсан</h2>
+        <p class="section-title">Өдөрт 50+ баримтад гарын үсэг зурдаг хүмүүст</p>
+        <div class="gold-sep"></div>
+
+        <div class="target-cards">
+            <div class="target-card">
+                <div class="emoji">👔</div>
+                <h3>Захирал, менежер</h3>
+                <p>Гэрээ, тушаал, хүсэлтэд өдөр бүр гарын үсэг зурдаг</p>
+            </div>
+            <div class="target-card">
+                <div class="emoji">🏢</div>
+                <h3>Нягтлан, нарийн бичиг</h3>
+                <p>Тамга дарах, баримт баталгаажуулах ажлыг хурдасгана</p>
+            </div>
+            <div class="target-card">
+                <div class="emoji">⚖️</div>
+                <h3>Хуульч, зөвлөх</h3>
+                <p>Олон хуудаст баримтад хурдан гарын үсэг тавих</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="cta-section fade-up">
+        <p class="section-title">Цаас дээрх гарын үсгээ <span style="font-family:'Caveat',cursive;color:var(--gold);">дижитал</span> болго</p>
+        <p class="subtitle">Нэг удаагийн 9,000₮ төлбөрөөр насан туршдаа хэрэглэнэ</p>
+        <div class="price-row">
+            <span class="price-old">27,000₮</span>
+            <span class="price-new">9,000₮</span>
+            <span class="price-save">-67%</span>
+        </div>
+        <div class="cta-row">
+            <a href="#" class="btn btn-gold">Худалдаж авах</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p style="margin-bottom:8px;">
+            <a href="/">Нүүр хуудас</a> &nbsp;·&nbsp;
+            <a href="/terms.html">Үйлчилгээний нөхцөл</a> &nbsp;·&nbsp;
+            <a href="/privacy.html">Нууцлалын бодлого</a>
+        </p>
+        <p>&copy; 2025 SoPro. Бүх эрх хуулиар хамгаалагдсан.</p>
+    </footer>
+
+</div>
+
+<!-- Stamp cursor (follows mouse in demo) -->
+<div class="stamp-cursor" id="stampCursor"></div>
+
+<script>
+(function() {
+    // Stamp mode
+    let mode = 'signature';
+    let stampCount = 0;
+
+    // SVG signature as data
+    const sigSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="120" height="40" viewBox="0 0 120 40">
+        <path d="M5,25 C10,10 20,10 25,20 C30,30 35,8 45,15 C55,22 50,10 60,13 C70,16 65,28 75,18 C85,8 80,25 95,15 C105,8 110,20 115,18"
+              fill="none" stroke="#2c2417" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>`;
+
+    const stampSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80">
+        <circle cx="40" cy="40" r="36" fill="none" stroke="#b44a3e" stroke-width="3"/>
+        <circle cx="40" cy="40" r="30" fill="none" stroke="#b44a3e" stroke-width="1"/>
+        <text x="40" y="34" text-anchor="middle" font-size="8" font-weight="bold" fill="#b44a3e" font-family="sans-serif">SoPro</text>
+        <text x="40" y="46" text-anchor="middle" font-size="6" fill="#b44a3e" font-family="sans-serif">ХХК</text>
+        <text x="40" y="56" text-anchor="middle" font-size="5" fill="#b44a3e" font-family="sans-serif">ТАМГА</text>
+    </svg>`;
+
+    const cursorEl = document.getElementById('stampCursor');
+    const demoPage = document.getElementById('demoPage');
+
+    window.setStampMode = function(m) {
+        mode = m;
+        document.getElementById('btnSig').style.background = m === 'signature' ? 'rgba(201,168,76,0.1)' : '#fff';
+        document.getElementById('btnSig').style.borderColor = m === 'signature' ? 'rgba(201,168,76,0.3)' : 'rgba(44,36,23,0.1)';
+        document.getElementById('btnSig').style.color = m === 'signature' ? 'var(--gold-dark)' : 'var(--ink-muted)';
+        document.getElementById('btnStamp').style.background = m === 'stamp' ? 'rgba(201,168,76,0.1)' : '#fff';
+        document.getElementById('btnStamp').style.borderColor = m === 'stamp' ? 'rgba(201,168,76,0.3)' : 'rgba(44,36,23,0.1)';
+        document.getElementById('btnStamp').style.color = m === 'stamp' ? 'var(--gold-dark)' : 'var(--ink-muted)';
+    };
+
+    window.clearStamps = function() {
+        demoPage.querySelectorAll('.placed-stamp').forEach(el => el.remove());
+        stampCount = 0;
+        document.getElementById('demoHint').textContent = '☝ Баримт бичиг дээр товшоод гарын үсэг тавиарай';
+    };
+
+    // Show stamp cursor on demo hover
+    demoPage.addEventListener('mouseenter', function() {
+        cursorEl.style.display = 'block';
+        cursorEl.innerHTML = mode === 'signature' ? sigSVG : stampSVG;
+    });
+
+    demoPage.addEventListener('mouseleave', function() {
+        cursorEl.style.display = 'none';
+    });
+
+    demoPage.addEventListener('mousemove', function(e) {
+        cursorEl.innerHTML = mode === 'signature' ? sigSVG : stampSVG;
+        const offset = mode === 'signature' ? 60 : 40;
+        cursorEl.style.left = (e.clientX - offset) + 'px';
+        cursorEl.style.top = (e.clientY - 20) + 'px';
+    });
+
+    // Place stamp on click
+    demoPage.addEventListener('click', function(e) {
+        const rect = demoPage.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const stamp = document.createElement('div');
+        stamp.className = 'placed-stamp';
+        stamp.innerHTML = mode === 'signature' ? sigSVG : stampSVG;
+
+        const offset = mode === 'signature' ? 60 : 40;
+        stamp.style.left = (x - offset) + 'px';
+        stamp.style.top = (y - 20) + 'px';
+
+        demoPage.appendChild(stamp);
+        stampCount++;
+
+        const hint = document.getElementById('demoHint');
+        if (stampCount === 1) {
+            hint.textContent = '🎉 Тамга тавигдлаа! Дахин товшоод туршаарай.';
+        } else if (stampCount >= 3) {
+            hint.textContent = '✨ Яг ийм хялбар! Апп-д бүр илүү олон боломж бий.';
+        }
+    });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-up').forEach(function(el) {
+        observer.observe(el);
+    });
+
+    // Re-run pen animation on scroll into view
+    const heroObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                const path = document.querySelector('.sig-path');
+                const underline = document.querySelector('.sig-underline');
+                if (path) {
+                    path.style.animation = 'none';
+                    path.offsetHeight; // trigger reflow
+                    path.style.animation = '';
+                }
+                if (underline) {
+                    underline.style.animation = 'none';
+                    underline.offsetHeight;
+                    underline.style.animation = '';
+                }
+            }
+        });
+    }, { threshold: 0.5 });
+
+    const penCanvas = document.querySelector('.pen-canvas');
+    if (penCanvas) heroObserver.observe(penCanvas);
+})();
+</script>
+</body>
+</html>

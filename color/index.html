@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Өнгө авагч — Instant Color Picker & Converter | SoPro</title>
+<meta name="description" content="Дэлгэцийн аль ч пикселийн өнгийг нэг товшилтоор хуулна. HEX, RGB, HSL, CMYK формат. Windows desktop апп.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--glass:rgba(255,255,255,0.12);--glass-border:rgba(255,255,255,0.2);--glass-card:rgba(255,255,255,0.08);--text:#fff;--text-dim:rgba(255,255,255,0.7)}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--text);overflow-x:hidden;background:#0a0a1a}
+
+/* === ANIMATED GRADIENT BACKGROUND === */
+.bg-gradient{position:fixed;inset:0;z-index:-2;background:linear-gradient(135deg,#6b21a8,#db2777,#f97316,#2563eb,#7c3aed,#ec4899);background-size:600% 600%;animation:gradientShift 12s ease infinite}
+@keyframes gradientShift{0%{background-position:0% 50%}25%{background-position:50% 0%}50%{background-position:100% 50%}75%{background-position:50% 100%}100%{background-position:0% 50%}}
+.bg-noise{position:fixed;inset:0;z-index:-1;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* === GLASS CARD === */
+.glass{background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:20px}
+.glass-card{background:rgba(255,255,255,0.06);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:28px;transition:transform .3s,box-shadow .3s}
+.glass-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+
+/* === NAV === */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;transition:background .3s}
+nav.scrolled{background:rgba(0,0,0,0.5);backdrop-filter:blur(16px)}
+.nav-logo{font-weight:800;font-size:1.2rem;text-decoration:none;color:#fff;display:flex;align-items:center;gap:8px}
+.nav-logo svg{width:28px;height:28px}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-links a{color:var(--text-dim);text-decoration:none;font-size:.9rem;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:#fff}
+.nav-cta{background:linear-gradient(135deg,#f97316,#ec4899);padding:8px 20px;border-radius:99px;color:#fff!important;font-weight:600;border:none;cursor:pointer;text-decoration:none;font-size:.9rem}
+
+/* === HERO === */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:120px 24px 80px;position:relative}
+.hero-content{max-width:1200px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.hero-text h1{font-size:clamp(2.2rem,5vw,3.8rem);font-weight:900;line-height:1.1;margin-bottom:20px}
+.hero-text h1 span{background:linear-gradient(135deg,#fbbf24,#f97316,#ec4899,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-text .subtitle{font-size:1.15rem;color:var(--text-dim);line-height:1.7;margin-bottom:32px}
+.hero-text .hotkey-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:10px 20px;margin-bottom:28px;font-size:.95rem}
+.hotkey-badge kbd{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:6px;padding:3px 10px;font-family:'Inter',monospace;font-weight:600;font-size:.85rem}
+.hero-buttons{display:flex;gap:16px;flex-wrap:wrap}
+.btn-primary{background:linear-gradient(135deg,#f97316,#ec4899);padding:14px 36px;border-radius:99px;color:#fff;font-weight:700;font-size:1.05rem;text-decoration:none;border:none;cursor:pointer;transition:transform .2s,box-shadow .2s;display:inline-flex;align-items:center;gap:8px}
+.btn-primary:hover{transform:scale(1.04);box-shadow:0 8px 40px rgba(249,115,22,0.4)}
+.btn-secondary{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);padding:14px 36px;border-radius:99px;color:#fff;font-weight:600;font-size:1.05rem;text-decoration:none;cursor:pointer;transition:transform .2s}
+.btn-secondary:hover{transform:scale(1.04);background:rgba(255,255,255,0.14)}
+
+/* === COLOR WHEEL HERO VISUAL === */
+.hero-visual{position:relative;display:flex;align-items:center;justify-content:center}
+.color-wheel-wrap{width:380px;height:380px;position:relative;animation:wheelFloat 6s ease-in-out infinite}
+@keyframes wheelFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+.color-wheel{width:100%;height:100%;border-radius:50%;background:conic-gradient(#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);animation:wheelSpin 20s linear infinite;position:relative}
+.color-wheel::after{content:'';position:absolute;inset:30%;border-radius:50%;background:rgba(10,10,26,0.85);backdrop-filter:blur(8px)}
+.wheel-glow{position:absolute;inset:-40px;border-radius:50%;background:conic-gradient(#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);filter:blur(60px);opacity:.35;animation:wheelSpin 20s linear infinite}
+@keyframes wheelSpin{to{transform:rotate(360deg)}}
+.wheel-center-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2;font-weight:800;font-size:1.1rem}
+.wheel-center-text .hex{font-size:1.6rem;font-family:monospace;animation:colorCycle 8s linear infinite}
+@keyframes colorCycle{0%{color:#f00}16%{color:#ff0}33%{color:#0f0}50%{color:#0ff}66%{color:#00f}83%{color:#f0f}100%{color:#f00}}
+
+/* === PRICE SECTION === */
+.price-badge{display:flex;align-items:baseline;gap:12px;margin-bottom:8px}
+.price-old{font-size:1.1rem;text-decoration:line-through;color:rgba(255,255,255,0.4)}
+.price-new{font-size:2.4rem;font-weight:900;background:linear-gradient(135deg,#34d399,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.price-save{background:rgba(52,211,153,0.15);color:#34d399;border:1px solid rgba(52,211,153,0.3);padding:4px 12px;border-radius:99px;font-size:.8rem;font-weight:600}
+
+/* === INTERACTIVE DEMO === */
+.demo-section{padding:80px 24px;position:relative}
+.demo-section .section-title{text-align:center;font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;margin-bottom:12px}
+.demo-section .section-sub{text-align:center;color:var(--text-dim);font-size:1.05rem;margin-bottom:48px}
+.demo-container{max-width:900px;margin:0 auto}
+.demo-card{border-radius:24px;overflow:hidden;border:1px solid rgba(255,255,255,0.12);background:rgba(0,0,0,0.3);backdrop-filter:blur(16px)}
+.demo-gradient{height:300px;cursor:crosshair;position:relative;background:linear-gradient(135deg,#f97316,#ec4899,#8b5cf6,#06b6d4,#10b981,#eab308,#ef4444);background-size:400% 400%;animation:demoGrad 10s ease infinite}
+@keyframes demoGrad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.demo-magnifier{position:absolute;width:120px;height:120px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 30px rgba(0,0,0,0.5),inset 0 0 20px rgba(0,0,0,0.3);pointer-events:none;display:none;overflow:hidden;z-index:10}
+.demo-magnifier canvas{width:100%;height:100%;image-rendering:pixelated}
+.demo-info{padding:24px 32px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.demo-format{text-align:center}
+.demo-format .label{font-size:.75rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:6px}
+.demo-format .value{font-family:'Courier New',monospace;font-size:1rem;font-weight:700;background:rgba(255,255,255,0.08);border-radius:8px;padding:8px 12px;cursor:pointer;transition:background .2s;user-select:all;border:1px solid rgba(255,255,255,0.08)}
+.demo-format .value:hover{background:rgba(255,255,255,0.16)}
+.demo-swatch{width:48px;height:48px;border-radius:12px;margin:0 auto 8px;border:2px solid rgba(255,255,255,0.2);transition:background .1s}
+.demo-hint{text-align:center;padding:0 32px 20px;font-size:.85rem;color:var(--text-dim)}
+
+/* === FEATURES === */
+.features{padding:80px 24px}
+.features .section-title{text-align:center;font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;margin-bottom:48px}
+.features-grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+.feature-icon{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:1.6rem}
+.feature-icon.purple{background:linear-gradient(135deg,#7c3aed,#a855f7)}
+.feature-icon.pink{background:linear-gradient(135deg,#ec4899,#f43f5e)}
+.feature-icon.orange{background:linear-gradient(135deg,#f97316,#eab308)}
+.feature-icon.cyan{background:linear-gradient(135deg,#06b6d4,#22d3ee)}
+.feature-icon.green{background:linear-gradient(135deg,#10b981,#34d399)}
+.feature-icon.blue{background:linear-gradient(135deg,#3b82f6,#6366f1)}
+.glass-card h3{font-size:1.15rem;font-weight:700;margin-bottom:8px}
+.glass-card p{color:var(--text-dim);line-height:1.6;font-size:.93rem}
+
+/* === HOW IT WORKS === */
+.how-section{padding:80px 24px}
+.how-section .section-title{text-align:center;font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;margin-bottom:48px}
+.steps{max-width:800px;margin:0 auto;display:flex;flex-direction:column;gap:0;position:relative}
+.steps::before{content:'';position:absolute;left:32px;top:32px;bottom:32px;width:2px;background:linear-gradient(to bottom,#f97316,#ec4899,#8b5cf6)}
+.step{display:flex;gap:24px;align-items:flex-start;padding:24px 0}
+.step-num{width:64px;height:64px;min-width:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.4rem;position:relative;z-index:2}
+.step:nth-child(1) .step-num{background:linear-gradient(135deg,#f97316,#fbbf24)}
+.step:nth-child(2) .step-num{background:linear-gradient(135deg,#ec4899,#f43f5e)}
+.step:nth-child(3) .step-num{background:linear-gradient(135deg,#8b5cf6,#6366f1)}
+.step h3{font-size:1.1rem;font-weight:700;margin-bottom:6px}
+.step p{color:var(--text-dim);line-height:1.6;font-size:.93rem}
+
+/* === TARGET === */
+.target-section{padding:80px 24px}
+.target-section .section-title{text-align:center;font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;margin-bottom:48px}
+.target-grid{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px}
+.target-card{text-align:center;padding:36px 28px}
+.target-card .emoji{font-size:2.8rem;margin-bottom:16px;display:block}
+.target-card h3{font-size:1.1rem;font-weight:700;margin-bottom:8px}
+.target-card p{color:var(--text-dim);font-size:.9rem;line-height:1.6}
+
+/* === CTA === */
+.cta-section{padding:80px 24px}
+.cta-box{max-width:700px;margin:0 auto;text-align:center;padding:56px 40px;border-radius:28px;background:linear-gradient(135deg,rgba(249,115,22,0.15),rgba(236,72,153,0.15),rgba(139,92,246,0.15));border:1px solid rgba(255,255,255,0.15);position:relative;overflow:hidden}
+.cta-box::before{content:'';position:absolute;inset:-2px;border-radius:28px;background:linear-gradient(135deg,#f97316,#ec4899,#8b5cf6);z-index:-1;filter:blur(30px);opacity:.3}
+.cta-box h2{font-size:clamp(1.6rem,4vw,2.2rem);font-weight:800;margin-bottom:12px}
+.cta-box p{color:var(--text-dim);margin-bottom:28px;font-size:1.05rem}
+
+/* === FOOTER === */
+footer{padding:32px 24px;text-align:center;color:rgba(255,255,255,0.35);font-size:.85rem;border-top:1px solid rgba(255,255,255,0.06)}
+footer a{color:rgba(255,255,255,0.5);text-decoration:none}
+footer a:hover{color:#fff}
+
+/* === RESPONSIVE === */
+@media(max-width:900px){
+.hero-content{grid-template-columns:1fr;text-align:center}
+.hero-visual{order:-1}
+.color-wheel-wrap{width:260px;height:260px}
+.hero-buttons{justify-content:center}
+.demo-info{grid-template-columns:repeat(2,1fr)}
+.nav-links{display:none}
+}
+@media(max-width:500px){
+.demo-info{grid-template-columns:1fr 1fr}
+.demo-gradient{height:200px}
+.hero-text h1{font-size:2rem}
+.price-new{font-size:1.8rem}
+}
+
+/* === FLOATING ORBS === */
+.orb{position:fixed;border-radius:50%;filter:blur(80px);opacity:.15;pointer-events:none;z-index:-1}
+.orb-1{width:400px;height:400px;background:#f97316;top:-100px;right:-100px;animation:orbFloat 8s ease-in-out infinite}
+.orb-2{width:350px;height:350px;background:#ec4899;bottom:-50px;left:-100px;animation:orbFloat 10s ease-in-out infinite 2s}
+.orb-3{width:300px;height:300px;background:#8b5cf6;top:50%;left:50%;animation:orbFloat 12s ease-in-out infinite 4s}
+@keyframes orbFloat{0%,100%{transform:translate(0,0)}33%{transform:translate(30px,-40px)}66%{transform:translate(-20px,30px)}}
+
+/* === COPIED TOAST === */
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(80px);background:rgba(0,0,0,0.85);backdrop-filter:blur(12px);color:#fff;padding:12px 28px;border-radius:99px;font-size:.9rem;font-weight:600;pointer-events:none;opacity:0;transition:all .3s ease;z-index:999;border:1px solid rgba(255,255,255,0.1)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="bg-gradient"></div>
+<div class="bg-noise"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="/" class="nav-logo">
+    <svg viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="13" stroke="#fff" stroke-width="2"/><circle cx="14" cy="14" r="6" fill="url(#ng)"/><defs><linearGradient id="ng" x1="8" y1="8" x2="20" y2="20"><stop stop-color="#f97316"/><stop offset="1" stop-color="#ec4899"/></linearGradient></defs></svg>
+    SoPro
+  </a>
+  <div class="nav-links">
+    <a href="#demo">Туршилт</a>
+    <a href="#features">Боломжууд</a>
+    <a href="#how">Хэрхэн</a>
+    <a href="#buy" class="nav-cta">Худалдаж авах</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-text">
+      <div class="hotkey-badge">
+        <span>⌨️</span>
+        <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>
+        <span style="color:var(--text-dim)">дараад өнгө аваарай</span>
+      </div>
+      <h1><span>Өнгө авагч</span><br>Instant Color Picker</h1>
+      <p class="subtitle">Дэлгэцийн аль ч пикселийн өнгийг нэг товшилтоор хуулна. HEX, RGB, HSL, CMYK — бүх формат. Томруулагч шилтэй. Бүрэн офлайн ажиллана.</p>
+      <div class="price-badge">
+        <span class="price-old">27,000₮</span>
+        <span class="price-new">9,000₮</span>
+        <span class="price-save">-67%</span>
+      </div>
+      <div class="hero-buttons">
+        <a href="#buy" class="btn-primary">🎨 Худалдаж авах</a>
+        <a href="#demo" class="btn-secondary">Туршиж үзэх ↓</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="color-wheel-wrap">
+        <div class="wheel-glow"></div>
+        <div class="color-wheel"></div>
+        <div class="wheel-center-text">
+          <span class="hex" id="wheelHex">#FF6B35</span>
+          <span style="font-size:.75rem;color:var(--text-dim);margin-top:4px">Өнгө авагч</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTERACTIVE DEMO -->
+<section class="demo-section" id="demo">
+  <h2 class="section-title">🖱️ Туршиж үзээрэй</h2>
+  <p class="section-sub">Доорх зураг дээр хулганаа хөдөлгөөд, бодит цагийн өнгө таних</p>
+  <div class="demo-container">
+    <div class="demo-card">
+      <div class="demo-gradient" id="demoArea">
+        <div class="demo-magnifier" id="magnifier"><canvas id="magCanvas" width="120" height="120"></canvas></div>
+      </div>
+      <div class="demo-hint">👆 Хулганаа зурган дээр аваачиж үзээрэй. Утга дээр дарж хуулна.</div>
+      <div class="demo-info">
+        <div class="demo-format">
+          <div class="demo-swatch" id="swatch" style="background:#f97316"></div>
+          <div class="label">HEX</div>
+          <div class="value" id="hexVal" onclick="copyVal(this)">#F97316</div>
+        </div>
+        <div class="demo-format">
+          <div class="label" style="margin-top:60px">RGB</div>
+          <div class="value" id="rgbVal" onclick="copyVal(this)">249, 115, 22</div>
+        </div>
+        <div class="demo-format">
+          <div class="label" style="margin-top:60px">HSL</div>
+          <div class="value" id="hslVal" onclick="copyVal(this)">25°, 95%, 53%</div>
+        </div>
+        <div class="demo-format">
+          <div class="label" style="margin-top:60px">CMYK</div>
+          <div class="value" id="cmykVal" onclick="copyVal(this)">0, 54, 91, 2</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <h2 class="section-title">✨ Боломжууд</h2>
+  <div class="features-grid">
+    <div class="glass-card">
+      <div class="feature-icon purple">🔍</div>
+      <h3>Пиксел түвшний нарийвчлал</h3>
+      <p>Томруулагч шил курсорын эргэн тойронд гарч, нэг пикселийг ч алдахгүй, яг таарсан өнгийг авна.</p>
+    </div>
+    <div class="glass-card">
+      <div class="feature-icon pink">🎨</div>
+      <h3>Бүх формат</h3>
+      <p>HEX, RGB, HSL, CMYK — дизайн, код, хэвлэлийн бүх хэрэгцээнд нэг дороос.</p>
+    </div>
+    <div class="glass-card">
+      <div class="feature-icon orange">📋</div>
+      <h3>Нэг товшилтоор хуулах</h3>
+      <p>Өнгө сонгомогц clipboard-д автоматаар хуулагдана. Paste хийхэд бэлэн.</p>
+    </div>
+    <div class="glass-card">
+      <div class="feature-icon cyan">🔎</div>
+      <h3>Томруулагч шил</h3>
+      <p>Курсорын эргэн тойрныг томруулж харуулна. Жижиг элемент, нарийн ялгааг хялбар олно.</p>
+    </div>
+    <div class="glass-card">
+      <div class="feature-icon green">📡</div>
+      <h3>Бүрэн офлайн</h3>
+      <p>Интернет шаардахгүй. Windows дээр суулгаад хаанаас ч ажиллана.</p>
+    </div>
+    <div class="glass-card">
+      <div class="feature-icon blue">⚡</div>
+      <h3>Хурдан товчлуур</h3>
+      <p>Ctrl+Shift+P — ямар ч програмаас шууд дуудна. Ажлын урсгалыг тасалдуулахгүй.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <h2 class="section-title">🚀 Хэрхэн ажиллах вэ?</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h3>Товчлуур дарна</h3>
+        <p>Ctrl+Shift+P дарахад курсор томруулагч шил болж хувирна. Дэлгэцийн аль ч хэсгийг томруулж харуулна.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h3>Пиксел дээр дарна</h3>
+        <p>Хүссэн цэг дээрээ нэг товшилт хийнэ. Тухайн пикселийн өнгө шууд таниж, бүх форматаар хөрвүүлнэ.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h3>Шууд ашиглана</h3>
+        <p>HEX код clipboard-д автоматаар хуулагдсан. Figma, Photoshop, CSS, хаана ч Ctrl+V дараад ашиглаарай.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TARGET AUDIENCE -->
+<section class="target-section">
+  <h2 class="section-title">🎯 Хэнд зориулсан бэ?</h2>
+  <div class="target-grid">
+    <div class="glass-card target-card">
+      <span class="emoji">🎨</span>
+      <h3>Вэб дизайнерууд</h3>
+      <p>Вэбсайтын өнгө тааруулах, брэндийн өнгийг нарийн авах, UI загвар зурахад.</p>
+    </div>
+    <div class="glass-card target-card">
+      <span class="emoji">📱</span>
+      <h3>Сошиал медиа менежерүүд</h3>
+      <p>Пост, зураг, видеоны өнгөний уялдааг хангахад. Брэндийн guideline-д нийцүүлэхэд.</p>
+    </div>
+    <div class="glass-card target-card">
+      <span class="emoji">💻</span>
+      <h3>Хөгжүүлэгчид</h3>
+      <p>CSS, дизайн системийн өнгийг шууд код руу хуулахад. Debugger шиг хурдан.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="buy">
+  <div class="cta-box">
+    <h2>Өнгөний ертөнцийг нэг товшилтоор</h2>
+    <p>Дэлгэцийн аль ч пикселийн өнгийг хормын дотор авна. Мэргэжлийн хэрэгсэл, хялбар үнэ.</p>
+    <div class="price-badge" style="justify-content:center;margin-bottom:24px">
+      <span class="price-old">27,000₮</span>
+      <span class="price-new">9,000₮</span>
+      <span class="price-save">-67%</span>
+    </div>
+    <a href="#buy" class="btn-primary" style="font-size:1.15rem;padding:16px 48px">🎨 Худалдаж авах — 9,000₮</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 SoPro. Бүх эрх хуулиар хамгаалагдсан. &nbsp;|&nbsp; <a href="/">Нүүр хуудас</a></p>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast">📋 Хуулагдлаа!</div>
+
+<script>
+// Nav scroll effect
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',window.scrollY>40)});
+
+// Wheel hex animation
+const hexColors=['#FF6B35','#E91E63','#9C27B0','#2196F3','#00BCD4','#4CAF50','#FFEB3B','#FF5722'];
+let hci=0;
+setInterval(()=>{hci=(hci+1)%hexColors.length;document.getElementById('wheelHex').textContent=hexColors[hci]},1500);
+
+// Interactive demo
+const demoArea=document.getElementById('demoArea');
+const magnifier=document.getElementById('magnifier');
+const magCanvas=document.getElementById('magCanvas');
+const swatch=document.getElementById('swatch');
+const hexVal=document.getElementById('hexVal');
+const rgbVal=document.getElementById('rgbVal');
+const hslVal=document.getElementById('hslVal');
+const cmykVal=document.getElementById('cmykVal');
+
+// Offscreen canvas for reading pixels
+let demoCanvas,demoCtx;
+function initDemoCanvas(){
+  demoCanvas=document.createElement('canvas');
+  const rect=demoArea.getBoundingClientRect();
+  demoCanvas.width=rect.width;demoCanvas.height=rect.height;
+  demoCtx=demoCanvas.getContext('2d',{willReadFrequently:true});
+  // Draw gradient matching CSS
+  const g=demoCtx.createLinearGradient(0,0,rect.width,rect.height);
+  g.addColorStop(0,'#f97316');g.addColorStop(0.17,'#ec4899');g.addColorStop(0.33,'#8b5cf6');
+  g.addColorStop(0.5,'#06b6d4');g.addColorStop(0.67,'#10b981');g.addColorStop(0.83,'#eab308');g.addColorStop(1,'#ef4444');
+  demoCtx.fillStyle=g;demoCtx.fillRect(0,0,rect.width,rect.height);
+}
+window.addEventListener('load',initDemoCanvas);
+window.addEventListener('resize',initDemoCanvas);
+
+function rgbToHex(r,g,b){return'#'+[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('').toUpperCase()}
+function rgbToHsl(r,g,b){r/=255;g/=255;b/=255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2;
+  if(mx===mn)return[0,0,Math.round(l*100)];
+  const d=mx-mn,s=l>.5?d/(2-mx-mn):d/(mx+mn);
+  let h;if(mx===r)h=((g-b)/d+(g<b?6:0))/6;else if(mx===g)h=((b-r)/d+2)/6;else h=((r-g)/d+4)/6;
+  return[Math.round(h*360),Math.round(s*100),Math.round(l*100)]}
+function rgbToCmyk(r,g,b){if(r===0&&g===0&&b===0)return[0,0,0,100];
+  const c=1-r/255,m=1-g/255,y=1-b/255,k=Math.min(c,m,y);
+  return[Math.round((c-k)/(1-k)*100),Math.round((m-k)/(1-k)*100),Math.round((y-k)/(1-k)*100),Math.round(k*100)]}
+
+demoArea.addEventListener('mousemove',function(e){
+  const rect=demoArea.getBoundingClientRect();
+  const x=e.clientX-rect.left,y=e.clientY-rect.top;
+  if(!demoCtx)return;
+  // Magnifier position
+  magnifier.style.display='block';
+  magnifier.style.left=(x-60)+'px';magnifier.style.top=(y-60)+'px';
+  // Draw magnified pixels
+  const mc=magCanvas.getContext('2d');
+  mc.imageSmoothingEnabled=false;
+  mc.clearRect(0,0,120,120);
+  const sz=10;
+  mc.drawImage(demoCanvas,Math.max(0,x-sz),Math.max(0,y-sz),sz*2,sz*2,0,0,120,120);
+  // Crosshair
+  mc.strokeStyle='rgba(255,255,255,0.6)';mc.lineWidth=1;
+  mc.beginPath();mc.moveTo(60,0);mc.lineTo(60,120);mc.moveTo(0,60);mc.lineTo(120,60);mc.stroke();
+  // Get pixel color
+  const px=demoCtx.getImageData(Math.round(x),Math.round(y),1,1).data;
+  const r=px[0],g=px[1],b=px[2];
+  const hex=rgbToHex(r,g,b);
+  const hsl=rgbToHsl(r,g,b);
+  const cmyk=rgbToCmyk(r,g,b);
+  swatch.style.background=hex;
+  hexVal.textContent=hex;
+  rgbVal.textContent=r+', '+g+', '+b;
+  hslVal.textContent=hsl[0]+'°, '+hsl[1]+'%, '+hsl[2]+'%';
+  cmykVal.textContent=cmyk.join(', ');
+});
+demoArea.addEventListener('mouseleave',()=>{magnifier.style.display='none'});
+
+// Copy
+function copyVal(el){
+  navigator.clipboard.writeText(el.textContent).then(()=>{
+    const t=document.getElementById('toast');
+    t.textContent='📋 '+el.textContent+' хуулагдлаа!';
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'),1800);
+  });
+}
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t)t.scrollIntoView({behavior:'smooth'});
+  });
+});
+</script>
+</body>
+</html>

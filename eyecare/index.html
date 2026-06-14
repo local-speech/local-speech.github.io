@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Нүд Хамгаалагч — Eye Care & Micro-Break Timer</title>
+<meta name="description" content="20 минут тутам нүдний дасгал хийж, нүдний ядаргааг 40%-иар бууруулна. Оффис ажилтнуудад зориулсан.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg1:#0f1729;--bg2:#0d2b3e;
+  --glow:#4ecdc4;--glow2:#45b7aa;
+  --text:#e0e8f0;--text2:#8da4b8;--text3:#5a7a90;
+  --accent:#4ecdc4;--accent2:#7ee8e0;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:linear-gradient(160deg,var(--bg1) 0%,var(--bg2) 50%,#0a1f2e 100%);
+  color:var(--text);min-height:100vh;overflow-x:hidden;
+  line-height:1.7;font-weight:300;
+}
+a{color:var(--accent);text-decoration:none}
+
+/* Floating particles */
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.particle{
+  position:absolute;border-radius:50%;
+  background:radial-gradient(circle,rgba(78,205,196,.15),transparent 70%);
+  animation:float-up linear infinite;
+}
+@keyframes float-up{
+  0%{transform:translateY(100vh) scale(0);opacity:0}
+  10%{opacity:1}
+  90%{opacity:1}
+  100%{transform:translateY(-100px) scale(1);opacity:0}
+}
+
+/* Nav */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:1rem 2rem;
+  background:rgba(15,23,41,.6);backdrop-filter:blur(20px);
+  display:flex;justify-content:space-between;align-items:center;
+  border-bottom:1px solid rgba(78,205,196,.08);
+}
+.nav-logo{font-weight:600;font-size:1.1rem;letter-spacing:-.02em}
+.nav-logo span{color:var(--accent);font-weight:300}
+.nav-back{font-size:.85rem;color:var(--text2);transition:color .3s}
+.nav-back:hover{color:var(--accent)}
+
+/* Section base */
+section{position:relative;z-index:1;padding:6rem 1.5rem}
+.container{max-width:900px;margin:0 auto}
+
+/* Hero */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding-top:5rem}
+.hero-inner{display:flex;flex-direction:column;align-items:center;gap:2rem}
+
+/* Breathing circle */
+.breath-wrap{position:relative;width:280px;height:280px;margin:0 auto}
+.breath-circle{
+  position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(circle at 40% 35%,rgba(78,205,196,.12),transparent 65%);
+  border:2px solid rgba(78,205,196,.25);
+  animation:breathe 16s ease-in-out infinite;
+  box-shadow:0 0 60px rgba(78,205,196,.08),inset 0 0 60px rgba(78,205,196,.04);
+}
+.breath-circle::after{
+  content:'';position:absolute;inset:15%;border-radius:50%;
+  border:1px solid rgba(78,205,196,.12);
+  animation:breathe 16s ease-in-out infinite;
+  animation-delay:-.5s;
+}
+.breath-label{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  font-size:.95rem;color:var(--accent);font-weight:400;letter-spacing:.05em;
+}
+.breath-label .phase{font-size:1.3rem;font-weight:500;margin-bottom:.25rem;transition:opacity .5s}
+.breath-label .timer{font-size:2.8rem;font-weight:200;line-height:1}
+.breath-label .sub{font-size:.7rem;color:var(--text3);margin-top:.5rem;text-transform:uppercase;letter-spacing:.15em}
+
+@keyframes breathe{
+  0%,100%{transform:scale(.7);opacity:.5}
+  12.5%{transform:scale(.7);opacity:.5}
+  25%{transform:scale(1);opacity:1}
+  37.5%{transform:scale(1);opacity:1}
+  50%{transform:scale(.7);opacity:.5}
+  62.5%{transform:scale(.7);opacity:.5}
+  75%{transform:scale(1);opacity:1}
+  87.5%{transform:scale(1);opacity:1}
+}
+
+.hero h1{font-size:2.6rem;font-weight:200;letter-spacing:-.03em;line-height:1.2}
+.hero h1 strong{font-weight:600;color:var(--accent)}
+.hero .tagline{font-size:1.1rem;color:var(--text2);max-width:500px;font-weight:300}
+
+/* CTA */
+.cta-wrap{display:flex;flex-direction:column;align-items:center;gap:.75rem;margin-top:1rem}
+.btn-buy{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.9rem 2.5rem;border-radius:50px;
+  background:linear-gradient(135deg,var(--accent),var(--glow2));
+  color:var(--bg1);font-weight:600;font-size:1rem;
+  border:none;cursor:pointer;
+  box-shadow:0 0 30px rgba(78,205,196,.2),0 4px 20px rgba(78,205,196,.15);
+  transition:all .4s;letter-spacing:-.01em;
+}
+.btn-buy:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(78,205,196,.35),0 8px 30px rgba(78,205,196,.2)}
+.price-info{display:flex;align-items:baseline;gap:.75rem}
+.price-old{font-size:.95rem;color:var(--text3);text-decoration:line-through}
+.price-new{font-size:1.6rem;font-weight:600;color:var(--accent)}
+
+/* Scroll hint */
+.scroll-hint{
+  margin-top:3rem;color:var(--text3);font-size:.75rem;
+  display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  animation:bob 3s ease-in-out infinite;
+}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+.scroll-hint svg{width:20px;height:20px;opacity:.4}
+
+/* Stats */
+.stats{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;
+  padding:3rem 0;border-top:1px solid rgba(78,205,196,.08);
+  border-bottom:1px solid rgba(78,205,196,.08);
+  margin:3rem 0;text-align:center;
+}
+.stat-num{font-size:2rem;font-weight:600;color:var(--accent);line-height:1.2}
+.stat-desc{font-size:.8rem;color:var(--text2);margin-top:.25rem}
+
+/* Exercises section */
+.section-title{
+  font-size:1.8rem;font-weight:200;text-align:center;margin-bottom:.5rem;
+  letter-spacing:-.02em;
+}
+.section-title strong{font-weight:600;color:var(--accent)}
+.section-sub{text-align:center;color:var(--text2);margin-bottom:3rem;font-size:.95rem}
+
+.exercises{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.exercise-card{
+  background:rgba(78,205,196,.03);
+  border:1px solid rgba(78,205,196,.08);
+  border-radius:20px;padding:2rem 1.5rem;text-align:center;
+  transition:all .4s;position:relative;overflow:hidden;
+}
+.exercise-card:hover{
+  border-color:rgba(78,205,196,.2);
+  background:rgba(78,205,196,.06);
+  transform:translateY(-4px);
+}
+.exercise-preview{
+  width:100px;height:100px;margin:0 auto 1.5rem;
+  border-radius:50%;position:relative;
+  display:flex;align-items:center;justify-content:center;
+}
+.exercise-card h3{font-size:1rem;font-weight:500;margin-bottom:.5rem}
+.exercise-card p{font-size:.82rem;color:var(--text2);line-height:1.6}
+
+/* Mini breathing preview */
+.preview-breath{
+  width:60px;height:60px;border-radius:50%;
+  border:2px solid rgba(78,205,196,.3);
+  background:radial-gradient(circle,rgba(78,205,196,.1),transparent);
+  animation:breathe-mini 8s ease-in-out infinite;
+}
+@keyframes breathe-mini{
+  0%,100%{transform:scale(.6);opacity:.4}
+  25%{transform:scale(1);opacity:1}
+  50%{transform:scale(.6);opacity:.4}
+  75%{transform:scale(1);opacity:1}
+}
+
+/* Mini dot tracking preview */
+.preview-dot-wrap{width:80px;height:80px;position:relative}
+.preview-dot{
+  width:12px;height:12px;border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 10px rgba(78,205,196,.5);
+  position:absolute;
+  animation:dot-track 4s ease-in-out infinite;
+}
+@keyframes dot-track{
+  0%{top:10px;left:10px}
+  25%{top:10px;left:58px}
+  50%{top:58px;left:58px}
+  75%{top:58px;left:10px}
+  100%{top:10px;left:10px}
+}
+.preview-dot-wrap::before{
+  content:'';position:absolute;inset:5px;
+  border:1px dashed rgba(78,205,196,.15);border-radius:8px;
+}
+
+/* Mini 20-20-20 preview */
+.preview-202020{
+  font-size:1.8rem;font-weight:200;color:var(--accent);opacity:.7;
+  display:flex;gap:4px;align-items:baseline;
+}
+.preview-202020 span{animation:pulse-num 3s ease-in-out infinite}
+.preview-202020 span:nth-child(2){animation-delay:.5s}
+.preview-202020 span:nth-child(3){animation-delay:1s}
+@keyframes pulse-num{0%,100%{opacity:.4}50%{opacity:1}}
+
+/* How it works */
+.steps{display:flex;flex-direction:column;gap:2rem;max-width:600px;margin:0 auto}
+.step{display:flex;gap:1.5rem;align-items:flex-start}
+.step-num{
+  flex-shrink:0;width:40px;height:40px;border-radius:50%;
+  border:1px solid rgba(78,205,196,.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;font-weight:500;color:var(--accent);
+}
+.step h3{font-size:.95rem;font-weight:500;margin-bottom:.25rem}
+.step p{font-size:.85rem;color:var(--text2)}
+
+/* Try it section */
+.try-section{text-align:center}
+.try-box{
+  max-width:400px;margin:2rem auto 0;
+  background:rgba(78,205,196,.03);
+  border:1px solid rgba(78,205,196,.1);
+  border-radius:24px;padding:3rem 2rem;
+}
+.try-circle-wrap{width:200px;height:200px;margin:0 auto 1.5rem;position:relative}
+.try-circle{
+  position:absolute;inset:0;border-radius:50%;
+  border:2px solid rgba(78,205,196,.3);
+  background:radial-gradient(circle at 40% 35%,rgba(78,205,196,.1),transparent 65%);
+  transition:transform 4s ease-in-out,opacity 4s ease-in-out;
+}
+.try-circle.inhale{transform:scale(1);opacity:1;box-shadow:0 0 40px rgba(78,205,196,.15)}
+.try-circle.exhale{transform:scale(.65);opacity:.5;box-shadow:none}
+.try-label{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+}
+.try-phase{font-size:1.1rem;font-weight:400;color:var(--accent);margin-bottom:.25rem}
+.try-timer{font-size:2.5rem;font-weight:200;color:var(--accent);line-height:1}
+.try-btn{
+  padding:.7rem 2rem;border-radius:50px;cursor:pointer;
+  background:transparent;border:1px solid rgba(78,205,196,.3);
+  color:var(--accent);font-family:inherit;font-size:.85rem;
+  transition:all .3s;
+}
+.try-btn:hover{background:rgba(78,205,196,.1);border-color:rgba(78,205,196,.5)}
+.try-btn.active{background:rgba(78,205,196,.15);border-color:var(--accent)}
+
+/* Features */
+.features{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:2rem}
+.feature{
+  display:flex;gap:1rem;align-items:flex-start;
+  padding:1.25rem;border-radius:14px;
+  background:rgba(78,205,196,.02);
+  border:1px solid rgba(78,205,196,.05);
+}
+.feature-icon{
+  flex-shrink:0;width:36px;height:36px;border-radius:10px;
+  background:rgba(78,205,196,.08);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;
+}
+.feature h4{font-size:.85rem;font-weight:500;margin-bottom:.15rem}
+.feature p{font-size:.78rem;color:var(--text2);line-height:1.5}
+
+/* Bottom CTA */
+.bottom-cta{text-align:center;padding:5rem 1.5rem}
+.bottom-cta h2{font-size:2rem;font-weight:200;margin-bottom:1rem}
+.bottom-cta h2 strong{font-weight:600;color:var(--accent)}
+
+/* Footer */
+footer{
+  text-align:center;padding:2rem;
+  border-top:1px solid rgba(78,205,196,.06);
+  font-size:.75rem;color:var(--text3);
+}
+
+/* Responsive */
+@media(max-width:768px){
+  .hero h1{font-size:1.8rem}
+  .stats{grid-template-columns:1fr;gap:1rem}
+  .exercises{grid-template-columns:1fr}
+  .features{grid-template-columns:1fr}
+  .breath-wrap{width:220px;height:220px}
+  section{padding:4rem 1.5rem}
+}
+@media(max-width:480px){
+  nav{padding:.75rem 1rem}
+  .hero h1{font-size:1.5rem}
+  .breath-wrap{width:180px;height:180px}
+  .breath-label .timer{font-size:2rem}
+  .try-circle-wrap{width:160px;height:160px}
+}
+</style>
+</head>
+<body>
+
+<!-- Particles -->
+<div class="particles" id="particles"></div>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-logo">Нүд Хамгаалагч <span>by SoPro</span></div>
+  <a href="/" class="nav-back">&#8592; Нүүр хуудас</a>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="breath-wrap" id="heroBreath">
+      <div class="breath-circle"></div>
+      <div class="breath-label">
+        <div class="phase" id="heroPhase">Амьсгалаарай</div>
+        <div class="timer" id="heroTimer">4</div>
+        <div class="sub">box breathing</div>
+      </div>
+    </div>
+    <h1>Таны нүдийг <strong>хамгаална</strong></h1>
+    <p class="tagline">20 минут тутам зөөлөн сануулга. 3 төрлийн дасгал. Esc дарж хаах. Компьютерт удаан суудаг хүн бүрд.</p>
+    <div class="cta-wrap">
+      <div class="price-info">
+        <span class="price-old">27,000&#8366;</span>
+        <span class="price-new">9,000&#8366;</span>
+      </div>
+      <button class="btn-buy" onclick="alert('Худалдан авах холбоос удахгүй нээгдэнэ.')">Худалдаж авах</button>
+    </div>
+    <div class="scroll-hint">
+      <span>Дэлгэрэнгүй</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14m0 0l-6-6m6 6l6-6"/></svg>
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<section>
+  <div class="container">
+    <div class="stats">
+      <div><div class="stat-num">40%</div><div class="stat-desc">Нүдний ядаргааг бууруулна<br>(20-20-20 дүрэм)</div></div>
+      <div><div class="stat-num">8+ цаг</div><div class="stat-desc">Дэлгэцний өмнө суудаг<br>оффис ажилтнууд</div></div>
+      <div><div class="stat-num">3 дасгал</div><div class="stat-desc">Амьсгал, нүдний хөдөлгөөн,<br>20-20-20 дүрэм</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 Exercises -->
+<section>
+  <div class="container">
+    <h2 class="section-title">3 төрлийн <strong>дасгал</strong></h2>
+    <p class="section-sub">20 минут тутам санамсаргүй нэгийг нь харуулна</p>
+    <div class="exercises">
+      <div class="exercise-card">
+        <div class="exercise-preview"><div class="preview-breath"></div></div>
+        <h3>Амьсгалын дасгал</h3>
+        <p>Box breathing: 4 секунд авах, 4 барих, 4 гаргах, 4 барих. Стрессийг бууруулна.</p>
+      </div>
+      <div class="exercise-card">
+        <div class="exercise-preview"><div class="preview-dot-wrap"><div class="preview-dot"></div></div></div>
+        <h3>Нүдний хөдөлгөөн</h3>
+        <p>Ногоон цэгийг нүдээрээ дага. Нүдний булчинг сулруулж, фокусыг сэргээнэ.</p>
+      </div>
+      <div class="exercise-card">
+        <div class="exercise-preview"><div class="preview-202020"><span>20</span><span>20</span><span>20</span></div></div>
+        <h3>20-20-20 дүрэм</h3>
+        <p>20 секундын турш 20 футын зайд хар. Нүдний ядаргааг 40% бууруулдаг.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Try it -->
+<section class="try-section">
+  <div class="container">
+    <h2 class="section-title">Одоо <strong>туршаад</strong> үзээрэй</h2>
+    <p class="section-sub">Амьсгалын дасгалыг эндээс шууд хийж болно</p>
+    <div class="try-box">
+      <div class="try-circle-wrap">
+        <div class="try-circle exhale" id="tryCircle"></div>
+        <div class="try-label">
+          <div class="try-phase" id="tryPhase">Бэлэн үү?</div>
+          <div class="try-timer" id="tryTimer">--</div>
+        </div>
+      </div>
+      <button class="try-btn" id="tryBtn" onclick="toggleBreathing()">Эхлэх</button>
+    </div>
+  </div>
+</section>
+
+<!-- How it works -->
+<section>
+  <div class="container">
+    <h2 class="section-title">Хэрхэн <strong>ажилладаг</strong></h2>
+    <p class="section-sub">Суулгаад мартаарай. Апп бүгдийг өөрөө хийнэ.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div><h3>Суулгах</h3><p>Нэг товшилтоор суулгана. Компьютер асахад автоматаар ажиллана.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div><h3>Чимээгүй ажиллана</h3><p>Далд горимд ажиллаж, taskbar-д жижиг icon харагдана. Таны ажилд саад болохгүй.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div><h3>20 минут тутам сануулга</h3><p>Тунгалаг дэлгэц гарч, нүдний дасгал харуулна. Esc дарж хааж болно.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div><h3>Нүд чинь баярлана</h3><p>Өдөр бүр хийвэл нүдний ачаалал мэдэгдэхүйц буурна.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section>
+  <div class="container">
+    <h2 class="section-title">Онцлог <strong>шинж чанар</strong></h2>
+    <div class="features">
+      <div class="feature">
+        <div class="feature-icon">&#9201;</div>
+        <div><h4>20 минутын таймер</h4><p>Эрүүл мэндийн стандарт хугацаа. Тохируулж болно.</p></div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">&#9940;</div>
+        <div><h4>Esc товчоор хаах</h4><p>Завгүй үед нэг товшилтоор алгасна. Таныг шахахгүй.</p></div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">&#128268;</div>
+        <div><h4>Offline ажиллана</h4><p>Интернэт холболт шаардахгүй. Бүрэн локал.</p></div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">&#128065;</div>
+        <div><h4>3 төрлийн дасгал</h4><p>Амьсгал, нүдний хөдөлгөөн, 20-20-20 дүрэм.</p></div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">&#128296;</div>
+        <div><h4>Автоматаар эхэлнэ</h4><p>Windows-той хамт асаж, далд горимд ажиллана.</p></div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">&#10024;</div>
+        <div><h4>Зөөлөн дизайн</h4><p>Тунгалаг overlay, нүдэнд таатай өнгө, тайван мэдрэмж.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Bottom CTA -->
+<section class="bottom-cta">
+  <h2>Нүдээ <strong>хайрлаарай</strong></h2>
+  <p style="color:var(--text2);margin-bottom:2rem;font-size:.95rem">Өдөрт 8+ цаг дэлгэц харж байгаа бол — энэ апп танд хэрэгтэй.</p>
+  <div class="cta-wrap">
+    <div class="price-info">
+      <span class="price-old">27,000&#8366;</span>
+      <span class="price-new">9,000&#8366;</span>
+    </div>
+    <button class="btn-buy" onclick="alert('Худалдан авах холбоос удахгүй нээгдэнэ.')">Худалдаж авах</button>
+  </div>
+</section>
+
+<footer>&copy; 2025 SoPro. Бүх эрх хуулиар хамгаалагдсан.</footer>
+
+<script>
+// Particles
+(function(){
+  const c=document.getElementById('particles');
+  for(let i=0;i<20;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    const s=Math.random()*80+20;
+    p.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;animation-duration:${Math.random()*20+15}s;animation-delay:${Math.random()*20}s;`;
+    c.appendChild(p);
+  }
+})();
+
+// Hero breathing label
+(function(){
+  const phases=['Амьсгал ав','Бари','Амьсгал гарга','Бари'];
+  let idx=0,sec=4;
+  const ph=document.getElementById('heroPhase'),tm=document.getElementById('heroTimer');
+  setInterval(()=>{
+    sec--;
+    if(sec<0){idx=(idx+1)%4;sec=3;}
+    tm.textContent=sec+1;
+    ph.textContent=phases[idx];
+  },1000);
+})();
+
+// Interactive breathing exercise
+let breathActive=false,breathInterval=null;
+function toggleBreathing(){
+  const btn=document.getElementById('tryBtn');
+  if(breathActive){
+    breathActive=false;
+    clearInterval(breathInterval);
+    btn.textContent='Эхлэх';
+    btn.classList.remove('active');
+    document.getElementById('tryPhase').textContent='Бэлэн үү?';
+    document.getElementById('tryTimer').textContent='--';
+    document.getElementById('tryCircle').className='try-circle exhale';
+    return;
+  }
+  breathActive=true;
+  btn.textContent='Зогсоох';
+  btn.classList.add('active');
+  const phases=['Амьсгал ав','Бари','Амьсгал гарга','Бари'];
+  const circles=['inhale','inhale','exhale','exhale'];
+  let idx=0,sec=4;
+  const ph=document.getElementById('tryPhase'),tm=document.getElementById('tryTimer'),ci=document.getElementById('tryCircle');
+  function tick(){
+    tm.textContent=sec;
+    ph.textContent=phases[idx];
+    ci.className='try-circle '+circles[idx];
+    sec--;
+    if(sec<0){idx=(idx+1)%4;sec=4;}
+  }
+  tick();
+  breathInterval=setInterval(()=>{if(breathActive)tick();},1000);
+}
+</script>
+</body>
+</html>
