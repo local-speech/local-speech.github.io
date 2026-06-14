@@ -375,5 +375,47 @@ function expandOutput(text) {
   tick();
 }
 </script>
+
+<!-- Байгууллагын хүсэлт -->
+<section style="max-width:800px;margin:60px auto;padding:0 24px">
+  <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:40px;text-align:center;backdrop-filter:blur(12px)">
+    <h2 style="font-size:22px;font-weight:800;color:#fff;margin-bottom:6px">Байгууллагын онцлогт нийцүүлэн хөгжүүлэлт хийлгэж авах боломжтой</h2>
+    <p style="color:rgba(255,255,255,0.5);font-size:14px;margin-bottom:24px">Таны байгууллагын ажлын урсгалд тохируулан тусгайлан өөрчилж, нэмэлт функц хөгжүүлж өгнө.</p>
+    <form id="entForm" onsubmit="return submitEntForm(event)" style="max-width:500px;margin:0 auto">
+      <div style="display:flex;gap:10px;margin-bottom:10px">
+        <input type="tel" id="entPhone" placeholder="Утасны дугаар" required style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:11px 14px;color:#fff;font-size:14px;outline:none">
+        <input type="email" id="entEmail" placeholder="Байгууллагын имэйл" required style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:11px 14px;color:#fff;font-size:14px;outline:none">
+      </div>
+      <textarea id="entMsg" placeholder="Ямар онцлог хэрэгтэй байгааг товч бичнэ үү..." rows="3" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:11px 14px;color:#fff;font-size:14px;outline:none;resize:vertical;margin-bottom:14px;font-family:inherit;box-sizing:border-box"></textarea>
+      <button type="submit" id="entBtn" style="padding:11px 28px;background:#00ff41;color:#fff;font-size:14px;font-weight:700;border:none;border-radius:10px;cursor:pointer">Хүсэлт илгээх</button>
+      <p id="entSuccess" style="display:none;color:#16a34a;font-size:13px;font-weight:600;margin-top:12px">✓ Хүсэлт амжилттай илгээгдлээ. Бид тантай удахгүй холбогдоно.</p>
+    </form>
+  </div>
+</section>
+<iframe name="entFrame" style="display:none"></iframe>
+<script>
+function submitEntForm(e){
+  e.preventDefault();
+  var phone=document.getElementById('entPhone').value;
+  var email=document.getElementById('entEmail').value;
+  var msg=document.getElementById('entMsg').value;
+  var btn=document.getElementById('entBtn');
+  btn.disabled=true;btn.textContent='Илгээж байна...';
+  var form=document.createElement('form');
+  form.method='POST';form.target='entFrame';
+  form.action='https://docs.google.com/forms/d/e/1FAIpQLSepAqBKUGAJY4IYrHt7eJaH1wznpjiNwMlxp7uQG0k7BX5PIA/formResponse';
+  [{n:'entry.413665365',v:phone},{n:'entry.1131290276',v:email},{n:'entry.1867735489',v:msg}].forEach(function(f){
+    var inp=document.createElement('input');inp.type='hidden';inp.name=f.n;inp.value=f.v;form.appendChild(inp);
+  });
+  document.body.appendChild(form);form.submit();document.body.removeChild(form);
+  setTimeout(function(){
+    btn.textContent='Илгээгдсэн ✓';
+    document.getElementById('entSuccess').style.display='block';
+    document.getElementById('entForm').reset();
+  },1500);
+  return false;
+}
+</script>
+
 </body>
 </html>

@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SoPro — Таны компьютерийг ухаалаг болгох 6 хэрэгсэл</title>
+<title>SoPro — Таны компьютерийг ухаалаг болгох 9 хэрэгсэл</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Alex+Brush&family=Great+Vibes&family=Allura&family=Monsieur+La+Doulaise&family=Sacramento&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -195,14 +195,23 @@ header nav a:hover{color:var(--text-bright)}
 /* 3. Signature */
 .sig-preview{
   height:80px;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
 }
-.sig-preview svg{overflow:visible}
-.sig-line{
-  stroke:#c9a84c;stroke-width:2;fill:none;
-  stroke-dasharray:200;stroke-dashoffset:200;
-  transition:stroke-dashoffset 1.2s ease;
+.sig-text{
+  color:#c9a84c;
+  font-size:36px;
+  white-space:nowrap;
+  min-height:50px;
+  display:flex;align-items:center;
 }
-.card:hover .sig-line{stroke-dashoffset:0}
+.sig-cursor{
+  display:inline-block;
+  width:2px;height:32px;
+  background:#c9a84c;
+  margin-left:2px;
+  animation:sigBlink .6s step-end infinite;
+}
+@keyframes sigBlink{50%{opacity:0}}
 
 /* 4. Macro typing */
 .macro-preview{
@@ -236,6 +245,54 @@ header nav a:hover{color:var(--text-bright)}
 }
 .card:hover .breath-circle{opacity:.8;animation:breathe 4s ease-in-out infinite}
 @keyframes breathe{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.5);opacity:1}}
+
+/* 7. Focus shield */
+.focus-preview{
+  height:80px;display:flex;align-items:center;justify-content:center;
+}
+.focus-shield{
+  width:36px;height:42px;
+  border:2.5px solid #ef4444;
+  border-radius:50% 50% 50% 50% / 30% 30% 70% 70%;
+  opacity:.4;
+  position:relative;
+  transition:opacity .4s;
+}
+.focus-shield::after{
+  content:'✕';position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:900;color:#ef4444;
+}
+.card:hover .focus-shield{opacity:1;animation:shieldPulse 1.5s ease-in-out infinite}
+@keyframes shieldPulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(239,68,68,.3)}50%{transform:scale(1.15);box-shadow:0 0 20px 8px rgba(239,68,68,.15)}}
+
+/* 8. Body / water drops */
+.body-preview{
+  height:80px;display:flex;align-items:flex-end;justify-content:center;gap:12px;
+}
+.water-drop{
+  width:14px;height:20px;
+  background:#3b82f6;
+  border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+  opacity:.3;
+  animation:dropFall 2.5s ease-in-out infinite;
+}
+.wd2{animation-delay:.6s;height:16px}
+.wd3{animation-delay:1.2s;height:22px}
+.card:hover .water-drop{opacity:.8}
+@keyframes dropFall{0%{transform:translateY(-20px);opacity:0}30%{opacity:.6}60%{transform:translateY(0);opacity:.8}80%{transform:translateY(4px) scaleY(.7) scaleX(1.3);opacity:.4}100%{transform:translateY(-20px);opacity:0}}
+
+/* 9. Productivity bars */
+.prod-preview{
+  height:80px;display:flex;align-items:flex-end;justify-content:center;gap:6px;
+}
+.prod-bar{
+  width:10px;border-radius:3px;
+  background:#f59e0b;
+  transition:height .3s ease;
+  opacity:.4;
+}
+.card:hover .prod-bar{opacity:.9}
 
 /* ---- Bundle Section ---- */
 .bundle{
@@ -294,6 +351,67 @@ header nav a:hover{color:var(--text-bright)}
 }
 .bundle-cta:hover{background:#15803d;transform:translateY(-2px)}
 
+/* ---- Enterprise CTA ---- */
+.enterprise{
+  position:relative;z-index:1;
+  max-width:1100px;
+  margin:0 auto 60px;
+  padding:0 24px;
+}
+.ent-card{
+  background:linear-gradient(135deg,rgba(59,130,246,.06),rgba(139,92,246,.05));
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:24px;
+  padding:48px;
+  text-align:center;
+  backdrop-filter:blur(16px);
+}
+.ent-card h2{
+  font-size:clamp(20px,3vw,28px);
+  font-weight:800;
+  color:var(--text-bright);
+  margin-bottom:8px;
+  letter-spacing:-.5px;
+}
+.ent-sub{color:var(--text-dim);font-size:15px;margin-bottom:28px;max-width:500px;margin-left:auto;margin-right:auto}
+.ent-fields{display:flex;gap:12px;margin-bottom:12px}
+.ent-form input,.ent-form textarea{
+  flex:1;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:10px;
+  padding:12px 16px;
+  color:var(--text-bright);
+  font-size:14px;
+  font-family:inherit;
+  outline:none;
+  transition:border-color .2s;
+}
+.ent-form input:focus,.ent-form textarea:focus{border-color:rgba(59,130,246,.5)}
+.ent-form textarea{width:100%;resize:vertical;margin-bottom:16px}
+.ent-btn{
+  display:inline-block;
+  padding:12px 32px;
+  background:#3b82f6;
+  color:#fff;
+  font-size:15px;font-weight:700;
+  border:none;border-radius:10px;
+  cursor:pointer;
+  transition:background .2s,transform .2s;
+}
+.ent-btn:hover{background:#2563eb;transform:translateY(-2px)}
+.ent-btn:disabled{opacity:.5;cursor:not-allowed}
+.ent-success{
+  display:none;
+  color:#16a34a;
+  font-size:14px;font-weight:600;
+  margin-top:16px;
+}
+@media(max-width:768px){
+  .ent-fields{flex-direction:column}
+  .ent-card{padding:28px 16px}
+}
+
 /* ---- Footer ---- */
 footer{
   position:relative;z-index:1;
@@ -340,7 +458,7 @@ footer{
 <section class="hero">
   <h1>So<span>Pro</span></h1>
   <p style="font-size:22px;font-weight:700;margin-bottom:8px">ӨӨРИЙН ДАТАГАА ХЯНА.</p>
-  <p style="font-size:15px;opacity:0.5">Бид AI-д бүх зүйлээ тэжээхийн оронд, таны компьютер дотор бүгдийг шийддэг 6 хэрэгсэл бүтээлээ.</p>
+  <p style="font-size:15px;opacity:0.5">Бид AI-д бүх зүйлээ тэжээхийн оронд, таны компьютер дотор бүгдийг шийддэг 9 хэрэгсэл бүтээлээ.</p>
 </section>
 
 <!-- Bento Grid -->
@@ -350,7 +468,7 @@ footer{
   <a href="/aispeech" class="card card-lg fade-up" style="--accent:#16a34a">
     <div class="card-top">
       <h3>AISpeech + All-in-One Converter</h3>
-      <p class="desc">Ярианд бичиг, файлд хөрвүүлэгч — F6 дарахад л болно</p>
+      <p class="desc">Таны ярьсан үгийг шууд текст болгож, курсор байгаа газарт бичнэ. Монгол, Англи зэрэг 35 хэлийг дэмждэг. Мөн зураг, аудио, видео файлыг хооронд нь хөрвүүлдэг All-in-One converter.</p>
       <span class="hotkey">F6</span>
       <div class="preview" id="eq-preview"></div>
     </div>
@@ -361,7 +479,7 @@ footer{
   <a href="/blur" class="card card-md fade-up" style="--accent:#00f0ff">
     <div class="card-top">
       <h3>Нууцлагч</h3>
-      <p class="desc">Дэлгэцийн зургаас нууц мэдээллийг шууд баллана</p>
+      <p class="desc">Screenshot дээрх регистрийн дугаар, утасны дугаар, нэр зэрэг хувийн мэдээллийг автоматаар таниж баллана. Зургаа хаашаа ч илгээхээсээ өмнө нэг товшилтоор нууцална. Төрийн байгууллага, банк, ААН-үүд нууц мэдээллээ гараар бүдгэрүүлж цаг үрэхийг бүрэн шийднэ.</p>
       <span class="hotkey">Alt + B</span>
       <div class="blur-preview" id="blur-text">█▓░ НА█░▓</div>
     </div>
@@ -372,12 +490,10 @@ footer{
   <a href="/sign" class="card card-md fade-up" style="--accent:#c9a84c">
     <div class="card-top">
       <h3>Гарын үсэг</h3>
-      <p class="desc">Баримт дээр гарын үсэг, тамгыг нэг товшилтоор</p>
+      <p class="desc">PDF, Word баримт дээр өөрийн гарын үсэг болон тамгыг нэг товшилтоор зурна. Гарын үсгээ нэг удаа бүртгээд, дахин дахин ашиглана — принтер, сканнер шаардлагагүй. Өдөрт олон файлд гарын үсэг зурдаг захирал, менежерүүдэд зориулсан хэрэгсэл.</p>
       <span class="hotkey">Ctrl + Shift + S</span>
       <div class="sig-preview">
-        <svg width="120" height="40" viewBox="0 0 120 40">
-          <path class="sig-line" d="M5 30 Q20 5 35 25 T65 20 Q80 10 95 25 L115 15"/>
-        </svg>
+        <div class="sig-text" id="sig-text"><span class="sig-cursor"></span></div>
       </div>
     </div>
     <div class="price"><strong>9,000₮</strong></div>
@@ -387,7 +503,7 @@ footer{
   <a href="/macro" class="card card-md fade-up" style="--accent:#00ff41">
     <div class="card-top">
       <h3>Текст бэлдэц</h3>
-      <p class="desc">Товчлол бичээд зай дарахад бүтэн текст бичигдэнэ</p>
+      <p class="desc">Байнга бичдэг текстээ товчлол болгож хадгална. ";данс" гэж бичээд зай дарахад дансны бүрэн мэдээлэл автоматаар бичигдэнэ. Онлайн худалдаа, хэрэглэгчийн үйлчилгээний ажилтнууд давтан бичдэг урт текстээ секундэд шивнэ.</p>
       <span class="hotkey">; trigger + space</span>
       <div class="macro-preview" id="macro-text"><span class="macro-cursor">|</span></div>
     </div>
@@ -398,7 +514,7 @@ footer{
   <a href="/color" class="card card-md fade-up" style="--accent:#8b5cf6">
     <div class="card-top">
       <h3>Өнгө авагч</h3>
-      <p class="desc">Дэлгэцийн аль ч пикселийн өнгийг шууд хуулна</p>
+      <p class="desc">Дэлгэцийн дурын цэг дээр хулганаа аваачихад өнгийн HEX, RGB, HSL кодыг шууд харуулна. Дизайнер, хөгжүүлэгчдэд зориулсан хурдан, нарийвчлалтай өнгө авагч.</p>
       <span class="hotkey">Ctrl + Shift + P</span>
       <div class="color-preview"></div>
     </div>
@@ -409,11 +525,50 @@ footer{
   <a href="/eyecare" class="card card-md fade-up" style="--accent:#4fd1c5">
     <div class="card-top">
       <h3>Нүд хамгаалагч</h3>
-      <p class="desc">20 минут тутам нүдний дасгал, амьсгалын дасгал</p>
+      <p class="desc">20 минут тутам нүдний амралт, амьсгалын дасгал харуулна. 4 секунд тутам нүд цавчих сануулга өгч, нүд хуурайшилтаас урьдчилан сэргийлнэ. Компьютерт олон цаг суудаг хүмүүсийн нүдний эрүүл мэндийг хамгаалах хамгийн энгийн арга.</p>
       <span class="hotkey">Auto</span>
       <div class="breath-preview">
         <div class="breath-circle"></div>
       </div>
+    </div>
+    <div class="price"><strong>9,000₮</strong></div>
+  </a>
+
+  <!-- 7. Төвлөрөл хамгаалагч -->
+  <a href="#" class="card card-md fade-up" style="--accent:#ef4444">
+    <div class="card-top">
+      <h3>Төвлөрөл хамгаалагч</h3>
+      <p class="desc">Ажлын цагт Facebook, YouTube, тоглоом нээгдвэл дэлгэцийг бүрхэж хаахаас өөр аргагүй болгоно. Оройн 22:00-с хойш цэнхэр гэрэл, дууг бууруулж унтах бэлтгэлийг хангана. Мөн эцэг эхчүүд хүүхдийнхээ тоглоомын цагийг хязгаарлаж, хориотой вэбүүдийг блоклох боломжтой — систем өөрөө хүчээр хааж, дэлгэцийн донтолтоос хамгаална.</p>
+      <span class="hotkey">Alt + F</span>
+      <div class="focus-preview" id="focus-preview">
+        <div class="focus-shield"></div>
+      </div>
+    </div>
+    <div class="price"><strong>9,000₮</strong></div>
+  </a>
+
+  <!-- 8. Биеийн сануулагч -->
+  <a href="#" class="card card-md fade-up" style="--accent:#3b82f6">
+    <div class="card-top">
+      <h3>Биеийн сануулагч</h3>
+      <p class="desc">50 минут суусны дараа босох, 2 цаг тутам ус уух, гар булчин ачаалал хэтэрвэл гар хулганыг 1 минут хүчээр цоожлон амраана. Дуу хоолойгоор сунгалтын дасгал зааж, яг хажууд багш байгаа мэт хийлгэнэ. Улайраад ажлаа хийгээд байсан ч биеийн физик ачааллыг кодоор хязгаарлаж, үе мөч болон нүдний эрүүл мэндийг урт хугацаанд хамгаална.</p>
+      <span class="hotkey">Auto</span>
+      <div class="body-preview" id="body-preview">
+        <div class="water-drop"></div>
+        <div class="water-drop wd2"></div>
+        <div class="water-drop wd3"></div>
+      </div>
+    </div>
+    <div class="price"><strong>9,000₮</strong></div>
+  </a>
+
+  <!-- 9. Бүтээмж хэмжигч -->
+  <a href="#" class="card card-lg fade-up" style="--accent:#f59e0b">
+    <div class="card-top">
+      <h3>Бүтээмж хэмжигч</h3>
+      <p class="desc">Помодоро таймер (25 мин), идэвхтэй програмын бүртгэл, өдрийн төгсгөлийн сэтгэл зүйн тэмдэглэл — бүгд нэг дор. "Бүтээмжийн харьцаа: 45%" гэсэн бодит датаг хараад маргааш нь сошиал медиа нээхдээ ухамсартайгаар өөрийгөө хянаж эхэлнэ. Мөн ажлыг сэтгэл зүйн хувьд "цэгцэлж хаах" зан үйл бий болгож, стрессийг гэртээ авч орохоос сэргийлнэ.</p>
+      <span class="hotkey">Alt + P</span>
+      <div class="prod-preview" id="prod-preview"></div>
     </div>
     <div class="price"><strong>9,000₮</strong></div>
   </a>
@@ -424,15 +579,33 @@ footer{
 <section class="bundle fade-up">
   <div class="bundle-card">
     <h2>Бүгд нэг дор</h2>
-    <p class="subtitle">6 хэрэгслийг хамтад нь авбал хэмнэлттэй</p>
+    <p class="subtitle">9 хэрэгслийг хамтад нь авбал хэмнэлттэй</p>
     <div class="bundle-pricing">
-      <span class="bundle-old">54,000₮</span>
-      <span class="bundle-new">29,000₮</span>
-      <span class="bundle-save">46% хэмнэлт</span>
+      <span class="bundle-old">81,000₮</span>
+      <span class="bundle-new">39,000₮</span>
+      <span class="bundle-save">52% хэмнэлт</span>
     </div>
     <a href="#" class="bundle-cta">Багц авах</a>
   </div>
 </section>
+
+<!-- Enterprise CTA -->
+<section class="enterprise fade-up">
+  <div class="ent-card">
+    <h2>Байгууллагын онцлогт нийцүүлэн хөгжүүлэлт хийлгэж авах боломжтой</h2>
+    <p class="ent-sub">Таны байгууллагын ажлын урсгалд тохируулан эдгээр хэрэгслүүдийг тусгайлан өөрчилж, нэмэлт функц хөгжүүлж өгнө.</p>
+    <form class="ent-form" id="entForm" onsubmit="return submitEntForm(event)">
+      <div class="ent-fields">
+        <input type="tel" id="entPhone" placeholder="Утасны дугаар" required>
+        <input type="email" id="entEmail" placeholder="Байгууллагын имэйл" required>
+      </div>
+      <textarea id="entMsg" placeholder="Ямар онцлог хэрэгтэй байгааг товч бичнэ үү..." rows="3"></textarea>
+      <button type="submit" class="ent-btn" id="entBtn">Хүсэлт илгээх</button>
+      <p class="ent-success" id="entSuccess">✓ Хүсэлт амжилттай илгээгдлээ. Бид тантай удахгүй холбогдоно.</p>
+    </form>
+  </div>
+</section>
+<iframe name="entFrame" style="display:none"></iframe>
 
 <!-- Footer -->
 <footer>
@@ -481,6 +654,40 @@ footer{
   }, 120);
 })();
 
+// ---- Signature handwriting animation ----
+(function(){
+  const el = document.getElementById('sig-text');
+  const fonts = ['Alex Brush','Great Vibes','Allura','Monsieur La Doulaise','Sacramento'];
+  const word = 'SoPro';
+  let fi = 0;
+  function cycle(){
+    const font = fonts[fi % fonts.length];
+    fi++;
+    let idx = 0;
+    el.style.fontFamily = "'" + font + "', cursive";
+    el.innerHTML = '<span class="sig-cursor"></span>';
+    function typeLetter(){
+      if(idx < word.length){
+        el.innerHTML = word.slice(0, idx + 1) + '<span class="sig-cursor"></span>';
+        idx++;
+        setTimeout(typeLetter, 180 + Math.random() * 120);
+      } else {
+        setTimeout(function(){
+          // Fade out then restart with next font
+          el.style.transition = 'opacity .4s';
+          el.style.opacity = '0';
+          setTimeout(function(){
+            el.style.opacity = '1';
+            cycle();
+          }, 500);
+        }, 2000);
+      }
+    }
+    typeLetter();
+  }
+  cycle();
+})();
+
 // ---- Macro typing animation ----
 (function(){
   const el = document.getElementById('macro-text');
@@ -511,6 +718,52 @@ footer{
   }
   tick();
 })();
+
+// ---- Productivity bars animation ----
+(function(){
+  const container = document.getElementById('prod-preview');
+  const count = 12;
+  for(let i = 0; i < count; i++){
+    const bar = document.createElement('div');
+    bar.className = 'prod-bar';
+    bar.style.height = '6px';
+    container.appendChild(bar);
+  }
+  const bars = container.querySelectorAll('.prod-bar');
+  function animateProd(){
+    const t = Date.now() / 1000;
+    bars.forEach((bar, i) => {
+      const h = 10 + Math.abs(Math.sin(t * 0.8 + i * 0.5)) * 50
+              + Math.abs(Math.cos(t * 1.3 + i * 0.9)) * 15;
+      bar.style.height = h + 'px';
+    });
+    requestAnimationFrame(animateProd);
+  }
+  animateProd();
+})();
+
+// ---- Enterprise form submission ----
+function submitEntForm(e){
+  e.preventDefault();
+  var phone=document.getElementById('entPhone').value;
+  var email=document.getElementById('entEmail').value;
+  var msg=document.getElementById('entMsg').value;
+  var btn=document.getElementById('entBtn');
+  btn.disabled=true;btn.textContent='Илгээж байна...';
+  var form=document.createElement('form');
+  form.method='POST';form.target='entFrame';
+  form.action='https://docs.google.com/forms/d/e/1FAIpQLSepAqBKUGAJY4IYrHt7eJaH1wznpjiNwMlxp7uQG0k7BX5PIA/formResponse';
+  [{n:'entry.413665365',v:phone},{n:'entry.1131290276',v:email},{n:'entry.1867735489',v:msg}].forEach(function(f){
+    var inp=document.createElement('input');inp.type='hidden';inp.name=f.n;inp.value=f.v;form.appendChild(inp);
+  });
+  document.body.appendChild(form);form.submit();document.body.removeChild(form);
+  setTimeout(function(){
+    btn.textContent='Илгээгдсэн ✓';
+    document.getElementById('entSuccess').style.display='block';
+    document.getElementById('entForm').reset();
+  },1500);
+  return false;
+}
 
 // ---- Intersection Observer fade-up ----
 const observer = new IntersectionObserver((entries) => {
