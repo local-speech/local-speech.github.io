@@ -544,33 +544,42 @@ function switchLang(l) {
   var h1 = document.querySelector('.hero h1');
   if (!h1) return;
   var words = h1.querySelectorAll('.aio-word');
-  var waveTimer;
-  var speed = 1000;
-  function redWave() {
+  var timer;
+  var running = false;
+  function greenWave(cb) {
     var i = 0;
     function step() {
+      if (!running) return;
       if (i > 0) words[i - 1].style.color = '';
       if (i < words.length) {
         words[i].style.color = 'var(--safe)';
         i++;
-        waveTimer = setTimeout(step, speed);
+        timer = setTimeout(step, 1000);
       } else {
         words[words.length - 1].style.color = '';
-        speed = Math.min(speed + 200, 2000);
-        waveTimer = setTimeout(redWave, 800);
+        timer = setTimeout(cb, 800);
       }
     }
     step();
   }
-  function play() {
-    clearTimeout(waveTimer);
-    words.forEach(function(w) { w.style.color = ''; });
+  function flip(cb) {
+    if (!running) return;
     h1.classList.remove('aio-flip'); void h1.offsetWidth; h1.classList.add('aio-flip');
-    setTimeout(redWave, 900);
+    timer = setTimeout(cb, 900);
+  }
+  function cycle() {
+    if (!running) return;
+    flip(function() { greenWave(cycle); });
+  }
+  function play() {
+    running = true;
+    clearTimeout(timer);
+    words.forEach(function(w) { w.style.color = ''; });
+    cycle();
   }
   var obs = new IntersectionObserver(function(entries) {
     if (entries[0].isIntersecting) play();
-    else { h1.classList.remove('aio-flip'); clearTimeout(waveTimer); speed = 1000; words.forEach(function(w) { w.style.color = ''; }); }
+    else { running = false; h1.classList.remove('aio-flip'); clearTimeout(timer); words.forEach(function(w) { w.style.color = ''; }); }
   }, { threshold: 0.5 });
   obs.observe(h1);
 })();
