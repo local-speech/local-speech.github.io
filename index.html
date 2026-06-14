@@ -80,6 +80,17 @@
         .demo-result a:hover { background: rgba(204,255,0,0.15); transform: translateY(-1px); }
         .demo-cta { margin-top: 24px; font-size: 13px; color: var(--muted); }
         .demo-cta strong { color: var(--lime); }
+        .demo-tabs { display: flex; gap: 0; justify-content: center; margin-bottom: 20px; }
+        .demo-tab { padding: 10px 28px; font-size: 13px; font-weight: 600; border: 1px solid var(--border); background: var(--card); color: var(--muted); cursor: pointer; transition: all .2s; }
+        .demo-tab:first-child { border-radius: 8px 0 0 8px; }
+        .demo-tab:last-child { border-radius: 0 8px 8px 0; }
+        .demo-tab.active { background: var(--lime); color: var(--bg); border-color: var(--lime); }
+        .demo-panel { display: none; }
+        .demo-panel.active { display: block; }
+        .compress-info { margin-top: 16px; font-size: 12px; color: var(--muted); }
+        .compress-info strong { color: var(--lime); }
+        .compress-slider { width: 100%; max-width: 300px; margin: 14px auto; display: block; accent-color: var(--lime); }
+        .compress-label { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
         .specs strong { color: var(--text); }
 
         /* Header */
@@ -205,23 +216,52 @@
 
         <!-- Try Free Tool -->
         <div class="demo" id="demo">
-            <h2 id="demoTitle">Try It Free — Images → PDF</h2>
-            <p class="demo-sub" id="demoSub">Drop your images here and convert to PDF instantly. No upload, no server — runs in your browser.</p>
-            <div class="demo-box" id="dropZone">
-                <div class="demo-icon">📄</div>
-                <p class="demo-text" id="dropText">Drag & drop images here or <strong>click to browse</strong></p>
-                <input type="file" id="fileInput" accept="image/*" multiple style="display:none"/>
-                <div class="demo-thumbs" id="thumbs"></div>
+            <h2 id="demoTitle">Try It Free</h2>
+            <p class="demo-sub" id="demoSub">No upload, no server — runs entirely in your browser.</p>
+            <div class="demo-tabs">
+                <button class="demo-tab active" onclick="switchDemo('pdf')">Images → PDF</button>
+                <button class="demo-tab" onclick="switchDemo('compress')">Compress Image</button>
             </div>
-            <div class="demo-actions" id="demoActions">
-                <button class="demo-convert" id="convertBtn">Convert to PDF</button>
-                <button class="demo-clear" id="clearBtn">Clear</button>
-                <span class="demo-count" id="imgCount"></span>
+
+            <!-- Panel 1: Images → PDF -->
+            <div class="demo-panel active" id="panelPdf">
+                <div class="demo-box" id="dropZone">
+                    <div class="demo-icon">📄</div>
+                    <p class="demo-text" id="dropText">Drag & drop images here or <strong>click to browse</strong></p>
+                    <input type="file" id="fileInput" accept="image/*" multiple style="display:none"/>
+                    <div class="demo-thumbs" id="thumbs"></div>
+                </div>
+                <div class="demo-actions" id="demoActions">
+                    <button class="demo-convert" id="convertBtn">Convert to PDF</button>
+                    <button class="demo-clear" id="clearBtn">Clear</button>
+                    <span class="demo-count" id="imgCount"></span>
+                </div>
+                <div class="demo-result" id="demoResult">
+                    <a id="downloadLink" href="#" download="images.pdf">⬇ Download PDF</a>
+                </div>
             </div>
-            <div class="demo-result" id="demoResult">
-                <a id="downloadLink" href="#" download="images.pdf">⬇ Download PDF</a>
+
+            <!-- Panel 2: Compress Image -->
+            <div class="demo-panel" id="panelCompress">
+                <div class="demo-box" id="compDropZone">
+                    <div class="demo-icon">🗜️</div>
+                    <p class="demo-text" id="compDropText">Drag & drop an image here or <strong>click to browse</strong></p>
+                    <input type="file" id="compFileInput" accept="image/*" style="display:none"/>
+                    <div class="demo-thumbs" id="compThumbs"></div>
+                </div>
+                <div class="compress-label" id="qualityLabel">Quality: <strong>60%</strong></div>
+                <input type="range" class="compress-slider" id="qualitySlider" min="10" max="100" value="60"/>
+                <div class="demo-actions" id="compActions">
+                    <button class="demo-convert" id="compressBtn">Compress</button>
+                    <button class="demo-clear" id="compClearBtn">Clear</button>
+                </div>
+                <div class="compress-info" id="compInfo"></div>
+                <div class="demo-result" id="compResult">
+                    <a id="compDownloadLink" href="#" download="compressed.jpg">⬇ Download Compressed</a>
+                </div>
             </div>
-            <p class="demo-cta" id="demoCta">This is <strong>1 of 21 tools</strong> included in AISpeech. Get all for just $5.</p>
+
+            <p class="demo-cta" id="demoCta">This is <strong>2 of 21 tools</strong> included in AISpeech. Get all for just $5.</p>
         </div>
 
         <!-- How it works -->
@@ -264,6 +304,66 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
+// ── Tab switching ──
+function switchDemo(tab) {
+  document.querySelectorAll('.demo-tab').forEach((b,i) => b.classList.toggle('active', (tab==='pdf'?0:1)===i));
+  document.getElementById('panelPdf').classList.toggle('active', tab==='pdf');
+  document.getElementById('panelCompress').classList.toggle('active', tab==='compress');
+}
+
+// ── Image Compress Demo ──
+(function(){
+  const drop = document.getElementById('compDropZone');
+  const input = document.getElementById('compFileInput');
+  const thumbs = document.getElementById('compThumbs');
+  const actions = document.getElementById('compActions');
+  const compressBtn = document.getElementById('compressBtn');
+  const clearBtn = document.getElementById('compClearBtn');
+  const slider = document.getElementById('qualitySlider');
+  const qualityLabel = document.getElementById('qualityLabel');
+  const info = document.getElementById('compInfo');
+  const result = document.getElementById('compResult');
+  const dlLink = document.getElementById('compDownloadLink');
+  let file = null;
+
+  drop.addEventListener('click', () => input.click());
+  drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('drag-over'); });
+  drop.addEventListener('dragleave', () => drop.classList.remove('drag-over'));
+  drop.addEventListener('drop', e => { e.preventDefault(); drop.classList.remove('drag-over'); setFile(e.dataTransfer.files[0]); });
+  input.addEventListener('change', () => { setFile(input.files[0]); input.value = ''; });
+  slider.addEventListener('input', () => { qualityLabel.innerHTML = 'Quality: <strong>' + slider.value + '%</strong>'; });
+
+  function setFile(f) {
+    if (!f || !f.type.startsWith('image/')) return;
+    file = f;
+    thumbs.innerHTML = '';
+    const img = document.createElement('img'); img.src = URL.createObjectURL(f); thumbs.appendChild(img);
+    actions.classList.add('show');
+    result.classList.remove('show');
+    info.innerHTML = 'Original: <strong>' + (f.size/1024).toFixed(0) + ' KB</strong>';
+  }
+  clearBtn.addEventListener('click', () => { file=null; thumbs.innerHTML=''; actions.classList.remove('show'); result.classList.remove('show'); info.innerHTML=''; });
+
+  compressBtn.addEventListener('click', () => {
+    if (!file) return;
+    compressBtn.disabled = true; compressBtn.textContent = 'Compressing...';
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
+      c.getContext('2d').drawImage(img, 0, 0);
+      const q = slider.value / 100;
+      c.toBlob(blob => {
+        const saved = ((1 - blob.size / file.size) * 100).toFixed(0);
+        info.innerHTML = 'Original: <strong>' + (file.size/1024).toFixed(0) + ' KB</strong> → Compressed: <strong>' + (blob.size/1024).toFixed(0) + ' KB</strong> (saved ' + saved + '%)';
+        dlLink.href = URL.createObjectURL(blob);
+        result.classList.add('show');
+        compressBtn.disabled = false; compressBtn.textContent = 'Compress';
+      }, 'image/jpeg', q);
+    };
+    img.src = URL.createObjectURL(file);
+  });
+})();
+
 // ── Image → PDF Demo ──
 (function(){
   const drop = document.getElementById('dropZone');
@@ -348,10 +448,12 @@ const T = {
     specsTitle: 'System Requirements',
     specsText: '<strong>Windows 10/11</strong> (64-bit) · <strong>Google Chrome</strong> installed · Active microphone',
     features: 'Features', tools: 'Tools',
-    demoTitle: 'Try It Free — Images → PDF',
-    demoSub: 'Drop your images here and convert to PDF instantly. No upload, no server — runs in your browser.',
+    demoTitle: 'Try It Free',
+    demoSub: 'No upload, no server — runs entirely in your browser.',
     dropText: 'Drag & drop images here or <strong>click to browse</strong>',
-    demoCta: 'This is <strong>1 of 21 tools</strong> included in AISpeech. Get all for just $5.',
+    compDropText: 'Drag & drop an image here or <strong>click to browse</strong>',
+    demoCta: 'This is <strong>2 of 21 tools</strong> included in AISpeech. Get all for just $5.',
+    tabPdf: 'Images → PDF', tabCompress: 'Compress Image',
   },
   mn: {
     subtitle: 'Cloud-гүй. Эрсдэлгүй. Захиалгагүй.',
@@ -376,10 +478,12 @@ const T = {
     specsTitle: 'Системийн шаардлага',
     specsText: '<strong>Windows 10/11</strong> (64-bit) · <strong>Google Chrome</strong> суусан · Микрофонтой',
     features: 'Боломжууд', tools: 'Хэрэгслүүд',
-    demoTitle: 'Үнэгүй туршаарай — Зураг → PDF',
-    demoSub: 'Зургаа энд чирээд PDF болгоно. Сервергүй, browser дотроо ажиллана.',
+    demoTitle: 'Үнэгүй туршаарай',
+    demoSub: 'Сервергүй, browser дотроо бүхэлдээ ажиллана.',
     dropText: 'Зургаа энд чирнэ үү эсвэл <strong>сонгох</strong>',
-    demoCta: 'Энэ бол AISpeech-д багтсан <strong>21 хэрэгслийн 1</strong>. Бүгдийг $5-аар аваарай.',
+    compDropText: 'Зургаа энд чирнэ үү эсвэл <strong>сонгох</strong>',
+    demoCta: 'Энэ бол AISpeech-д багтсан <strong>21 хэрэгслийн 2</strong>. Бүгдийг $5-аар аваарай.',
+    tabPdf: 'Зураг → PDF', tabCompress: 'Зураг шахах',
   }
 };
 function switchLang(l) {
@@ -411,7 +515,10 @@ function switchLang(l) {
   document.getElementById('demoTitle').textContent = t.demoTitle;
   document.getElementById('demoSub').textContent = t.demoSub;
   document.getElementById('dropText').innerHTML = t.dropText;
+  document.getElementById('compDropText').innerHTML = t.compDropText;
   document.getElementById('demoCta').innerHTML = t.demoCta;
+  const tabs = document.querySelectorAll('.demo-tab');
+  tabs[0].textContent = t.tabPdf; tabs[1].textContent = t.tabCompress;
   const navLinks = document.querySelectorAll('header nav > a:not(.btn-header)');
   navLinks[0].textContent = t.features;
   navLinks[1].textContent = t.tools;
