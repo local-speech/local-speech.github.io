@@ -6,26 +6,26 @@
     <title>AISpeech — Zero Cloud. Zero Risk. Zero Subscriptions.</title>
     <meta name="description" content="Smart Windows desktop app: speech-to-text + 19 offline PDF/image converter tools. No cloud, no subscriptions.">
     <style>
-        :root { --lime: #16a34a; --bg: #ffffff; --card: #f8faf8; --border: #e2e8e2; --text: #1a2e1a; --muted: #5f7060; }
+        :root { --accent: #e8453c; --bg: #ffffff; --card: #faf8f8; --border: #e8e2e2; --text: #1a1a1a; --muted: #605f5f; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
-        a { color: var(--lime); text-decoration: none; }
+        a { color: var(--accent); text-decoration: none; }
 
         .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
 
         /* Hero */
         .hero { text-align: center; padding: 80px 24px 50px; }
         .hero h1 { font-size: 3rem; color: var(--text); margin-bottom: 4px; letter-spacing: -1px; }
-        .hero .subtitle { font-size: 13px; color: var(--lime); font-weight: 600; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 28px; }
+        .hero .subtitle { font-size: 13px; color: var(--accent); font-weight: 600; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 28px; }
         .hero .desc { font-size: 16px; color: var(--muted); max-width: 560px; margin: 0 auto 36px; }
-        .hero .privacy { display: inline-flex; align-items: center; gap: 8px; background: rgba(22,163,74,0.06); border: 1px solid rgba(22,163,74,0.2); border-radius: 10px; padding: 14px 24px; font-size: 13px; color: var(--lime); font-weight: 600; margin-bottom: 36px; }
+        .hero .privacy { display: inline-flex; align-items: center; gap: 8px; background: rgba(220,38,38,0.06); border: 1px solid rgba(220,38,38,0.2); border-radius: 10px; padding: 14px 24px; font-size: 13px; color: var(--accent); font-weight: 600; margin-bottom: 36px; }
 
         .cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 12px; }
         .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 36px; border-radius: 10px; font-size: 15px; font-weight: 600; border: none; cursor: pointer; letter-spacing: 0.5px; transition: all .2s; text-decoration: none; }
-        .btn-primary { background: var(--lime); color: var(--bg); }
+        .btn-primary { background: var(--accent); color: var(--bg); }
         .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
-        .btn-outline { background: transparent; color: var(--lime); border: 1px solid rgba(22,163,74,0.3); }
-        .btn-outline:hover { border-color: var(--lime); background: rgba(22,163,74,0.05); }
+        .btn-outline { background: transparent; color: var(--accent); border: 1px solid rgba(220,38,38,0.3); }
+        .btn-outline:hover { border-color: var(--accent); background: rgba(220,38,38,0.05); }
         .price-note { font-size: 12px; color: var(--muted); }
 
         /* Features */
@@ -33,22 +33,22 @@
         .section h2 { font-size: 20px; color: var(--text); margin-bottom: 24px; text-align: center; letter-spacing: 1px; text-transform: uppercase; }
         .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
         .feature { background: var(--card); border: .5px solid var(--border); border-radius: 12px; padding: 24px; transition: border-color .2s; }
-        .feature:hover { border-color: rgba(22,163,74,0.3); }
+        .feature:hover { border-color: rgba(220,38,38,0.3); }
         .feature .icon { font-size: 24px; margin-bottom: 10px; }
         .feature h3 { font-size: 14px; color: var(--text); margin-bottom: 6px; }
         .feature p { font-size: 12px; color: var(--muted); line-height: 1.6; }
 
         /* Tools grid */
         .tools-section { text-align: center; padding: 40px 0; }
-        .cat-label { font-size: 12px; color: var(--lime); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin: 24px 0 12px; }
+        .cat-label { font-size: 12px; color: var(--accent); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin: 24px 0 12px; }
         .tools-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
         .tool-chip { background: var(--card); border: .5px solid var(--border); border-radius: 8px; padding: 8px 14px; font-size: 11px; color: var(--text); transition: all .2s; }
-        .tool-chip:hover { border-color: rgba(22,163,74,0.3); color: var(--lime); }
+        .tool-chip:hover { border-color: rgba(220,38,38,0.3); color: var(--accent); }
 
         /* How it works */
         .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; counter-reset: step; }
         .step { background: var(--card); border: .5px solid var(--border); border-radius: 12px; padding: 24px; counter-increment: step; }
-        .step::before { content: counter(step); display: block; font-size: 28px; font-weight: 700; color: var(--lime); opacity: 0.4; margin-bottom: 8px; }
+        .step::before { content: counter(step); display: block; font-size: 28px; font-weight: 700; color: var(--accent); opacity: 0.4; margin-bottom: 8px; }
         .step h3 { font-size: 13px; color: var(--text); margin-bottom: 6px; }
         .step p { font-size: 12px; color: var(--muted); }
 
@@ -61,54 +61,54 @@
         .demo h2 { font-size: 20px; color: var(--text); margin-bottom: 6px; letter-spacing: 1px; text-transform: uppercase; }
         .demo .demo-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
         .demo-box { max-width: 480px; margin: 0 auto; background: var(--card); border: 1.5px dashed var(--border); border-radius: 14px; padding: 36px 24px; transition: border-color .3s; cursor: pointer; position: relative; }
-        .demo-box:hover, .demo-box.drag-over { border-color: var(--lime); }
+        .demo-box:hover, .demo-box.drag-over { border-color: var(--accent); }
         .demo-box .demo-icon { font-size: 36px; margin-bottom: 10px; }
         .demo-box .demo-text { font-size: 13px; color: var(--muted); }
-        .demo-box .demo-text strong { color: var(--lime); }
+        .demo-box .demo-text strong { color: var(--accent); }
         .demo-thumbs { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 16px; min-height: 20px; }
         .demo-thumbs img { width: 56px; height: 56px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border); }
         .demo-actions { margin-top: 18px; display: none; gap: 10px; justify-content: center; align-items: center; }
         .demo-actions.show { display: flex; }
         .demo-actions button { padding: 12px 32px; border-radius: 10px; font-size: 14px; font-weight: 700; border: none; cursor: pointer; transition: all .2s; }
-        .demo-convert { background: var(--lime); color: var(--bg); }
+        .demo-convert { background: var(--accent); color: var(--bg); }
         .demo-convert:hover { filter: brightness(1.1); transform: translateY(-1px); }
         .demo-clear { background: transparent; color: var(--muted); border: 1px solid var(--border) !important; }
         .demo-count { font-size: 12px; color: var(--muted); }
         .demo-result { margin-top: 16px; display: none; }
         .demo-result.show { display: block; }
-        .demo-result a { display: inline-flex; align-items: center; gap: 6px; padding: 12px 28px; background: rgba(22,163,74,0.08); border: 1px solid rgba(22,163,74,0.3); border-radius: 10px; color: var(--lime); font-weight: 600; font-size: 14px; text-decoration: none; transition: all .2s; }
-        .demo-result a:hover { background: rgba(22,163,74,0.12); transform: translateY(-1px); }
+        .demo-result a { display: inline-flex; align-items: center; gap: 6px; padding: 12px 28px; background: rgba(220,38,38,0.08); border: 1px solid rgba(220,38,38,0.3); border-radius: 10px; color: var(--accent); font-weight: 600; font-size: 14px; text-decoration: none; transition: all .2s; }
+        .demo-result a:hover { background: rgba(220,38,38,0.12); transform: translateY(-1px); }
         .demo-cta { margin-top: 24px; font-size: 13px; color: var(--muted); }
-        .demo-cta strong { color: var(--lime); }
+        .demo-cta strong { color: var(--accent); }
         .demo-tabs { display: flex; gap: 0; justify-content: center; margin-bottom: 20px; }
         .demo-tab { padding: 10px 28px; font-size: 13px; font-weight: 600; border: 1px solid var(--border); background: var(--card); color: var(--muted); cursor: pointer; transition: all .2s; }
         .demo-tab:first-child { border-radius: 8px 0 0 8px; }
         .demo-tab:last-child { border-radius: 0 8px 8px 0; }
-        .demo-tab.active { background: var(--lime); color: var(--bg); border-color: var(--lime); }
+        .demo-tab.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
         .demo-panel { display: none; }
         .demo-panel.active { display: block; }
         .compress-info { margin-top: 16px; font-size: 12px; color: var(--muted); }
-        .compress-info strong { color: var(--lime); }
-        .compress-slider { width: 100%; max-width: 300px; margin: 14px auto; display: block; accent-color: var(--lime); }
+        .compress-info strong { color: var(--accent); }
+        .compress-slider { width: 100%; max-width: 300px; margin: 14px auto; display: block; accent-color: var(--accent); }
         .compress-label { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
         .specs strong { color: var(--text); }
 
         /* Header */
         header { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.92); backdrop-filter: blur(12px); border-bottom: .5px solid var(--border); padding: 14px 0; }
         header .container { display: flex; align-items: center; justify-content: space-between; }
-        header .logo { font-size: 16px; font-weight: 700; color: var(--lime); letter-spacing: -0.5px; text-decoration: none; }
+        header .logo { font-size: 16px; font-weight: 700; color: var(--accent); letter-spacing: -0.5px; text-decoration: none; }
         header nav { display: flex; align-items: center; gap: 20px; }
         header nav a { font-size: 12px; color: var(--muted); text-decoration: none; transition: color .2s; }
-        header nav a:hover { color: var(--lime); }
+        header nav a:hover { color: var(--accent); }
         .lang-toggle { display: flex; border-radius: 6px; overflow: hidden; border: 1px solid var(--border); }
         .lang-toggle button { font-size: 11px; padding: 5px 12px; border: none; cursor: pointer; font-weight: 600; background: var(--card); color: var(--muted); transition: all .2s; }
-        .lang-toggle button.active { background: var(--lime); color: var(--bg); }
-        .btn-header { font-size: 12px; padding: 8px 20px; border-radius: 8px; background: var(--lime); color: var(--bg); font-weight: 600; text-decoration: none; transition: all .2s; }
+        .lang-toggle button.active { background: var(--accent); color: var(--bg); }
+        .btn-header { font-size: 12px; padding: 8px 20px; border-radius: 8px; background: var(--accent); color: var(--bg); font-weight: 600; text-decoration: none; transition: all .2s; }
         .btn-header:hover { filter: brightness(1.1); transform: translateY(-1px); }
 
         /* Footer */
         footer { border-top: .5px solid var(--border); padding: 20px 0; text-align: center; font-size: 11px; color: var(--muted); }
-        footer span { color: var(--lime); font-weight: 600; }
+        footer span { color: var(--accent); font-weight: 600; }
 
         @media (max-width: 600px) {
             .hero h1 { font-size: 2rem; }
@@ -140,13 +140,13 @@
         <div class="subtitle">Zero Cloud. Zero Risk. Zero Subscriptions.</div>
         <p class="desc">Smart Windows desktop app — speech-to-text directly to your cursor, plus 19 offline PDF & image converter tools. Nothing leaves your computer.</p>
 
-        <div class="privacy">🔒 Your files and voice never leave your computer</div>
+        <div class="privacy"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Your files and voice never leave your computer</div>
 
         <div class="cta-row">
             <a href="https://buy.paddle.com/v3/checkout/buy?price=pri_01kv15xdrz1e69pjy2vm3rqp18&discount=dsc_01kv16fbnk53qmqb439kd23fg8" class="btn btn-primary" id="buy-btn" target="_blank">Buy Now — <s style="opacity:0.5">$15</s> $5</a>
             <a href="#how" class="btn btn-outline">How It Works</a>
         </div>
-        <div class="price-note">🔥 Launch offer: first 100 customers get 66% off! One-time payment. No subscription. Lifetime license.</div>
+        <div class="price-note">Launch offer: first 100 customers get 66% off! One-time payment. No subscription. Lifetime license.</div>
     </div>
 
     <div class="container">
@@ -157,27 +157,27 @@
             <p style="text-align:center; font-size:13px; color:var(--muted); max-width:600px; margin:0 auto 28px;">AISpeech's local-first architecture eliminates the most critical risks users face with cloud-based alternatives.</p>
             <div class="features">
                 <div class="feature">
-                    <div class="icon">🔒</div>
+                    <div class="icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
                     <h3>Data Privacy & Security</h3>
                     <p>Government agencies, banks, law firms, and hospitals are prohibited from sending internal data to external servers. AISpeech processes everything locally — your voice and files never leave your machine. All data is processed in memory and discarded. Zero leak risk.</p>
                 </div>
                 <div class="feature">
-                    <div class="icon">📡</div>
+                    <div class="icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round"><path d="M2 12h20M12 2a15.3 15.3 0 010 20 15.3 15.3 0 010-20"/><circle cx="12" cy="12" r="10"/></svg></div>
                     <h3>Works Without Internet</h3>
                     <p>Cloud-based apps freeze when your connection drops or slows down. AISpeech runs entirely on your local machine — even license validation reads from a local file. 100% uptime regardless of network conditions, anywhere in the world.</p>
                 </div>
                 <div class="feature">
-                    <div class="icon">⚡</div>
+                    <div class="icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
                     <h3>Ultra-Low Latency</h3>
                     <p>No network round-trip. No waiting for a server response. AISpeech polls input 20 times per second (~50ms) and pastes text at your cursor instantly via Ctrl+V. It feels like you're typing at full speed — true real-time dictation.</p>
                 </div>
                 <div class="feature">
-                    <div class="icon">💰</div>
+                    <div class="icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
                     <h3>One-Time Purchase, Lifetime License</h3>
                     <p>Cloud apps charge monthly because they pay for servers. AISpeech uses your own CPU and RAM — no server costs. That means one purchase, lifetime ownership. No recurring fees, no surprise charges, no price hikes.</p>
                 </div>
                 <div class="feature">
-                    <div class="icon">🖥️</div>
+                    <div class="icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
                     <h3>Deep OS Integration</h3>
                     <p>Web-based apps can't access system hotkeys or clipboard. AISpeech uses native Windows PowerShell and C# to integrate deeply with your OS — press F6 in any app (ERP, accounting, games, chat) and dictate. The lime equaliser floats on top, invisible until you need it.</p>
                 </div>
@@ -227,7 +227,7 @@
             <!-- Panel 1: Images → PDF -->
             <div class="demo-panel active" id="panelPdf">
                 <div class="demo-box" id="dropZone">
-                    <div class="demo-icon">📄</div>
+                    <div class="demo-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
                     <p class="demo-text" id="dropText">Drag & drop images here or <strong>click to browse</strong></p>
                     <input type="file" id="fileInput" accept="image/*" multiple style="display:none"/>
                     <div class="demo-thumbs" id="thumbs"></div>
@@ -245,7 +245,7 @@
             <!-- Panel 2: Compress Image -->
             <div class="demo-panel" id="panelCompress">
                 <div class="demo-box" id="compDropZone">
-                    <div class="demo-icon">🗜️</div>
+                    <div class="demo-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg></div>
                     <p class="demo-text" id="compDropText">Drag & drop an image here or <strong>click to browse</strong></p>
                     <input type="file" id="compFileInput" accept="image/*" style="display:none"/>
                     <div class="demo-thumbs" id="compThumbs"></div>
@@ -298,7 +298,7 @@
 
     <footer>
         <div class="container">
-            <span>AISpeech</span> · © 2025 SoPro. All rights reserved.
+            <span>AISpeech</span> · © 2025 <svg width="60" height="22" viewBox="0 0 120 42" style="vertical-align:middle"><text x="0" y="30" font-family="'Segoe UI',system-ui,sans-serif" font-size="28" font-weight="700" fill="#4d4d4d">So</text><path d="M44,0 L120,0 L120,34 Q120,42 112,42 L64,42 Q44,42 44,22 Z" fill="#e8453c"/><text x="58" y="30" font-family="'Segoe UI',system-ui,sans-serif" font-size="28" font-weight="700" fill="#fff">Pro</text></svg>. All rights reserved.
             <div style="margin-top:8px;"><a href="terms.html">Terms of Service</a> · <a href="privacy.html">Privacy Policy</a> · <a href="refund.html">Refund Policy</a></div>
         </div>
     </footer>
@@ -430,10 +430,10 @@ const T = {
   en: {
     subtitle: 'Zero Cloud. Zero Risk. Zero Subscriptions.',
     desc: 'Smart Windows desktop app — speech-to-text directly to your cursor, plus 19 offline PDF & image converter tools. Nothing leaves your computer.',
-    privacy: '🔒 Your files and voice never leave your computer',
+    privacy: 'Your files and voice never leave your computer',
     buy: 'Buy Now',
     howLink: 'How It Works',
-    priceNote: '🔥 Launch offer: first 100 customers get 66% off! One-time payment. No subscription. Lifetime license.',
+    priceNote: 'Launch offer: first 100 customers get 66% off! One-time payment. No subscription. Lifetime license.',
     whyTitle: 'Why AISpeech',
     whyDesc: "AISpeech's local-first architecture eliminates the most critical risks users face with cloud-based alternatives.",
     f1t: 'Data Privacy & Security', f1d: 'Government agencies, banks, law firms, and hospitals are prohibited from sending internal data to external servers. AISpeech processes everything locally — your voice and files never leave your machine. All data is processed in memory and discarded. Zero leak risk.',
@@ -460,10 +460,10 @@ const T = {
   mn: {
     subtitle: 'Cloud-гүй. Эрсдэлгүй. Захиалгагүй.',
     desc: 'Windows desktop апп — ярианаас текст шууд курсор дээр, мөн 19 офлайн PDF & зураг хөрвүүлэгч хэрэгсэл. Ямар ч мэдээлэл компьютерээс гарахгүй.',
-    privacy: '🔒 Таны файл, дуу хоолой компьютерээс хэзээ ч гарахгүй',
+    privacy: 'Таны файл, дуу хоолой компьютерээс хэзээ ч гарахгүй',
     buy: 'Худалдаж авах',
     howLink: 'Хэрхэн ажилладаг',
-    priceNote: '🔥 Нээлтийн хөнгөлөлт: эхний 100 хэрэглэгчид 66% хямдрал! Нэг удаагийн төлбөр. Захиалга биш. Насан туршийн лиценз.',
+    priceNote: 'Нээлтийн хөнгөлөлт: эхний 100 хэрэглэгчид 66% хямдрал! Нэг удаагийн төлбөр. Захиалга биш. Насан туршийн лиценз.',
     whyTitle: 'Яагаад AISpeech',
     whyDesc: 'AISpeech-ийн локал архитектур нь клоуд-д суурилсан хувилбаруудын хамгийн чухал эрсдэлүүдийг арилгана.',
     f1t: 'Мэдээллийн нууцлал', f1d: 'Засгийн газрын байгууллага, банк, хуулийн фирм, эмнэлгүүд дотоод мэдээллийг гадаад серверт илгээхийг хориглодог. AISpeech бүх зүйлийг локалд боловсруулна — дуу хоолой, файл хэзээ ч гарахгүй.',
@@ -493,7 +493,7 @@ function switchLang(l) {
   document.querySelectorAll('#langToggle button').forEach(b => b.classList.toggle('active', b.textContent === l.toUpperCase()));
   document.querySelector('.hero .subtitle').textContent = t.subtitle;
   document.querySelector('.hero .desc').textContent = t.desc;
-  document.querySelector('.hero .privacy').textContent = t.privacy;
+  document.querySelector('.hero .privacy').innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> ' + t.privacy;
   document.querySelector('#buy-btn').innerHTML = t.buy + ' — <s style="opacity:0.5">$15</s> $5';
   document.querySelector('.hero .btn-outline').textContent = t.howLink;
   document.querySelector('.price-note').textContent = t.priceNote;
