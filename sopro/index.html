@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SoPro — Таны компьютерийг ухаалаг болгох 6 хэрэгсэл</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#09090b;
+  --card-bg:rgba(255,255,255,0.035);
+  --card-border:rgba(255,255,255,0.08);
+  --text:#e4e4e7;
+  --text-dim:#71717a;
+  --text-bright:#fafafa;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ---- Floating gradient orbs ---- */
+.orb{
+  position:fixed;
+  border-radius:50%;
+  filter:blur(120px);
+  pointer-events:none;
+  z-index:0;
+  opacity:.35;
+}
+.orb-1{width:600px;height:600px;background:radial-gradient(circle,#16a34a 0%,transparent 70%);top:-10%;left:-8%;animation:orbFloat1 18s ease-in-out infinite}
+.orb-2{width:500px;height:500px;background:radial-gradient(circle,#00f0ff 0%,transparent 70%);top:40%;right:-12%;animation:orbFloat2 22s ease-in-out infinite}
+.orb-3{width:400px;height:400px;background:radial-gradient(circle,#c9a84c 0%,transparent 70%);bottom:-5%;left:30%;animation:orbFloat3 20s ease-in-out infinite}
+@keyframes orbFloat1{0%,100%{transform:translate(0,0)}50%{transform:translate(60px,40px)}}
+@keyframes orbFloat2{0%,100%{transform:translate(0,0)}50%{transform:translate(-50px,30px)}}
+@keyframes orbFloat3{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-40px)}}
+
+/* ---- Header ---- */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 32px;
+  background:rgba(9,9,11,.6);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+.logo{font-weight:800;font-size:20px;letter-spacing:-.5px;color:var(--text-bright)}
+.logo span{color:#16a34a}
+header nav a{color:var(--text-dim);text-decoration:none;font-size:13px;font-weight:600;transition:color .2s}
+header nav a:hover{color:var(--text-bright)}
+
+/* ---- Hero ---- */
+.hero{
+  position:relative;z-index:1;
+  text-align:center;
+  padding:160px 24px 80px;
+}
+.hero h1{
+  font-size:clamp(48px,8vw,88px);
+  font-weight:800;
+  letter-spacing:-2px;
+  line-height:1;
+  color:var(--text-bright);
+  margin-bottom:20px;
+}
+.hero h1 span{
+  background:linear-gradient(135deg,#16a34a,#00f0ff,#c9a84c);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero p{
+  font-size:clamp(16px,2.5vw,20px);
+  color:var(--text-dim);
+  max-width:500px;
+  margin:0 auto;
+  line-height:1.6;
+}
+
+/* ---- Bento Grid ---- */
+.bento{
+  position:relative;z-index:1;
+  max-width:1100px;
+  margin:0 auto;
+  padding:0 24px 60px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-auto-rows:minmax(260px,auto);
+  gap:16px;
+}
+
+/* ---- Card ---- */
+.card{
+  position:relative;
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  border-radius:20px;
+  padding:32px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  overflow:hidden;
+  cursor:pointer;
+  text-decoration:none;
+  color:inherit;
+  transition:transform .35s cubic-bezier(.22,1,.36,1),
+             border-color .35s ease,
+             box-shadow .35s ease;
+  backdrop-filter:blur(12px);
+}
+.card::before{
+  content:'';
+  position:absolute;inset:0;
+  border-radius:20px;
+  background:radial-gradient(ellipse at 50% 0%,var(--accent,.16),transparent 60%);
+  opacity:0;
+  transition:opacity .4s ease;
+  pointer-events:none;
+}
+.card:hover{
+  transform:translateY(-4px);
+  border-color:var(--accent);
+  box-shadow:0 0 40px -10px var(--accent);
+}
+.card:hover::before{opacity:1}
+
+/* Card sizes */
+.card-lg{grid-column:span 2;grid-row:span 1}
+.card-md{grid-column:span 1;grid-row:span 1}
+.card-tall{grid-column:span 1;grid-row:span 2}
+
+/* Card content */
+.card-top{flex:1;display:flex;flex-direction:column;gap:12px}
+.card h3{font-size:20px;font-weight:800;color:var(--text-bright);letter-spacing:-.3px}
+.card .desc{font-size:14px;color:var(--text-dim);line-height:1.5}
+.hotkey{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:11px;font-weight:600;
+  color:rgba(255,255,255,.5);
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  padding:4px 10px;
+  border-radius:6px;
+  width:fit-content;
+  font-family:'Inter',monospace;
+}
+.price{
+  font-size:13px;font-weight:600;
+  color:var(--text-dim);
+  margin-top:auto;
+  padding-top:16px;
+}
+.price strong{color:var(--text-bright);font-size:16px}
+
+/* ---- Mini Previews ---- */
+.preview{
+  height:80px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  gap:3px;
+  margin:12px 0;
+  opacity:.5;
+  transition:opacity .4s ease;
+}
+.card:hover .preview{opacity:1}
+
+/* 1. Equalizer */
+.eq-bar{
+  width:4px;border-radius:2px;
+  background:#16a34a;
+  transition:height .15s ease;
+}
+
+/* 2. Blur scramble */
+.blur-preview{
+  font-family:monospace;font-size:14px;color:#00f0ff;
+  letter-spacing:2px;
+  display:flex;align-items:center;justify-content:center;
+  height:80px;
+  filter:blur(0px);
+  transition:filter .3s;
+}
+.card:hover .blur-preview{animation:scrambleGlow 1.5s ease-in-out infinite}
+@keyframes scrambleGlow{0%,100%{filter:blur(0px);opacity:1}50%{filter:blur(3px);opacity:.6}}
+
+/* 3. Signature */
+.sig-preview{
+  height:80px;display:flex;align-items:center;justify-content:center;
+}
+.sig-preview svg{overflow:visible}
+.sig-line{
+  stroke:#c9a84c;stroke-width:2;fill:none;
+  stroke-dasharray:200;stroke-dashoffset:200;
+  transition:stroke-dashoffset 1.2s ease;
+}
+.card:hover .sig-line{stroke-dashoffset:0}
+
+/* 4. Macro typing */
+.macro-preview{
+  font-family:monospace;font-size:14px;color:#00ff41;
+  height:80px;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.macro-cursor{animation:blink .8s step-end infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* 5. Color spectrum */
+.color-preview{
+  height:80px;border-radius:10px;
+  background:linear-gradient(90deg,#ff0040,#ff8c00,#ffdd00,#00ff41,#00f0ff,#8b5cf6,#ff0040);
+  background-size:200% 100%;
+  opacity:.4;
+  transition:opacity .4s;
+}
+.card:hover .color-preview{opacity:.8;animation:spectrumShift 3s linear infinite}
+@keyframes spectrumShift{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+
+/* 6. Breathing circle */
+.breath-preview{
+  height:80px;display:flex;align-items:center;justify-content:center;
+}
+.breath-circle{
+  width:40px;height:40px;border-radius:50%;
+  border:2px solid #4fd1c5;
+  opacity:.4;
+  transition:opacity .4s;
+}
+.card:hover .breath-circle{opacity:.8;animation:breathe 4s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.5);opacity:1}}
+
+/* ---- Bundle Section ---- */
+.bundle{
+  position:relative;z-index:1;
+  max-width:1100px;
+  margin:40px auto 80px;
+  padding:0 24px;
+}
+.bundle-card{
+  background:linear-gradient(135deg,rgba(22,163,74,.08),rgba(0,240,255,.05));
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:24px;
+  padding:48px;
+  text-align:center;
+  backdrop-filter:blur(16px);
+}
+.bundle-card h2{
+  font-size:clamp(28px,4vw,40px);
+  font-weight:800;
+  color:var(--text-bright);
+  margin-bottom:8px;
+  letter-spacing:-1px;
+}
+.bundle-card .subtitle{color:var(--text-dim);font-size:16px;margin-bottom:32px}
+.bundle-pricing{display:flex;align-items:baseline;justify-content:center;gap:16px;flex-wrap:wrap}
+.bundle-old{
+  font-size:24px;color:var(--text-dim);
+  text-decoration:line-through;
+  text-decoration-color:rgba(255,255,255,.3);
+}
+.bundle-new{
+  font-size:clamp(36px,5vw,56px);
+  font-weight:800;
+  background:linear-gradient(135deg,#16a34a,#00f0ff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.bundle-save{
+  background:rgba(22,163,74,.15);
+  color:#16a34a;
+  font-size:13px;font-weight:700;
+  padding:6px 14px;
+  border-radius:100px;
+}
+.bundle-cta{
+  display:inline-block;
+  margin-top:32px;
+  padding:14px 36px;
+  background:#16a34a;
+  color:#fff;
+  font-size:15px;font-weight:700;
+  border-radius:12px;
+  text-decoration:none;
+  transition:background .2s,transform .2s;
+}
+.bundle-cta:hover{background:#15803d;transform:translateY(-2px)}
+
+/* ---- Footer ---- */
+footer{
+  position:relative;z-index:1;
+  text-align:center;
+  padding:40px 24px;
+  color:var(--text-dim);
+  font-size:13px;
+  border-top:1px solid rgba(255,255,255,.05);
+}
+
+/* ---- Fade-up animation ---- */
+.fade-up{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+
+/* ---- Responsive ---- */
+@media(max-width:768px){
+  .bento{grid-template-columns:1fr;gap:12px}
+  .card-lg,.card-tall{grid-column:span 1;grid-row:span 1}
+  header{padding:12px 16px}
+  .hero{padding:120px 16px 48px}
+  .bundle-card{padding:32px 20px}
+}
+@media(min-width:769px) and (max-width:1024px){
+  .bento{grid-template-columns:repeat(2,1fr)}
+  .card-lg{grid-column:span 2}
+  .card-tall{grid-column:span 1;grid-row:span 1}
+}
+</style>
+</head>
+<body>
+
+<!-- Floating gradient orbs -->
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- Header -->
+<header>
+  <div class="logo">So<span>Pro</span></div>
+  <nav><a href="#">MN</a></nav>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <h1>So<span>Pro</span></h1>
+  <p style="font-size:22px;font-weight:700;margin-bottom:8px">Таны дата — таны хяналтанд.</p>
+  <p style="font-size:15px;opacity:0.5">Бид AI-д бүх зүйлээ тэжээхийн оронд, таны компьютер дотор бүгдийг шийддэг 6 хэрэгсэл бүтээлээ.</p>
+</section>
+
+<!-- Bento Grid -->
+<section class="bento">
+
+  <!-- 1. AISpeech — large card -->
+  <a href="/aispeech" class="card card-lg fade-up" style="--accent:#16a34a">
+    <div class="card-top">
+      <h3>AISpeech + All-in-One Converter</h3>
+      <p class="desc">Ярианд бичиг, файлд хөрвүүлэгч — F6 дарахад л болно</p>
+      <span class="hotkey">F6</span>
+      <div class="preview" id="eq-preview"></div>
+    </div>
+    <div class="price"><strong>9,000₮</strong></div>
+  </a>
+
+  <!-- 2. Нууцлагч -->
+  <a href="/blur" class="card card-md fade-up" style="--accent:#00f0ff">
+    <div class="card-top">
+      <h3>Нууцлагч</h3>
+      <p class="desc">Дэлгэцийн зургаас нууц мэдээллийг шууд баллана</p>
+      <span class="hotkey">Alt + B</span>
+      <div class="blur-preview" id="blur-text">█▓░ НА█░▓</div>
+    </div>
+    <div class="price"><strong>9,000₮</strong></div>
+  </a>
+
+  <!-- 3. Гарын үсэг -->
+  <a href="/sign" class="card card-md fade-up" style="--accent:#c9a84c">
+    <div class="card-top">
+      <h3>Гарын үсэг</h3>
+      <p class="desc">Баримт дээр гарын үсэг, тамгыг нэг товшилтоор</p>
+      <span class="hotkey">Ctrl + Shift + S</span>
+      <div class="sig-preview">
+        <svg width="120" height="40" viewBox="0 0 120 40">
+          <path class="sig-line" d="M5 30 Q20 5 35 25 T65 20 Q80 10 95 25 L115 15"/>
+        </svg>
+      </div>
+    </div>
+    <div class="price"><strong>9,000₮</strong></div>
+  </a>
+
+  <!-- 4. Бэлдэц -->
+  <a href="/macro" class="card card-md fade-up" style="--accent:#00ff41">
+    <div class="card-top">
+      <h3>Текст бэлдэц</h3>
+      <p class="desc">Товчлол бичээд зай дарахад бүтэн текст бичигдэнэ</p>
+      <span class="hotkey">; trigger + space</span>
+      <div class="macro-preview" id="macro-text"><span class="macro-cursor">|</span></div>
+    </div>
+    <div class="price"><strong>9,000₮</strong></div>
+  </a>
+
+  <!-- 5. Өнгө авагч -->
+  <a href="/color" class="card card-md fade-up" style="--accent:#8b5cf6">
+    <div class="card-top">
+      <h3>Өнгө авагч</h3>
+      <p class="desc">Дэлгэцийн аль ч пикселийн өнгийг шууд хуулна</p>
+      <span class="hotkey">Ctrl + Shift + P</span>
+      <div class="color-preview"></div>
+    </div>
+    <div class="price"><strong>9,000₮</strong></div>
+  </a>
+
+  <!-- 6. Нүд хамгаалагч -->
+  <a href="/eyecare" class="card card-md fade-up" style="--accent:#4fd1c5">
+    <div class="card-top">
+      <h3>Нүд хамгаалагч</h3>
+      <p class="desc">20 минут тутам нүдний дасгал, амьсгалын дасгал</p>
+      <span class="hotkey">Auto</span>
+      <div class="breath-preview">
+        <div class="breath-circle"></div>
+      </div>
+    </div>
+    <div class="price"><strong>9,000₮</strong></div>
+  </a>
+
+</section>
+
+<!-- Bundle Offer -->
+<section class="bundle fade-up">
+  <div class="bundle-card">
+    <h2>Бүгд нэг дор</h2>
+    <p class="subtitle">6 хэрэгслийг хамтад нь авбал хэмнэлттэй</p>
+    <div class="bundle-pricing">
+      <span class="bundle-old">54,000₮</span>
+      <span class="bundle-new">29,000₮</span>
+      <span class="bundle-save">46% хэмнэлт</span>
+    </div>
+    <a href="#" class="bundle-cta">Багц авах</a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>&copy; 2025 SoPro. Бүх эрх хуулиар хамгаалагдсан.</p>
+</footer>
+
+<script>
+// ---- Equalizer bars ----
+(function(){
+  const container = document.getElementById('eq-preview');
+  const count = 24;
+  for(let i = 0; i < count; i++){
+    const bar = document.createElement('div');
+    bar.className = 'eq-bar';
+    bar.style.height = '8px';
+    container.appendChild(bar);
+  }
+  const bars = container.querySelectorAll('.eq-bar');
+  function animateEq(){
+    const t = Date.now() / 1000;
+    bars.forEach((bar, i) => {
+      const wave = Math.sin(t * 3 + i * 0.6) * 0.3
+                 + Math.sin(t * 5.3 + i * 1.1) * 0.25
+                 + Math.cos(t * 2.1 + i * 0.4) * 0.15;
+      const h = 12 + Math.abs(wave) * 55;
+      bar.style.height = h + 'px';
+    });
+    requestAnimationFrame(animateEq);
+  }
+  animateEq();
+})();
+
+// ---- Blur scramble text ----
+(function(){
+  const el = document.getElementById('blur-text');
+  const chars = '█▓░▒■□▪▫●◌';
+  const base = 'НУУЦ МЭДЭЭЛЭЛ';
+  let frame = 0;
+  setInterval(() => {
+    frame++;
+    let out = '';
+    for(let i = 0; i < base.length; i++){
+      out += (Math.random() > 0.4) ? chars[Math.floor(Math.random()*chars.length)] : base[i];
+    }
+    el.textContent = out;
+  }, 120);
+})();
+
+// ---- Macro typing animation ----
+(function(){
+  const el = document.getElementById('macro-text');
+  const trigger = ';данс';
+  const expanded = 'Голомт банк 1234-5678-9012';
+  let phase = 0, idx = 0;
+  function tick(){
+    if(phase === 0){
+      // typing trigger
+      if(idx <= trigger.length){
+        el.innerHTML = '<span style="opacity:.6">' + trigger.slice(0,idx) + '</span><span class="macro-cursor">|</span>';
+        idx++;
+        setTimeout(tick, 150);
+      } else {
+        phase = 1; idx = 0;
+        setTimeout(tick, 400);
+      }
+    } else if(phase === 1){
+      // expanding
+      if(idx <= expanded.length){
+        el.innerHTML = expanded.slice(0,idx) + '<span class="macro-cursor">|</span>';
+        idx++;
+        setTimeout(tick, 30);
+      } else {
+        setTimeout(() => { phase = 0; idx = 0; tick(); }, 2500);
+      }
+    }
+  }
+  tick();
+})();
+
+// ---- Intersection Observer fade-up ----
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
