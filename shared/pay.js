@@ -63,6 +63,11 @@
 
   el.innerHTML = html;
 
+  // Listen for sp:open event to open modal
+  el.addEventListener('sp:open', function(){
+    document.getElementById('payModal').style.display = 'flex';
+  });
+
   // Eye toggle
   var eyeBtn = el.querySelector('.eye-toggle');
   if (eyeBtn) {
