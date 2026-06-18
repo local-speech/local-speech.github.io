@@ -38,13 +38,14 @@ a{color:var(--green);text-decoration:none}
 .glow{text-shadow:0 0 5px var(--green),0 0 15px rgba(0,255,65,0.3)}
 .glow-strong{text-shadow:0 0 5px var(--green),0 0 20px rgba(0,255,65,0.5),0 0 40px rgba(0,255,65,0.2)}
 
-/* NAV */
-nav{position:fixed;top:0;width:100%;z-index:100;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;
-background:rgba(10,10,10,0.9);border-bottom:1px solid var(--border);backdrop-filter:blur(8px)}
-nav .logo{font-size:14px;font-weight:700;letter-spacing:1px}
-nav .logo span{color:var(--dim)}
-nav .links{display:flex;gap:20px;font-size:13px}
-nav .links a:hover{text-decoration:underline}
+/* Unified SoPro header */
+.sp-hdr{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:rgba(9,9,11,.7);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06)}
+.sp-brand{font-weight:800;font-size:15px;color:rgba(255,255,255,.9);letter-spacing:-.3px;display:flex;align-items:center;gap:6px;text-decoration:none}
+.sp-brand i{color:#16a34a;font-style:normal}
+.sp-brand em{font-style:normal;font-weight:400;color:rgba(255,255,255,.45);font-size:13px}
+.sp-nav{display:flex;gap:16px;align-items:center}
+.sp-nav a{color:rgba(255,255,255,.45);font-size:12px;font-weight:600;transition:color .2s;text-decoration:none}
+.sp-nav a:hover{color:rgba(255,255,255,.9)}
 
 /* HERO */
 .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:80px 24px 40px;text-align:center}
@@ -139,14 +140,10 @@ footer{border-top:1px solid var(--border);padding:24px;text-align:center;font-si
 </head>
 <body class="screen">
 
-<nav>
-  <div class="logo">SOPRO<span>/macro</span></div>
-  <div class="links">
-    <a href="/sopro">Нүүр</a>
-    <a href="#demo">Туршиж үзэх</a>
-    <a href="#price">Үнэ</a>
-  </div>
-</nav>
+<div class="sp-hdr">
+  <a href="/sopro" class="sp-brand">So<i>Pro</i> <em>— Текст бэлдэц</em></a>
+  <nav class="sp-nav"><a href="/sopro">← Бүх хэрэгсэл</a></nav>
+</div>
 
 <section class="hero">
   <div class="hero-pre">// WINDOWS DESKTOP APP</div>
@@ -277,7 +274,7 @@ footer{border-top:1px solid var(--border);padding:24px;text-align:center;font-si
     <div class="label">Нэг удаагийн төлбөр. Бүх үед ашиглана.</div>
     <div class="forever">// no subscription, no hidden fees</div>
   </div>
-  <a href="#price" class="btn btn-primary" style="font-size:16px;padding:16px 40px">Худалдаж авах</a>
+  <a href="javascript:void(0)" class="btn btn-primary" style="font-size:16px;padding:16px 40px" onclick="document.getElementById('payModal').style.display='flex'">Худалдаж авах</a>
   <p style="margin-top:16px;font-size:12px;color:var(--dim)">Худалдан авсны дараа шууд татаж суулгана</p>
 </section>
 
@@ -415,6 +412,96 @@ function submitEntForm(e){
   },1500);
   return false;
 }
+</script>
+
+<!-- Payment Modal -->
+<style>
+.pay-overlay{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.45);align-items:center;justify-content:center;backdrop-filter:blur(6px);animation:payIn .25s}
+@keyframes payIn{from{opacity:0}to{opacity:1}}
+.pay-card{background:#fff;border-radius:20px;max-width:400px;width:92%;position:relative;box-shadow:0 24px 80px rgba(0,0,0,.18);overflow:hidden;animation:payUp .3s}
+@keyframes payUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.pay-close{position:absolute;top:14px;right:14px;background:rgba(0,0,0,.05);border:none;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;color:#666;display:flex;align-items:center;justify-content:center}
+.pay-close:hover{background:rgba(0,0,0,.1)}
+.pay-header{background:linear-gradient(135deg,#0f172a,#1e293b);padding:28px;color:#fff}
+.pay-header h3{font-size:17px;font-weight:700;margin-bottom:3px}
+.pay-header p{font-size:12px;color:rgba(255,255,255,.5)}
+.pay-amount{font-size:32px;font-weight:800;margin-top:12px;letter-spacing:-1px}
+.pay-amount s{font-size:18px;opacity:.35;font-weight:400;margin-right:6px}
+.pay-body{padding:24px 28px 28px}
+.pay-info{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.pay-info-item{background:#f8fafc;border-radius:10px;padding:12px 14px}
+.pay-label{font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+.pay-value{font-size:13px;font-weight:700;color:#1e293b}
+.pay-code-box{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1.5px solid #bbf7d0;border-radius:12px;padding:14px;text-align:center;margin-bottom:18px}
+.pay-code-box .pay-label{color:#16a34a;letter-spacing:1px}
+.pay-code-val{font-size:22px;font-weight:800;color:#15803d;letter-spacing:2px}
+.pay-code-hint{font-size:10px;color:#6b7280;margin-top:4px}
+.pay-field{margin-bottom:14px}
+.pay-field label{font-size:11px;color:#64748b;font-weight:600;display:block;margin-bottom:5px}
+.pay-field input{width:100%;padding:11px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#f8fafc;box-sizing:border-box}
+.pay-field input:focus{border-color:#00ff41;background:#fff}
+.pay-submit{width:100%;padding:14px;background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;margin-top:4px}
+.pay-submit:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(22,163,74,.3)}
+.pay-submit:disabled{opacity:.6;transform:none}
+.pay-success{display:none;text-align:center;padding:32px 28px}
+.pay-success-icon{width:64px;height:64px;background:linear-gradient(135deg,#dcfce7,#bbf7d0);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:28px}
+.pay-success h3{font-size:18px;font-weight:700;color:#1e293b;margin-bottom:6px}
+.pay-success p{font-size:13px;color:#64748b;line-height:1.6}
+</style>
+<div id="payModal" class="pay-overlay" onclick="if(event.target===this)this.style.display='none'">
+<div class="pay-card">
+<button class="pay-close" onclick="document.getElementById('payModal').style.display='none'">✕</button>
+<div id="payForm">
+<div class="pay-header">
+<h3>Текст бэлдэц (Macro)</h3>
+<p>Насан туршийн лиценз</p>
+<div class="pay-amount"><s>27,000₮</s> 9,000₮</div>
+</div>
+<div class="pay-body">
+<div class="pay-info">
+<div class="pay-info-item"><div class="pay-label">Банк</div><div class="pay-value">Хаанбанк</div></div>
+<div class="pay-info-item"><div class="pay-label">Данс</div><div class="pay-value">5400780646</div></div>
+<div class="pay-info-item"><div class="pay-label">Нэр</div><div class="pay-value">Д.Баттулга</div></div>
+<div class="pay-info-item"><div class="pay-label">Дүн</div><div class="pay-value" style="color:#e8453c">9,000₮</div></div>
+</div>
+<div class="pay-code-box">
+<div class="pay-label">Гүйлгээний утга</div>
+<div class="pay-code-val" id="payCode"></div>
+<div class="pay-code-hint">Энэ кодыг гүйлгээний утгад заавал бичнэ үү</div>
+</div>
+<div class="pay-field"><label>Имэйл хаяг</label><input type="email" id="payEmail" placeholder="example@gmail.com"></div>
+<div class="pay-field"><label>Утасны дугаар</label><input type="tel" id="payPhone" placeholder="99112233"></div>
+<button class="pay-submit" id="paySubmit" onclick="submitPayment()">Шилжүүлсэн ✓</button>
+</div>
+</div>
+<div class="pay-success" id="paySuccess">
+<div class="pay-success-icon">✓</div>
+<h3>Амжилттай бүртгэгдлээ!</h3>
+<p>Таны захиалгыг хүлээн авлаа.<br>24 цагийн дотор имэйл рүү лицензийн түлхүүр илгээгдэнэ.</p>
+</div>
+</div>
+</div>
+<iframe name="payFrame" style="display:none"></iframe>
+<script>
+(function(){
+var chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',code='MCR-';
+for(var i=0;i<6;i++)code+=chars[Math.floor(Math.random()*chars.length)];
+document.getElementById('payCode').textContent=code;
+window.submitPayment=function(){
+var email=document.getElementById('payEmail').value.trim();
+var phone=document.getElementById('payPhone').value.trim();
+if(!email||!phone){alert('Имэйл болон утасны дугаараа оруулна уу');return;}
+var btn=document.getElementById('paySubmit');
+btn.disabled=true;btn.textContent='Илгээж байна...';
+var form=document.createElement('form');
+form.method='POST';form.target='payFrame';
+form.action='https://docs.google.com/forms/d/e/1FAIpQLScBeTfkDj0vzYjT6fkwC8oCjAFXDdmtghfasIE7eLO4GdhfUw/formResponse';
+var f1=document.createElement('input');f1.name='entry.413665365';f1.value=phone;form.appendChild(f1);
+var f2=document.createElement('input');f2.name='entry.1131290276';f2.value=email+' | '+code;form.appendChild(f2);
+document.body.appendChild(form);form.submit();document.body.removeChild(form);
+setTimeout(function(){document.getElementById('payForm').style.display='none';document.getElementById('paySuccess').style.display='block';},800);
+};
+})();
 </script>
 
 </body>

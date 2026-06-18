@@ -105,14 +105,13 @@
         .specs strong { color: var(--text); }
 
         /* Header */
-        header { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.92); backdrop-filter: blur(12px); border-bottom: .5px solid var(--border); padding: 14px 0; }
-        header .container { display: flex; align-items: center; justify-content: space-between; }
-        header .logo { font-size: 16px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; text-decoration: none; }
-        header nav { display: flex; align-items: center; gap: 20px; }
-        header nav a { font-size: 12px; color: var(--muted); text-decoration: none; transition: color .2s; }
-        header nav a:hover { color: var(--text); }
-        .btn-header { font-size: 12px; padding: 8px 20px; border-radius: 8px; background: var(--text); color: var(--bg); font-weight: 600; text-decoration: none; transition: all .2s; }
-        .btn-header:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        .sp-hdr{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:.5px solid rgba(0,0,0,.06)}
+        .sp-brand{font-weight:800;font-size:15px;color:#1a1a2e;letter-spacing:-.3px;display:flex;align-items:center;gap:6px;text-decoration:none}
+        .sp-brand i{color:#16a34a;font-style:normal}
+        .sp-brand em{font-style:normal;font-weight:400;color:#94a3b8;font-size:13px}
+        .sp-nav{display:flex;gap:16px;align-items:center}
+        .sp-nav a{color:#64748b;font-size:12px;font-weight:600;transition:color .2s;text-decoration:none}
+        .sp-nav a:hover{color:#1a1a2e}
 
         /* Footer */
         footer { border-top: .5px solid var(--border); padding: 20px 0; text-align: center; font-size: 11px; color: var(--muted); }
@@ -127,20 +126,13 @@
 </head>
 <body>
 
-    <header>
-        <div class="container">
-            <a href="./" class="logo">AISpeech</a>
-            <nav>
-                <a href="/sopro">SoPro</a>
-                <a href="/blur">Blur</a>
-                <a href="/sign">Sign</a>
-                <a href="/macro">Macro</a>
-                <a href="/color">Color</a>
-                <a href="/eyecare">EyeCare</a>
-                <a href="/mn" style="font-size:11px;padding:5px 12px;border:1px solid var(--border);border-radius:6px;font-weight:600;color:var(--muted);">MN</a>
-            </nav>
-        </div>
-    </header>
+    <div class="sp-hdr">
+      <a href="/sopro" class="sp-brand">So<i>Pro</i> <em>— AISpeech</em></a>
+      <nav class="sp-nav">
+        <a href="/sopro">← All Tools</a>
+        <a href="/mn" style="font-size:11px;padding:4px 12px;border:1px solid rgba(0,0,0,.1);border-radius:6px">MN</a>
+      </nav>
+    </div>
 
     <!-- Hero -->
     <div class="hero">

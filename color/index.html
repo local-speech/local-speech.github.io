@@ -23,15 +23,14 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--text);overflow-x:hidde
 .glass-card{background:rgba(255,255,255,0.06);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:28px;transition:transform .3s,box-shadow .3s}
 .glass-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.3)}
 
-/* === NAV === */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;transition:background .3s}
-nav.scrolled{background:rgba(0,0,0,0.5);backdrop-filter:blur(16px)}
-.nav-logo{font-weight:800;font-size:1.2rem;text-decoration:none;color:#fff;display:flex;align-items:center;gap:8px}
-.nav-logo svg{width:28px;height:28px}
-.nav-links{display:flex;gap:24px;align-items:center}
-.nav-links a{color:var(--text-dim);text-decoration:none;font-size:.9rem;font-weight:500;transition:color .2s}
-.nav-links a:hover{color:#fff}
-.nav-cta{background:linear-gradient(135deg,#f97316,#ec4899);padding:8px 20px;border-radius:99px;color:#fff!important;font-weight:600;border:none;cursor:pointer;text-decoration:none;font-size:.9rem}
+/* === HEADER === */
+.sp-hdr{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:rgba(9,9,11,.7);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06)}
+.sp-brand{font-weight:800;font-size:15px;color:rgba(255,255,255,.9);letter-spacing:-.3px;display:flex;align-items:center;gap:6px;text-decoration:none}
+.sp-brand i{color:#16a34a;font-style:normal}
+.sp-brand em{font-style:normal;font-weight:400;color:rgba(255,255,255,.45);font-size:13px}
+.sp-nav{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.sp-nav a{color:rgba(255,255,255,.45);font-size:12px;font-weight:600;transition:color .2s;text-decoration:none}
+.sp-nav a:hover{color:rgba(255,255,255,.9)}
 
 /* === HERO === */
 .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:120px 24px 80px;position:relative}
@@ -138,7 +137,6 @@ footer a:hover{color:#fff}
 .color-wheel-wrap{width:260px;height:260px}
 .hero-buttons{justify-content:center}
 .demo-info{grid-template-columns:repeat(2,1fr)}
-.nav-links{display:none}
 }
 @media(max-width:500px){
 .demo-info{grid-template-columns:1fr 1fr}
@@ -166,19 +164,11 @@ footer a:hover{color:#fff}
 <div class="orb orb-2"></div>
 <div class="orb orb-3"></div>
 
-<!-- NAV -->
-<nav id="nav">
-  <a href="/sopro" class="nav-logo">
-    <svg viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="13" stroke="#fff" stroke-width="2"/><circle cx="14" cy="14" r="6" fill="url(#ng)"/><defs><linearGradient id="ng" x1="8" y1="8" x2="20" y2="20"><stop stop-color="#f97316"/><stop offset="1" stop-color="#ec4899"/></linearGradient></defs></svg>
-    SoPro
-  </a>
-  <div class="nav-links">
-    <a href="#demo">Туршилт</a>
-    <a href="#features">Боломжууд</a>
-    <a href="#how">Хэрхэн</a>
-    <a href="#buy" class="nav-cta">Худалдаж авах</a>
-  </div>
-</nav>
+<!-- HEADER -->
+<div class="sp-hdr">
+  <a href="/sopro" class="sp-brand">So<i>Pro</i> <em>— Өнгө авагч</em></a>
+  <nav class="sp-nav"><a href="/sopro">← Бүх хэрэгсэл</a></nav>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -344,7 +334,7 @@ footer a:hover{color:#fff}
       <span class="price-new">9,000₮</span>
       <span class="price-save">-67%</span>
     </div>
-    <a href="#buy" class="btn-primary" style="font-size:1.15rem;padding:16px 48px">🎨 Худалдаж авах — 9,000₮</a>
+    <a href="javascript:void(0)" class="btn-primary" style="font-size:1.15rem;padding:16px 48px" onclick="document.getElementById('payModal').style.display='flex'">🎨 Худалдаж авах — 9,000₮</a>
   </div>
 </section>
 
@@ -357,10 +347,6 @@ footer a:hover{color:#fff}
 <div class="toast" id="toast">📋 Хуулагдлаа!</div>
 
 <script>
-// Nav scroll effect
-const nav=document.getElementById('nav');
-window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',window.scrollY>40)});
-
 // Wheel hex animation
 const hexColors=['#FF6B35','#E91E63','#9C27B0','#2196F3','#00BCD4','#4CAF50','#FFEB3B','#FF5722'];
 let hci=0;
@@ -491,6 +477,96 @@ function submitEntForm(e){
   },1500);
   return false;
 }
+</script>
+
+<!-- Payment Modal -->
+<style>
+.pay-overlay{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.45);align-items:center;justify-content:center;backdrop-filter:blur(6px);animation:payIn .25s}
+@keyframes payIn{from{opacity:0}to{opacity:1}}
+.pay-card{background:#fff;border-radius:20px;max-width:400px;width:92%;position:relative;box-shadow:0 24px 80px rgba(0,0,0,.18);overflow:hidden;animation:payUp .3s}
+@keyframes payUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.pay-close{position:absolute;top:14px;right:14px;background:rgba(0,0,0,.05);border:none;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;color:#666;display:flex;align-items:center;justify-content:center}
+.pay-close:hover{background:rgba(0,0,0,.1)}
+.pay-header{background:linear-gradient(135deg,#0f172a,#1e293b);padding:28px;color:#fff}
+.pay-header h3{font-size:17px;font-weight:700;margin-bottom:3px}
+.pay-header p{font-size:12px;color:rgba(255,255,255,.5)}
+.pay-amount{font-size:32px;font-weight:800;margin-top:12px;letter-spacing:-1px}
+.pay-amount s{font-size:18px;opacity:.35;font-weight:400;margin-right:6px}
+.pay-body{padding:24px 28px 28px}
+.pay-info{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.pay-info-item{background:#f8fafc;border-radius:10px;padding:12px 14px}
+.pay-label{font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+.pay-value{font-size:13px;font-weight:700;color:#1e293b}
+.pay-code-box{background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:1.5px solid #c4b5fd;border-radius:12px;padding:14px;text-align:center;margin-bottom:18px}
+.pay-code-box .pay-label{color:#7c3aed;letter-spacing:1px}
+.pay-code-val{font-size:22px;font-weight:800;color:#6d28d9;letter-spacing:2px}
+.pay-code-hint{font-size:10px;color:#6b7280;margin-top:4px}
+.pay-field{margin-bottom:14px}
+.pay-field label{font-size:11px;color:#64748b;font-weight:600;display:block;margin-bottom:5px}
+.pay-field input{width:100%;padding:11px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#f8fafc;box-sizing:border-box}
+.pay-field input:focus{border-color:#8b5cf6;background:#fff}
+.pay-submit{width:100%;padding:14px;background:linear-gradient(135deg,#8b5cf6,#7c3aed);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;margin-top:4px}
+.pay-submit:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(139,92,246,.3)}
+.pay-submit:disabled{opacity:.6;transform:none}
+.pay-success{display:none;text-align:center;padding:32px 28px}
+.pay-success-icon{width:64px;height:64px;background:linear-gradient(135deg,#ede9fe,#c4b5fd);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:28px}
+.pay-success h3{font-size:18px;font-weight:700;color:#1e293b;margin-bottom:6px}
+.pay-success p{font-size:13px;color:#64748b;line-height:1.6}
+</style>
+<div id="payModal" class="pay-overlay" onclick="if(event.target===this)this.style.display='none'">
+<div class="pay-card">
+<button class="pay-close" onclick="document.getElementById('payModal').style.display='none'">✕</button>
+<div id="payForm">
+<div class="pay-header">
+<h3>Өнгө авагч (Color Picker)</h3>
+<p>Насан туршийн лиценз</p>
+<div class="pay-amount"><s>27,000₮</s> 9,000₮</div>
+</div>
+<div class="pay-body">
+<div class="pay-info">
+<div class="pay-info-item"><div class="pay-label">Банк</div><div class="pay-value">Хаанбанк</div></div>
+<div class="pay-info-item"><div class="pay-label">Данс</div><div class="pay-value">5400780646</div></div>
+<div class="pay-info-item"><div class="pay-label">Нэр</div><div class="pay-value">Д.Баттулга</div></div>
+<div class="pay-info-item"><div class="pay-label">Дүн</div><div class="pay-value" style="color:#e8453c">9,000₮</div></div>
+</div>
+<div class="pay-code-box">
+<div class="pay-label">Гүйлгээний утга</div>
+<div class="pay-code-val" id="payCode"></div>
+<div class="pay-code-hint">Энэ кодыг гүйлгээний утгад заавал бичнэ үү</div>
+</div>
+<div class="pay-field"><label>Имэйл хаяг</label><input type="email" id="payEmail" placeholder="example@gmail.com"></div>
+<div class="pay-field"><label>Утасны дугаар</label><input type="tel" id="payPhone" placeholder="99112233"></div>
+<button class="pay-submit" id="paySubmit" onclick="submitPayment()">Шилжүүлсэн ✓</button>
+</div>
+</div>
+<div class="pay-success" id="paySuccess">
+<div class="pay-success-icon">✓</div>
+<h3>Амжилттай бүртгэгдлээ!</h3>
+<p>Таны захиалгыг хүлээн авлаа.<br>24 цагийн дотор имэйл рүү лицензийн түлхүүр илгээгдэнэ.</p>
+</div>
+</div>
+</div>
+<iframe name="payFrame" style="display:none"></iframe>
+<script>
+(function(){
+var chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',code='CLR-';
+for(var i=0;i<6;i++)code+=chars[Math.floor(Math.random()*chars.length)];
+document.getElementById('payCode').textContent=code;
+window.submitPayment=function(){
+var email=document.getElementById('payEmail').value.trim();
+var phone=document.getElementById('payPhone').value.trim();
+if(!email||!phone){alert('Имэйл болон утасны дугаараа оруулна уу');return;}
+var btn=document.getElementById('paySubmit');
+btn.disabled=true;btn.textContent='Илгээж байна...';
+var form=document.createElement('form');
+form.method='POST';form.target='payFrame';
+form.action='https://docs.google.com/forms/d/e/1FAIpQLScBeTfkDj0vzYjT6fkwC8oCjAFXDdmtghfasIE7eLO4GdhfUw/formResponse';
+var f1=document.createElement('input');f1.name='entry.413665365';f1.value=phone;form.appendChild(f1);
+var f2=document.createElement('input');f2.name='entry.1131290276';f2.value=email+' | '+code;form.appendChild(f2);
+document.body.appendChild(form);form.submit();document.body.removeChild(form);
+setTimeout(function(){document.getElementById('payForm').style.display='none';document.getElementById('paySuccess').style.display='block';},800);
+};
+})();
 </script>
 
 </body>

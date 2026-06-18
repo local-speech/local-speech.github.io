@@ -44,19 +44,13 @@ body{
 @keyframes orbFloat3{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-40px)}}
 
 /* ---- Header ---- */
-header{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:16px 32px;
-  background:rgba(9,9,11,.6);
-  backdrop-filter:blur(20px);
-  border-bottom:1px solid rgba(255,255,255,.05);
-}
-.logo{font-weight:800;font-size:20px;letter-spacing:-.5px;color:var(--text-bright)}
-.logo span{color:#16a34a}
-header nav{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
-header nav a{color:var(--text-dim);text-decoration:none;font-size:13px;font-weight:600;transition:color .2s}
-header nav a:hover{color:var(--text-bright)}
+.sp-hdr{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:rgba(9,9,11,.7);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06)}
+.sp-brand{font-weight:800;font-size:15px;color:rgba(255,255,255,.9);letter-spacing:-.3px;display:flex;align-items:center;gap:6px;text-decoration:none}
+.sp-brand i{color:#16a34a;font-style:normal}
+.sp-brand em{font-style:normal;font-weight:400;color:rgba(255,255,255,.45);font-size:13px}
+.sp-nav{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.sp-nav a{color:rgba(255,255,255,.45);font-size:12px;font-weight:600;transition:color .2s;text-decoration:none}
+.sp-nav a:hover{color:rgba(255,255,255,.9)}
 
 /* ---- Hero ---- */
 .hero{
@@ -296,61 +290,66 @@ header nav a:hover{color:var(--text-bright)}
 .card:hover .prod-bar{opacity:.9}
 
 /* ---- Bundle Section ---- */
-.bundle{
-  position:relative;z-index:1;
-  max-width:1100px;
-  margin:40px auto 80px;
-  padding:0 24px;
-}
-.bundle-card{
-  background:linear-gradient(135deg,rgba(22,163,74,.08),rgba(0,240,255,.05));
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:24px;
-  padding:48px;
-  text-align:center;
-  backdrop-filter:blur(16px);
-}
-.bundle-card h2{
-  font-size:clamp(28px,4vw,40px);
-  font-weight:800;
-  color:var(--text-bright);
-  margin-bottom:8px;
-  letter-spacing:-1px;
-}
-.bundle-card .subtitle{color:var(--text-dim);font-size:16px;margin-bottom:32px}
+.bundle{position:relative;z-index:1;max-width:1100px;margin:40px auto 80px;padding:0 24px}
+.bundle-card{background:linear-gradient(135deg,rgba(22,163,74,.08),rgba(0,240,255,.05));border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:48px;backdrop-filter:blur(16px)}
+.bundle-card h2{font-size:clamp(28px,4vw,40px);font-weight:800;color:var(--text-bright);margin-bottom:8px;letter-spacing:-1px;text-align:center}
+.bundle-card .subtitle{color:var(--text-dim);font-size:16px;margin-bottom:32px;text-align:center}
+.bundle-apps{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:32px}
+.bundle-app{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;border:1.5px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);cursor:pointer;transition:all .2s;user-select:none}
+.bundle-app:hover{border-color:rgba(22,163,74,.3);background:rgba(22,163,74,.05)}
+.bundle-app.checked{border-color:rgba(22,163,74,.5);background:rgba(22,163,74,.1)}
+.bundle-app input[type=checkbox]{display:none}
+.bundle-check{width:22px;height:22px;border-radius:6px;border:2px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;font-size:13px;color:transparent}
+.bundle-app.checked .bundle-check{background:#16a34a;border-color:#16a34a;color:#fff}
+.bundle-app-icon{font-size:20px;flex-shrink:0}
+.bundle-app-info{flex:1;min-width:0}
+.bundle-app-name{font-size:14px;font-weight:600;color:var(--text-bright)}
+.bundle-app-price{font-size:12px;color:var(--text-dim)}
+.bundle-summary{text-align:center;padding:24px 0;border-top:1px solid rgba(255,255,255,.06);margin-top:8px}
+.bundle-count{font-size:14px;color:var(--text-dim);margin-bottom:12px}
 .bundle-pricing{display:flex;align-items:baseline;justify-content:center;gap:16px;flex-wrap:wrap}
-.bundle-old{
-  font-size:24px;color:var(--text-dim);
-  text-decoration:line-through;
-  text-decoration-color:rgba(255,255,255,.3);
-}
-.bundle-new{
-  font-size:clamp(36px,5vw,56px);
-  font-weight:800;
-  background:linear-gradient(135deg,#16a34a,#00f0ff);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-}
-.bundle-save{
-  background:rgba(22,163,74,.15);
-  color:#16a34a;
-  font-size:13px;font-weight:700;
-  padding:6px 14px;
-  border-radius:100px;
-}
-.bundle-cta{
-  display:inline-block;
-  margin-top:32px;
-  padding:14px 36px;
-  background:#16a34a;
-  color:#fff;
-  font-size:15px;font-weight:700;
-  border-radius:12px;
-  text-decoration:none;
-  transition:background .2s,transform .2s;
-}
+.bundle-old{font-size:24px;color:var(--text-dim);text-decoration:line-through;text-decoration-color:rgba(255,255,255,.3)}
+.bundle-new{font-size:clamp(36px,5vw,56px);font-weight:800;background:linear-gradient(135deg,#16a34a,#00f0ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.bundle-save{background:rgba(22,163,74,.15);color:#16a34a;font-size:13px;font-weight:700;padding:6px 14px;border-radius:100px}
+.bundle-hint{font-size:13px;color:var(--text-dim);margin-top:12px;opacity:.7}
+.bundle-select-all{display:inline-block;margin-bottom:20px;padding:8px 20px;background:rgba(22,163,74,.1);color:#16a34a;border:1px solid rgba(22,163,74,.3);border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;text-align:center}
+.bundle-select-all:hover{background:rgba(22,163,74,.2)}
+.bundle-cta{display:inline-block;margin-top:24px;padding:14px 36px;background:#16a34a;color:#fff;font-size:15px;font-weight:700;border-radius:12px;text-decoration:none;transition:all .2s;cursor:pointer;border:none}
 .bundle-cta:hover{background:#15803d;transform:translateY(-2px)}
+.bundle-cta:disabled{opacity:.4;cursor:not-allowed;transform:none}
+/* ---- Payment Modal ---- */
+.pay-overlay{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.45);align-items:center;justify-content:center;backdrop-filter:blur(6px);animation:payIn .25s}
+@keyframes payIn{from{opacity:0}to{opacity:1}}
+.pay-card{background:#fff;border-radius:20px;max-width:420px;width:92%;position:relative;box-shadow:0 24px 80px rgba(0,0,0,.18);overflow:hidden;animation:payUp .3s;max-height:90vh;overflow-y:auto}
+@keyframes payUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.pay-close{position:absolute;top:14px;right:14px;background:rgba(0,0,0,.05);border:none;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;color:#666;display:flex;align-items:center;justify-content:center;z-index:1}
+.pay-close:hover{background:rgba(0,0,0,.1)}
+.pay-header{background:linear-gradient(135deg,#0f172a,#1e293b);padding:28px;color:#fff}
+.pay-header h3{font-size:17px;font-weight:700;margin-bottom:3px}
+.pay-header p{font-size:12px;color:rgba(255,255,255,.5)}
+.pay-amount{font-size:32px;font-weight:800;margin-top:12px;letter-spacing:-1px}
+.pay-amount s{font-size:18px;opacity:.35;font-weight:400;margin-right:6px}
+.pay-selected-list{margin-top:12px;font-size:12px;color:rgba(255,255,255,.6);line-height:1.6}
+.pay-body{padding:24px 28px 28px}
+.pay-info{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.pay-info-item{background:#f8fafc;border-radius:10px;padding:12px 14px}
+.pay-label{font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+.pay-value{font-size:13px;font-weight:700;color:#1e293b}
+.pay-code-box{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1.5px solid #bbf7d0;border-radius:12px;padding:14px;text-align:center;margin-bottom:18px}
+.pay-code-box .pay-label{color:#16a34a;letter-spacing:1px}
+.pay-code-val{font-size:22px;font-weight:800;color:#15803d;letter-spacing:2px}
+.pay-code-hint{font-size:10px;color:#6b7280;margin-top:4px}
+.pay-field{margin-bottom:14px}
+.pay-field label{font-size:11px;color:#64748b;font-weight:600;display:block;margin-bottom:5px}
+.pay-field input{width:100%;padding:11px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#f8fafc;box-sizing:border-box}
+.pay-field input:focus{border-color:#16a34a;background:#fff}
+.pay-submit{width:100%;padding:14px;background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;margin-top:4px}
+.pay-submit:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(22,163,74,.3)}
+.pay-submit:disabled{opacity:.6;transform:none}
+.pay-success{display:none;text-align:center;padding:32px 28px}
+.pay-success-icon{width:64px;height:64px;background:linear-gradient(135deg,#dcfce7,#bbf7d0);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:28px}
+.pay-success h3{font-size:18px;font-weight:700;color:#1e293b;margin-bottom:6px}
+.pay-success p{font-size:13px;color:#64748b;line-height:1.6}
 
 /* ---- Enterprise CTA ---- */
 .enterprise{
@@ -431,7 +430,7 @@ footer{
 @media(max-width:768px){
   .bento{grid-template-columns:1fr;gap:12px}
   .card-lg,.card-tall{grid-column:span 1;grid-row:span 1}
-  header{padding:12px 16px}
+  .sp-hdr{padding:12px 16px}
   .hero{padding:120px 16px 48px}
   .bundle-card{padding:32px 20px}
 }
@@ -450,9 +449,9 @@ footer{
 <div class="orb orb-3"></div>
 
 <!-- Header -->
-<header>
-  <div class="logo">So<span>Pro</span></div>
-  <nav>
+<div class="sp-hdr">
+  <div class="sp-brand">So<i>Pro</i></div>
+  <nav class="sp-nav">
     <a href="/aispeech">AISpeech</a>
     <a href="/blur">Нууцлагч</a>
     <a href="/sign">Гарын үсэг</a>
@@ -461,7 +460,7 @@ footer{
     <a href="/eyecare">Нүд</a>
     <a href="/mn">MN</a>
   </nav>
-</header>
+</div>
 
 <!-- Hero -->
 <section class="hero">
@@ -584,19 +583,74 @@ footer{
 
 </section>
 
-<!-- Bundle Offer -->
-<section class="bundle fade-up">
+<!-- Bundle Builder -->
+<section class="bundle fade-up" id="bundle">
   <div class="bundle-card">
-    <h2>Бүгд нэг дор</h2>
-    <p class="subtitle">9 хэрэгслийг хамтад нь авбал хэмнэлттэй</p>
-    <div class="bundle-pricing">
-      <span class="bundle-old">81,000₮</span>
-      <span class="bundle-new">39,000₮</span>
-      <span class="bundle-save">52% хэмнэлт</span>
+    <h2>Өөрийн багц үүсгэх</h2>
+    <p class="subtitle">Хэрэгтэй хэрэгслүүдээ сонгоод хямдралтай аваарай</p>
+    <div style="text-align:center"><span class="bundle-select-all" id="selectAll" onclick="toggleAll()">✓ Бүгдийг сонгох</span></div>
+    <div class="bundle-apps" id="bundleApps">
+      <label class="bundle-app" onclick="toggleApp(this)"><input type="checkbox" value="AISpeech"><span class="bundle-check">✓</span><span class="bundle-app-icon">🎤</span><div class="bundle-app-info"><div class="bundle-app-name">AISpeech</div><div class="bundle-app-price">9,000₮</div></div></label>
+      <label class="bundle-app" onclick="toggleApp(this)"><input type="checkbox" value="Blur"><span class="bundle-check">✓</span><span class="bundle-app-icon">🔒</span><div class="bundle-app-info"><div class="bundle-app-name">Нууц баллагч</div><div class="bundle-app-price">9,000₮</div></div></label>
+      <label class="bundle-app" onclick="toggleApp(this)"><input type="checkbox" value="Sign"><span class="bundle-check">✓</span><span class="bundle-app-icon">✍️</span><div class="bundle-app-info"><div class="bundle-app-name">Гарын үсэг</div><div class="bundle-app-price">9,000₮</div></div></label>
+      <label class="bundle-app" onclick="toggleApp(this)"><input type="checkbox" value="Macro"><span class="bundle-check">✓</span><span class="bundle-app-icon">⌨️</span><div class="bundle-app-info"><div class="bundle-app-name">Текст бэлдэц</div><div class="bundle-app-price">9,000₮</div></div></label>
+      <label class="bundle-app" onclick="toggleApp(this)"><input type="checkbox" value="Color"><span class="bundle-check">✓</span><span class="bundle-app-icon">🎨</span><div class="bundle-app-info"><div class="bundle-app-name">Өнгө авагч</div><div class="bundle-app-price">9,000₮</div></div></label>
+      <label class="bundle-app" onclick="toggleApp(this)"><input type="checkbox" value="EyeCare"><span class="bundle-check">✓</span><span class="bundle-app-icon">👁️</span><div class="bundle-app-info"><div class="bundle-app-name">Нүд хамгаалагч</div><div class="bundle-app-price">9,000₮</div></div></label>
+      <label class="bundle-app" onclick="toggleApp(this)"><input type="checkbox" value="Focus"><span class="bundle-check">✓</span><span class="bundle-app-icon">🛡️</span><div class="bundle-app-info"><div class="bundle-app-name">Төвлөрөл хамгаалагч</div><div class="bundle-app-price">9,000₮</div></div></label>
+      <label class="bundle-app" onclick="toggleApp(this)"><input type="checkbox" value="Body"><span class="bundle-check">✓</span><span class="bundle-app-icon">🧘</span><div class="bundle-app-info"><div class="bundle-app-name">Биеийн сануулагч</div><div class="bundle-app-price">9,000₮</div></div></label>
+      <label class="bundle-app" onclick="toggleApp(this)"><input type="checkbox" value="Productivity"><span class="bundle-check">✓</span><span class="bundle-app-icon">📊</span><div class="bundle-app-info"><div class="bundle-app-name">Бүтээмж хэмжигч</div><div class="bundle-app-price">9,000₮</div></div></label>
     </div>
-    <a href="#" class="bundle-cta">Багц авах</a>
+    <div class="bundle-summary" id="bundleSummary" style="display:none">
+      <div class="bundle-count" id="bundleCount"></div>
+      <div class="bundle-pricing">
+        <span class="bundle-old" id="bundleOld"></span>
+        <span class="bundle-new" id="bundleNew"></span>
+        <span class="bundle-save" id="bundleSave"></span>
+      </div>
+      <div class="bundle-hint" id="bundleHint">Бүгдийг сонговол 50% хямдрал!</div>
+    </div>
+    <div style="text-align:center">
+      <button class="bundle-cta" id="bundleCta" disabled onclick="openBundlePay()">Багц авах</button>
+    </div>
   </div>
 </section>
+
+<!-- Payment Modal -->
+<div id="payModal" class="pay-overlay" onclick="if(event.target===this)this.style.display='none'">
+<div class="pay-card">
+<button class="pay-close" onclick="document.getElementById('payModal').style.display='none'">✕</button>
+<div id="payForm">
+<div class="pay-header">
+<h3 id="payTitle">SoPro багц</h3>
+<p>Насан туршийн лиценз</p>
+<div class="pay-amount" id="payAmount"></div>
+<div class="pay-selected-list" id="payList"></div>
+</div>
+<div class="pay-body">
+<div class="pay-info">
+<div class="pay-info-item"><div class="pay-label">Банк</div><div class="pay-value">Хаанбанк</div></div>
+<div class="pay-info-item"><div class="pay-label">Данс</div><div class="pay-value">5400780646</div></div>
+<div class="pay-info-item"><div class="pay-label">Нэр</div><div class="pay-value">Д.Баттулга</div></div>
+<div class="pay-info-item"><div class="pay-label">Дүн</div><div class="pay-value" id="payDun" style="color:#e8453c"></div></div>
+</div>
+<div class="pay-code-box">
+<div class="pay-label">Гүйлгээний утга</div>
+<div class="pay-code-val" id="payCode"></div>
+<div class="pay-code-hint">Энэ кодыг гүйлгээний утгад заавал бичнэ үү</div>
+</div>
+<div class="pay-field"><label>Имэйл хаяг</label><input type="email" id="payEmail" placeholder="example@gmail.com"></div>
+<div class="pay-field"><label>Утасны дугаар</label><input type="tel" id="payPhone" placeholder="99112233"></div>
+<button class="pay-submit" id="paySubmit" onclick="submitPayment()">Шилжүүлсэн ✓</button>
+</div>
+</div>
+<div class="pay-success" id="paySuccess">
+<div class="pay-success-icon">✓</div>
+<h3>Амжилттай бүртгэгдлээ!</h3>
+<p>Таны захиалгыг хүлээн авлаа.<br>24 цагийн дотор имэйл рүү лицензийн түлхүүр илгээгдэнэ.</p>
+</div>
+</div>
+</div>
+<iframe name="payFrame" style="display:none"></iframe>
 
 <!-- Enterprise CTA -->
 <section class="enterprise fade-up">
@@ -784,6 +838,82 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
 document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+// ---- Bundle Builder ----
+var PRICE=9000,TOTAL_APPS=9;
+function getChecked(){return document.querySelectorAll('#bundleApps input:checked')}
+function fmt(n){return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,',')}
+function toggleApp(el){
+  var cb=el.querySelector('input');
+  cb.checked=!cb.checked;
+  el.classList.toggle('checked',cb.checked);
+  updateBundle();
+}
+function toggleAll(){
+  var apps=document.querySelectorAll('#bundleApps .bundle-app');
+  var all=getChecked().length===TOTAL_APPS;
+  apps.forEach(function(a){
+    var cb=a.querySelector('input');
+    cb.checked=!all;
+    a.classList.toggle('checked',!all);
+  });
+  updateBundle();
+}
+function updateBundle(){
+  var checked=getChecked();
+  var count=checked.length;
+  var sum=document.getElementById('bundleSummary');
+  var cta=document.getElementById('bundleCta');
+  var hint=document.getElementById('bundleHint');
+  var selAll=document.getElementById('selectAll');
+  selAll.textContent=count===TOTAL_APPS?'✕ Бүгдийг болих':'✓ Бүгдийг сонгох';
+  if(count<2){sum.style.display='none';cta.disabled=true;return;}
+  sum.style.display='block';cta.disabled=false;
+  var original=count*PRICE;
+  var discount=count===TOTAL_APPS?50:30;
+  var final_price=Math.round(original*(100-discount)/100);
+  document.getElementById('bundleCount').textContent=count+' хэрэгсэл сонгосон';
+  document.getElementById('bundleOld').textContent=fmt(original)+'₮';
+  document.getElementById('bundleNew').textContent=fmt(final_price)+'₮';
+  document.getElementById('bundleSave').textContent=discount+'% хэмнэлт';
+  hint.textContent=count===TOTAL_APPS?'Бүх багц — хамгийн их хэмнэлт!':'Бүгдийг сонговол 50% хямдрал!';
+}
+function openBundlePay(){
+  var checked=getChecked();
+  if(checked.length<2)return;
+  var count=checked.length;
+  var original=count*PRICE;
+  var discount=count===TOTAL_APPS?50:30;
+  var final_price=Math.round(original*(100-discount)/100);
+  var names=[];checked.forEach(function(cb){names.push(cb.value)});
+  var chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',code='SPR-';
+  for(var i=0;i<6;i++)code+=chars[Math.floor(Math.random()*chars.length)];
+  document.getElementById('payCode').textContent=code;
+  document.getElementById('payTitle').textContent=count===TOTAL_APPS?'SoPro бүрэн багц (9 апп)':'SoPro багц ('+count+' апп)';
+  document.getElementById('payAmount').innerHTML='<s>'+fmt(original)+'₮</s> '+fmt(final_price)+'₮';
+  document.getElementById('payList').textContent=names.join(' • ');
+  document.getElementById('payDun').textContent=fmt(final_price)+'₮';
+  document.getElementById('payForm').style.display='';
+  document.getElementById('paySuccess').style.display='none';
+  document.getElementById('paySubmit').disabled=false;
+  document.getElementById('paySubmit').textContent='Шилжүүлсэн ✓';
+  document.getElementById('payModal').style.display='flex';
+  window._payCode=code;window._payNames=names.join(', ');window._payPrice=final_price;
+}
+function submitPayment(){
+  var email=document.getElementById('payEmail').value.trim();
+  var phone=document.getElementById('payPhone').value.trim();
+  if(!email||!phone){alert('Имэйл болон утасны дугаараа оруулна уу');return;}
+  var btn=document.getElementById('paySubmit');
+  btn.disabled=true;btn.textContent='Илгээж байна...';
+  var form=document.createElement('form');
+  form.method='POST';form.target='payFrame';
+  form.action='https://docs.google.com/forms/d/e/1FAIpQLScBeTfkDj0vzYjT6fkwC8oCjAFXDdmtghfasIE7eLO4GdhfUw/formResponse';
+  var f1=document.createElement('input');f1.name='entry.413665365';f1.value=phone;form.appendChild(f1);
+  var f2=document.createElement('input');f2.name='entry.1131290276';f2.value=email+' | '+window._payCode+' | '+window._payNames+' | '+window._payPrice+'₮';form.appendChild(f2);
+  document.body.appendChild(form);form.submit();document.body.removeChild(form);
+  setTimeout(function(){document.getElementById('payForm').style.display='none';document.getElementById('paySuccess').style.display='block';},800);
+}
 </script>
 </body>
 </html>
