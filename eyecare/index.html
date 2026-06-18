@@ -10,15 +10,15 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg1:#0f1729;--bg2:#0d2b3e;
-  --glow:#4ecdc4;--glow2:#45b7aa;
-  --text:#e0e8f0;--text2:#8da4b8;--text3:#5a7a90;
-  --accent:#4ecdc4;--accent2:#7ee8e0;
+  --bg1:#ffffff;--bg2:#f8fafa;
+  --glow:#0d9488;--glow2:#0f766e;
+  --text:#1a1a2e;--text2:#555;--text3:#999;
+  --accent:#0d9488;--accent2:#14b8a6;
 }
 html{scroll-behavior:smooth}
 body{
   font-family:'Inter',system-ui,sans-serif;
-  background:linear-gradient(160deg,var(--bg1) 0%,var(--bg2) 50%,#0a1f2e 100%);
+  background:#ffffff;
   color:var(--text);min-height:100vh;overflow-x:hidden;
   line-height:1.7;font-weight:300;
 }
@@ -28,7 +28,7 @@ a{color:var(--accent);text-decoration:none}
 .particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
 .particle{
   position:absolute;border-radius:50%;
-  background:radial-gradient(circle,rgba(78,205,196,.15),transparent 70%);
+  background:radial-gradient(circle,rgba(13,148,136,.06),transparent 70%);
   animation:float-up linear infinite;
 }
 @keyframes float-up{
@@ -39,13 +39,15 @@ a{color:var(--accent);text-decoration:none}
 }
 
 /* UNIFIED HEADER */
-.sp-hdr{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:rgba(9,9,11,.7);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06)}
-.sp-brand{font-weight:800;font-size:15px;color:rgba(255,255,255,.9);letter-spacing:-.3px;display:flex;align-items:center;gap:6px;text-decoration:none}
-.sp-brand i{color:#16a34a;font-style:normal}
-.sp-brand em{font-style:normal;font-weight:400;color:rgba(255,255,255,.45);font-size:13px}
-.sp-nav{display:flex;gap:16px;align-items:center}
-.sp-nav a{color:rgba(255,255,255,.45);font-size:12px;font-weight:600;transition:color .2s;text-decoration:none}
-.sp-nav a:hover{color:rgba(255,255,255,.9)}
+.sp-hdr{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:rgba(255,255,255,.97);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,.06)}
+.sp-hdr::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(232,69,60,.12) 20%,rgba(232,69,60,.25) 50%,rgba(232,69,60,.12) 80%,transparent)}
+.sp-brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:'Segoe UI',system-ui,sans-serif;font-size:17px;font-weight:700;color:#4d4d4d;letter-spacing:-.5px}
+.sp-brand i{font-style:normal;font-size:13px;font-weight:700;color:#fff;background:#e8453c;padding:2px 9px 3px;border-radius:6px;letter-spacing:.3px}
+.sp-brand .sep{display:inline-block;width:1px;height:20px;background:rgba(0,0,0,.12);margin:0 2px;vertical-align:middle}
+.sp-brand em{font-style:normal;font-size:15px;font-weight:500;color:#1a1a2e;letter-spacing:-.3px}
+.sp-nav{display:flex;gap:14px;align-items:center}
+.sp-nav a{font-size:12px;font-weight:500;color:#888;letter-spacing:.2px;text-transform:uppercase;text-decoration:none;transition:color .2s}
+.sp-nav a:hover{color:#1a1a2e}
 
 /* Section base */
 section{position:relative;z-index:1;padding:6rem 1.5rem}
@@ -59,14 +61,14 @@ section{position:relative;z-index:1;padding:6rem 1.5rem}
 .breath-wrap{position:relative;width:280px;height:280px;margin:0 auto}
 .breath-circle{
   position:absolute;inset:0;border-radius:50%;
-  background:radial-gradient(circle at 40% 35%,rgba(78,205,196,.12),transparent 65%);
-  border:2px solid rgba(78,205,196,.25);
+  background:radial-gradient(circle at 40% 35%,rgba(13,148,136,.08),transparent 65%);
+  border:2px solid rgba(13,148,136,.2);
   animation:breathe 16s ease-in-out infinite;
-  box-shadow:0 0 60px rgba(78,205,196,.08),inset 0 0 60px rgba(78,205,196,.04);
+  box-shadow:0 0 40px rgba(13,148,136,.06);
 }
 .breath-circle::after{
   content:'';position:absolute;inset:15%;border-radius:50%;
-  border:1px solid rgba(78,205,196,.12);
+  border:1px solid rgba(13,148,136,.1);
   animation:breathe 16s ease-in-out infinite;
   animation-delay:-.5s;
 }
@@ -100,12 +102,12 @@ section{position:relative;z-index:1;padding:6rem 1.5rem}
   display:inline-flex;align-items:center;gap:.5rem;
   padding:.9rem 2.5rem;border-radius:50px;
   background:linear-gradient(135deg,var(--accent),var(--glow2));
-  color:var(--bg1);font-weight:600;font-size:1rem;
+  color:#fff;font-weight:600;font-size:1rem;
   border:none;cursor:pointer;
-  box-shadow:0 0 30px rgba(78,205,196,.2),0 4px 20px rgba(78,205,196,.15);
+  box-shadow:0 4px 16px rgba(13,148,136,.2);
   transition:all .4s;letter-spacing:-.01em;
 }
-.btn-buy:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(78,205,196,.35),0 8px 30px rgba(78,205,196,.2)}
+.btn-buy:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(13,148,136,.25)}
 .price-info{display:flex;align-items:baseline;gap:.75rem}
 .price-old{font-size:.95rem;color:var(--text3);text-decoration:line-through}
 .price-new{font-size:1.6rem;font-weight:600;color:var(--accent)}
@@ -122,8 +124,8 @@ section{position:relative;z-index:1;padding:6rem 1.5rem}
 /* Stats */
 .stats{
   display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;
-  padding:3rem 0;border-top:1px solid rgba(78,205,196,.08);
-  border-bottom:1px solid rgba(78,205,196,.08);
+  padding:3rem 0;border-top:1px solid rgba(0,0,0,.06);
+  border-bottom:1px solid rgba(0,0,0,.06);
   margin:3rem 0;text-align:center;
 }
 .stat-num{font-size:2rem;font-weight:600;color:var(--accent);line-height:1.2}
@@ -139,14 +141,14 @@ section{position:relative;z-index:1;padding:6rem 1.5rem}
 
 .exercises{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
 .exercise-card{
-  background:rgba(78,205,196,.03);
-  border:1px solid rgba(78,205,196,.08);
+  background:#fff;
+  border:1px solid rgba(0,0,0,.06);
   border-radius:20px;padding:2rem 1.5rem;text-align:center;
   transition:all .4s;position:relative;overflow:hidden;
 }
 .exercise-card:hover{
-  border-color:rgba(78,205,196,.2);
-  background:rgba(78,205,196,.06);
+  border-color:rgba(13,148,136,.2);
+  box-shadow:0 8px 30px rgba(0,0,0,.06);
   transform:translateY(-4px);
 }
 .exercise-preview{
@@ -160,8 +162,8 @@ section{position:relative;z-index:1;padding:6rem 1.5rem}
 /* Mini breathing preview */
 .preview-breath{
   width:60px;height:60px;border-radius:50%;
-  border:2px solid rgba(78,205,196,.3);
-  background:radial-gradient(circle,rgba(78,205,196,.1),transparent);
+  border:2px solid rgba(13,148,136,.25);
+  background:radial-gradient(circle,rgba(13,148,136,.08),transparent);
   animation:breathe-mini 8s ease-in-out infinite;
 }
 @keyframes breathe-mini{
@@ -176,7 +178,7 @@ section{position:relative;z-index:1;padding:6rem 1.5rem}
 .preview-dot{
   width:12px;height:12px;border-radius:50%;
   background:var(--accent);
-  box-shadow:0 0 10px rgba(78,205,196,.5);
+  box-shadow:0 0 10px rgba(13,148,136,.3);
   position:absolute;
   animation:dot-track 4s ease-in-out infinite;
 }
@@ -189,7 +191,7 @@ section{position:relative;z-index:1;padding:6rem 1.5rem}
 }
 .preview-dot-wrap::before{
   content:'';position:absolute;inset:5px;
-  border:1px dashed rgba(78,205,196,.15);border-radius:8px;
+  border:1px dashed rgba(13,148,136,.15);border-radius:8px;
 }
 
 /* Mini 20-20-20 preview */
@@ -207,7 +209,7 @@ section{position:relative;z-index:1;padding:6rem 1.5rem}
 .step{display:flex;gap:1.5rem;align-items:flex-start}
 .step-num{
   flex-shrink:0;width:40px;height:40px;border-radius:50%;
-  border:1px solid rgba(78,205,196,.2);
+  border:1px solid rgba(13,148,136,.15);
   display:flex;align-items:center;justify-content:center;
   font-size:.85rem;font-weight:500;color:var(--accent);
 }
@@ -218,18 +220,18 @@ section{position:relative;z-index:1;padding:6rem 1.5rem}
 .try-section{text-align:center}
 .try-box{
   max-width:400px;margin:2rem auto 0;
-  background:rgba(78,205,196,.03);
-  border:1px solid rgba(78,205,196,.1);
-  border-radius:24px;padding:3rem 2rem;
+  background:#fff;
+  border:1px solid rgba(0,0,0,.06);
+  border-radius:24px;padding:3rem 2rem;box-shadow:0 4px 20px rgba(0,0,0,.04);
 }
 .try-circle-wrap{width:200px;height:200px;margin:0 auto 1.5rem;position:relative}
 .try-circle{
   position:absolute;inset:0;border-radius:50%;
-  border:2px solid rgba(78,205,196,.3);
-  background:radial-gradient(circle at 40% 35%,rgba(78,205,196,.1),transparent 65%);
+  border:2px solid rgba(13,148,136,.25);
+  background:radial-gradient(circle at 40% 35%,rgba(13,148,136,.08),transparent 65%);
   transition:transform 4s ease-in-out,opacity 4s ease-in-out;
 }
-.try-circle.inhale{transform:scale(1);opacity:1;box-shadow:0 0 40px rgba(78,205,196,.15)}
+.try-circle.inhale{transform:scale(1);opacity:1;box-shadow:0 0 30px rgba(13,148,136,.1)}
 .try-circle.exhale{transform:scale(.65);opacity:.5;box-shadow:none}
 .try-label{
   position:absolute;inset:0;display:flex;flex-direction:column;
@@ -239,24 +241,24 @@ section{position:relative;z-index:1;padding:6rem 1.5rem}
 .try-timer{font-size:2.5rem;font-weight:200;color:var(--accent);line-height:1}
 .try-btn{
   padding:.7rem 2rem;border-radius:50px;cursor:pointer;
-  background:transparent;border:1px solid rgba(78,205,196,.3);
+  background:transparent;border:1px solid rgba(13,148,136,.25);
   color:var(--accent);font-family:inherit;font-size:.85rem;
   transition:all .3s;
 }
-.try-btn:hover{background:rgba(78,205,196,.1);border-color:rgba(78,205,196,.5)}
-.try-btn.active{background:rgba(78,205,196,.15);border-color:var(--accent)}
+.try-btn:hover{background:rgba(13,148,136,.06);border-color:var(--accent)}
+.try-btn.active{background:rgba(13,148,136,.1);border-color:var(--accent)}
 
 /* Features */
 .features{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:2rem}
 .feature{
   display:flex;gap:1rem;align-items:flex-start;
   padding:1.25rem;border-radius:14px;
-  background:rgba(78,205,196,.02);
-  border:1px solid rgba(78,205,196,.05);
+  background:#fff;
+  border:1px solid rgba(0,0,0,.05);
 }
 .feature-icon{
   flex-shrink:0;width:36px;height:36px;border-radius:10px;
-  background:rgba(78,205,196,.08);
+  background:rgba(13,148,136,.06);
   display:flex;align-items:center;justify-content:center;
   font-size:1.1rem;
 }
@@ -271,7 +273,7 @@ section{position:relative;z-index:1;padding:6rem 1.5rem}
 /* Footer */
 footer{
   text-align:center;padding:2rem;
-  border-top:1px solid rgba(78,205,196,.06);
+  border-top:1px solid rgba(0,0,0,.06);
   font-size:.75rem;color:var(--text3);
 }
 
@@ -299,10 +301,7 @@ footer{
 <div class="particles" id="particles"></div>
 
 <!-- Nav -->
-<div class="sp-hdr">
-  <a href="/sopro" class="sp-brand">So<i>Pro</i> <em>— Нүд хамгаалагч</em></a>
-  <nav class="sp-nav"><a href="/sopro">← Бүх хэрэгсэл</a></nav>
-</div>
+<div class="sp-hdr"><a href="/sopro" class="sp-brand">So<i>Pro</i><span class="sep"></span><em>Нүд хамгаалагч</em></a><nav class="sp-nav"><a href="/sopro">← Бүх хэрэгсэл</a></nav></div>
 
 <!-- Hero -->
 <section class="hero">
@@ -447,7 +446,7 @@ footer{
 <!-- Bottom CTA -->
 <section class="bottom-cta">
   <h2>Нүдээ <strong>хайрлаарай</strong></h2>
-  <p style="color:var(--text2);margin-bottom:2rem;font-size:.95rem">Өдөрт 8+ цаг дэлгэц харж байгаа бол — энэ апп танд хэрэгтэй.</p>
+  <p style="color:#555;margin-bottom:2rem;font-size:.95rem">Өдөрт 8+ цаг дэлгэц харж байгаа бол — энэ апп танд хэрэгтэй.</p>
   <div class="cta-wrap">
     <div class="price-info">
       <span class="price-old">27,000&#8366;</span>
@@ -520,15 +519,15 @@ function toggleBreathing(){
 
 <!-- Байгууллагын хүсэлт -->
 <section style="max-width:800px;margin:60px auto;padding:0 24px">
-  <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:40px;text-align:center;backdrop-filter:blur(12px)">
-    <h2 style="font-size:22px;font-weight:800;color:#fff;margin-bottom:6px">Байгууллагын онцлогт нийцүүлэн хөгжүүлэлт хийлгэж авах боломжтой</h2>
-    <p style="color:rgba(255,255,255,0.5);font-size:14px;margin-bottom:24px">Таны байгууллагын ажлын урсгалд тохируулан тусгайлан өөрчилж, нэмэлт функц хөгжүүлж өгнө.</p>
+  <div style="background:#fff;border:1px solid rgba(0,0,0,0.06);border-radius:20px;padding:40px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.04)">
+    <h2 style="font-size:22px;font-weight:800;color:#1a1a2e;margin-bottom:6px">Байгууллагын онцлогт нийцүүлэн хөгжүүлэлт хийлгэж авах боломжтой</h2>
+    <p style="color:#555;font-size:14px;margin-bottom:24px">Таны байгууллагын ажлын урсгалд тохируулан тусгайлан өөрчилж, нэмэлт функц хөгжүүлж өгнө.</p>
     <form id="entForm" onsubmit="return submitEntForm(event)" style="max-width:500px;margin:0 auto">
       <div style="display:flex;gap:10px;margin-bottom:10px">
-        <input type="tel" id="entPhone" placeholder="Утасны дугаар" required style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:11px 14px;color:#fff;font-size:14px;outline:none">
-        <input type="email" id="entEmail" placeholder="Байгууллагын имэйл" required style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:11px 14px;color:#fff;font-size:14px;outline:none">
+        <input type="tel" id="entPhone" placeholder="Утасны дугаар" required style="flex:1;background:#f8fafa;border:1px solid rgba(0,0,0,0.08);border-radius:10px;padding:11px 14px;color:#1a1a2e;font-size:14px;outline:none">
+        <input type="email" id="entEmail" placeholder="Байгууллагын имэйл" required style="flex:1;background:#f8fafa;border:1px solid rgba(0,0,0,0.08);border-radius:10px;padding:11px 14px;color:#1a1a2e;font-size:14px;outline:none">
       </div>
-      <textarea id="entMsg" placeholder="Ямар онцлог хэрэгтэй байгааг товч бичнэ үү..." rows="3" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:11px 14px;color:#fff;font-size:14px;outline:none;resize:vertical;margin-bottom:14px;font-family:inherit;box-sizing:border-box"></textarea>
+      <textarea id="entMsg" placeholder="Ямар онцлог хэрэгтэй байгааг товч бичнэ үү..." rows="3" style="width:100%;background:#f8fafa;border:1px solid rgba(0,0,0,0.08);border-radius:10px;padding:11px 14px;color:#1a1a2e;font-size:14px;outline:none;resize:vertical;margin-bottom:14px;font-family:inherit;box-sizing:border-box"></textarea>
       <button type="submit" id="entBtn" style="padding:11px 28px;background:#4fd1c5;color:#fff;font-size:14px;font-weight:700;border:none;border-radius:10px;cursor:pointer">Хүсэлт илгээх</button>
       <p id="entSuccess" style="display:none;color:#16a34a;font-size:13px;font-weight:600;margin-top:12px">✓ Хүсэлт амжилттай илгээгдлээ. Бид тантай удахгүй холбогдоно.</p>
     </form>

@@ -662,23 +662,22 @@
         }
 
         /* Unified SoPro header */
-        .sp-hdr{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:rgba(9,9,11,.7);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06)}
-        .sp-brand{font-weight:800;font-size:15px;color:rgba(255,255,255,.9);letter-spacing:-.3px;display:flex;align-items:center;gap:6px;text-decoration:none}
-        .sp-brand i{color:#16a34a;font-style:normal}
-        .sp-brand em{font-style:normal;font-weight:400;color:rgba(255,255,255,.45);font-size:13px}
-        .sp-nav{display:flex;gap:16px;align-items:center}
-        .sp-nav a{color:rgba(255,255,255,.45);font-size:12px;font-weight:600;transition:color .2s;text-decoration:none}
-        .sp-nav a:hover{color:rgba(255,255,255,.9)}
+        .sp-hdr{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:rgba(255,255,255,.97);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,.06)}
+        .sp-hdr::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(232,69,60,.12) 20%,rgba(232,69,60,.25) 50%,rgba(232,69,60,.12) 80%,transparent)}
+        .sp-brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:'Segoe UI',system-ui,sans-serif;font-size:17px;font-weight:700;color:#4d4d4d;letter-spacing:-.5px}
+        .sp-brand i{font-style:normal;font-size:13px;font-weight:700;color:#fff;background:#e8453c;padding:2px 9px 3px;border-radius:6px;letter-spacing:.3px}
+        .sp-brand .sep{display:inline-block;width:1px;height:20px;background:rgba(0,0,0,.12);margin:0 2px;vertical-align:middle}
+        .sp-brand em{font-style:normal;font-size:15px;font-weight:500;color:#1a1a2e;letter-spacing:-.3px}
+        .sp-nav{display:flex;gap:14px;align-items:center}
+        .sp-nav a{font-size:12px;font-weight:500;color:#888;letter-spacing:.2px;text-transform:uppercase;text-decoration:none;transition:color .2s}
+        .sp-nav a:hover{color:#1a1a2e}
     </style>
 </head>
 <body>
 <div class="page-content">
 
     <!-- Header -->
-    <div class="sp-hdr">
-      <a href="/sopro" class="sp-brand">So<i>Pro</i> <em>— Гарын үсэг</em></a>
-      <nav class="sp-nav"><a href="/sopro">← Бүх хэрэгсэл</a></nav>
-    </div>
+    <div class="sp-hdr"><a href="/sopro" class="sp-brand">So<i>Pro</i><span class="sep"></span><em>Гарын үсэг</em></a><nav class="sp-nav"><a href="/sopro">← Бүх хэрэгсэл</a></nav></div>
 
     <!-- Hero -->
     <section class="hero">

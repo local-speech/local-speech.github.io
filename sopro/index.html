@@ -10,12 +10,13 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#09090b;
-  --card-bg:rgba(255,255,255,0.035);
-  --card-border:rgba(255,255,255,0.08);
-  --text:#e4e4e7;
-  --text-dim:#71717a;
-  --text-bright:#fafafa;
+  --bg:#ffffff;
+  --bg2:#f8f9fa;
+  --card-bg:#ffffff;
+  --card-border:rgba(0,0,0,0.08);
+  --text:#1a1a2e;
+  --text-dim:#666;
+  --text-bright:#1a1a2e;
 }
 html{scroll-behavior:smooth}
 body{
@@ -27,30 +28,17 @@ body{
   -webkit-font-smoothing:antialiased;
 }
 
-/* ---- Floating gradient orbs ---- */
-.orb{
-  position:fixed;
-  border-radius:50%;
-  filter:blur(120px);
-  pointer-events:none;
-  z-index:0;
-  opacity:.35;
-}
-.orb-1{width:600px;height:600px;background:radial-gradient(circle,#16a34a 0%,transparent 70%);top:-10%;left:-8%;animation:orbFloat1 18s ease-in-out infinite}
-.orb-2{width:500px;height:500px;background:radial-gradient(circle,#00f0ff 0%,transparent 70%);top:40%;right:-12%;animation:orbFloat2 22s ease-in-out infinite}
-.orb-3{width:400px;height:400px;background:radial-gradient(circle,#c9a84c 0%,transparent 70%);bottom:-5%;left:30%;animation:orbFloat3 20s ease-in-out infinite}
-@keyframes orbFloat1{0%,100%{transform:translate(0,0)}50%{transform:translate(60px,40px)}}
-@keyframes orbFloat2{0%,100%{transform:translate(0,0)}50%{transform:translate(-50px,30px)}}
-@keyframes orbFloat3{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-40px)}}
 
 /* ---- Header ---- */
-.sp-hdr{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:rgba(9,9,11,.7);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06)}
-.sp-brand{font-weight:800;font-size:15px;color:rgba(255,255,255,.9);letter-spacing:-.3px;display:flex;align-items:center;gap:6px;text-decoration:none}
-.sp-brand i{color:#16a34a;font-style:normal}
-.sp-brand em{font-style:normal;font-weight:400;color:rgba(255,255,255,.45);font-size:13px}
-.sp-nav{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
-.sp-nav a{color:rgba(255,255,255,.45);font-size:12px;font-weight:600;transition:color .2s;text-decoration:none}
-.sp-nav a:hover{color:rgba(255,255,255,.9)}
+.sp-hdr{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:rgba(255,255,255,.97);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,.06)}
+.sp-hdr::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(232,69,60,.12) 20%,rgba(232,69,60,.25) 50%,rgba(232,69,60,.12) 80%,transparent)}
+.sp-brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:'Segoe UI',system-ui,sans-serif;font-size:17px;font-weight:700;color:#4d4d4d;letter-spacing:-.5px}
+.sp-brand i{font-style:normal;font-size:13px;font-weight:700;color:#fff;background:#e8453c;padding:2px 9px 3px;border-radius:6px;letter-spacing:.3px}
+.sp-brand .sep{display:inline-block;width:1px;height:20px;background:rgba(0,0,0,.12);margin:0 2px;vertical-align:middle}
+.sp-brand em{font-style:normal;font-size:15px;font-weight:500;color:#1a1a2e;letter-spacing:-.3px}
+.sp-nav{display:flex;gap:14px;align-items:center}
+.sp-nav a{font-size:12px;font-weight:500;color:#888;letter-spacing:.2px;text-transform:uppercase;text-decoration:none;transition:color .2s}
+.sp-nav a:hover{color:#1a1a2e}
 
 /* ---- Hero ---- */
 .hero{
@@ -67,10 +55,7 @@ body{
   margin-bottom:20px;
 }
 .hero h1 span{
-  background:linear-gradient(135deg,#16a34a,#00f0ff,#c9a84c);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
+  color:#e8453c;
 }
 .hero p{
   font-size:clamp(16px,2.5vw,20px);
@@ -109,21 +94,21 @@ body{
   transition:transform .35s cubic-bezier(.22,1,.36,1),
              border-color .35s ease,
              box-shadow .35s ease;
-  backdrop-filter:blur(12px);
+  box-shadow:0 1px 3px rgba(0,0,0,.04);
 }
 .card::before{
   content:'';
   position:absolute;inset:0;
   border-radius:20px;
-  background:radial-gradient(ellipse at 50% 0%,var(--accent,.16),transparent 60%);
+  background:radial-gradient(ellipse at 50% 0%,var(--accent,.06),transparent 60%);
   opacity:0;
   transition:opacity .4s ease;
   pointer-events:none;
 }
 .card:hover{
   transform:translateY(-4px);
-  border-color:var(--accent);
-  box-shadow:0 0 40px -10px var(--accent);
+  border-color:rgba(0,0,0,.12);
+  box-shadow:0 12px 40px rgba(0,0,0,.08);
 }
 .card:hover::before{opacity:1}
 
@@ -139,9 +124,9 @@ body{
 .hotkey{
   display:inline-flex;align-items:center;gap:4px;
   font-size:11px;font-weight:600;
-  color:rgba(255,255,255,.5);
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.1);
+  color:#888;
+  background:#f0f1f3;
+  border:1px solid rgba(0,0,0,.08);
   padding:4px 10px;
   border-radius:6px;
   width:fit-content;
@@ -177,7 +162,7 @@ body{
 
 /* 2. Blur scramble */
 .blur-preview{
-  font-family:monospace;font-size:14px;color:#00f0ff;
+  font-family:monospace;font-size:14px;color:#0891b2;
   letter-spacing:2px;
   display:flex;align-items:center;justify-content:center;
   height:80px;
@@ -210,7 +195,7 @@ body{
 
 /* 4. Macro typing */
 .macro-preview{
-  font-family:monospace;font-size:14px;color:#00ff41;
+  font-family:monospace;font-size:14px;color:#16a34a;
   height:80px;display:flex;align-items:center;justify-content:center;
   overflow:hidden;
 }
@@ -291,29 +276,29 @@ body{
 
 /* ---- Bundle Section ---- */
 .bundle{position:relative;z-index:1;max-width:1100px;margin:40px auto 80px;padding:0 24px}
-.bundle-card{background:linear-gradient(135deg,rgba(22,163,74,.08),rgba(0,240,255,.05));border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:48px;backdrop-filter:blur(16px)}
+.bundle-card{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:24px;padding:48px;box-shadow:0 2px 12px rgba(0,0,0,.04)}
 .bundle-card h2{font-size:clamp(28px,4vw,40px);font-weight:800;color:var(--text-bright);margin-bottom:8px;letter-spacing:-1px;text-align:center}
 .bundle-card .subtitle{color:var(--text-dim);font-size:16px;margin-bottom:32px;text-align:center}
 .bundle-apps{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:32px}
-.bundle-app{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;border:1.5px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);cursor:pointer;transition:all .2s;user-select:none}
-.bundle-app:hover{border-color:rgba(22,163,74,.3);background:rgba(22,163,74,.05)}
-.bundle-app.checked{border-color:rgba(22,163,74,.5);background:rgba(22,163,74,.1)}
+.bundle-app{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;border:1.5px solid rgba(0,0,0,.08);background:#fff;cursor:pointer;transition:all .2s;user-select:none}
+.bundle-app:hover{border-color:rgba(22,163,74,.3);background:rgba(22,163,74,.04)}
+.bundle-app.checked{border-color:rgba(22,163,74,.5);background:rgba(22,163,74,.06)}
 .bundle-app input[type=checkbox]{display:none}
-.bundle-check{width:22px;height:22px;border-radius:6px;border:2px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;font-size:13px;color:transparent}
+.bundle-check{width:22px;height:22px;border-radius:6px;border:2px solid rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;font-size:13px;color:transparent}
 .bundle-app.checked .bundle-check{background:#16a34a;border-color:#16a34a;color:#fff}
 .bundle-app-icon{font-size:20px;flex-shrink:0}
 .bundle-app-info{flex:1;min-width:0}
 .bundle-app-name{font-size:14px;font-weight:600;color:var(--text-bright)}
 .bundle-app-price{font-size:12px;color:var(--text-dim)}
-.bundle-summary{text-align:center;padding:24px 0;border-top:1px solid rgba(255,255,255,.06);margin-top:8px}
+.bundle-summary{text-align:center;padding:24px 0;border-top:1px solid rgba(0,0,0,.06);margin-top:8px}
 .bundle-count{font-size:14px;color:var(--text-dim);margin-bottom:12px}
 .bundle-pricing{display:flex;align-items:baseline;justify-content:center;gap:16px;flex-wrap:wrap}
-.bundle-old{font-size:24px;color:var(--text-dim);text-decoration:line-through;text-decoration-color:rgba(255,255,255,.3)}
+.bundle-old{font-size:24px;color:var(--text-dim);text-decoration:line-through;text-decoration-color:rgba(0,0,0,.25)}
 .bundle-new{font-size:clamp(36px,5vw,56px);font-weight:800;background:linear-gradient(135deg,#16a34a,#00f0ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .bundle-save{background:rgba(22,163,74,.15);color:#16a34a;font-size:13px;font-weight:700;padding:6px 14px;border-radius:100px}
 .bundle-hint{font-size:13px;color:var(--text-dim);margin-top:12px;opacity:.7}
-.bundle-select-all{display:inline-block;margin-bottom:20px;padding:8px 20px;background:rgba(22,163,74,.1);color:#16a34a;border:1px solid rgba(22,163,74,.3);border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;text-align:center}
-.bundle-select-all:hover{background:rgba(22,163,74,.2)}
+.bundle-select-all{display:inline-block;margin-bottom:20px;padding:8px 20px;background:rgba(22,163,74,.06);color:#16a34a;border:1px solid rgba(22,163,74,.2);border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;text-align:center}
+.bundle-select-all:hover{background:rgba(22,163,74,.12)}
 .bundle-cta{display:inline-block;margin-top:24px;padding:14px 36px;background:#16a34a;color:#fff;font-size:15px;font-weight:700;border-radius:12px;text-decoration:none;transition:all .2s;cursor:pointer;border:none}
 .bundle-cta:hover{background:#15803d;transform:translateY(-2px)}
 .bundle-cta:disabled{opacity:.4;cursor:not-allowed;transform:none}
@@ -359,12 +344,12 @@ body{
   padding:0 24px;
 }
 .ent-card{
-  background:linear-gradient(135deg,rgba(59,130,246,.06),rgba(139,92,246,.05));
-  border:1px solid rgba(255,255,255,.1);
+  background:#fff;
+  border:1px solid rgba(0,0,0,.08);
   border-radius:24px;
   padding:48px;
   text-align:center;
-  backdrop-filter:blur(16px);
+  box-shadow:0 2px 12px rgba(0,0,0,.04);
 }
 .ent-card h2{
   font-size:clamp(20px,3vw,28px);
@@ -377,8 +362,8 @@ body{
 .ent-fields{display:flex;gap:12px;margin-bottom:12px}
 .ent-form input,.ent-form textarea{
   flex:1;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.12);
+  background:#f8f9fa;
+  border:1px solid rgba(0,0,0,.1);
   border-radius:10px;
   padding:12px 16px;
   color:var(--text-bright);
@@ -419,7 +404,8 @@ footer{
   padding:40px 24px;
   color:var(--text-dim);
   font-size:13px;
-  border-top:1px solid rgba(255,255,255,.05);
+  border-top:1px solid rgba(0,0,0,.06);
+  background:#f8f9fa;
 }
 
 /* ---- Fade-up animation ---- */
@@ -443,24 +429,9 @@ footer{
 </head>
 <body>
 
-<!-- Floating gradient orbs -->
-<div class="orb orb-1"></div>
-<div class="orb orb-2"></div>
-<div class="orb orb-3"></div>
 
 <!-- Header -->
-<div class="sp-hdr">
-  <div class="sp-brand">So<i>Pro</i></div>
-  <nav class="sp-nav">
-    <a href="/aispeech">AISpeech</a>
-    <a href="/blur">Нууцлагч</a>
-    <a href="/sign">Гарын үсэг</a>
-    <a href="/macro">Бэлдэц</a>
-    <a href="/color">Өнгө</a>
-    <a href="/eyecare">Нүд</a>
-    <a href="/mn">MN</a>
-  </nav>
-</div>
+<div class="sp-hdr"><a href="/sopro" class="sp-brand">So<i>Pro</i></a><nav class="sp-nav"><a href="/aispeech">AISpeech</a><a href="/blur">Нууцлагч</a><a href="/sign">Гарын үсэг</a><a href="/macro">Бэлдэц</a><a href="/color">Өнгө</a><a href="/eyecare">Нүд</a><a href="/mn">MN</a></nav></div>
 
 <!-- Hero -->
 <section class="hero">
@@ -487,7 +458,7 @@ footer{
   <a href="/blur" class="card card-md fade-up" style="--accent:#00f0ff">
     <div class="card-top">
       <h3>Нууцлагч</h3>
-      <p class="desc">Screenshot дээрх регистрийн дугаар, утасны дугаар, нэр зэрэг хувийн мэдээллийг автоматаар таниж баллана. Зургаа хаашаа ч илгээхээсээ өмнө нэг товшилтоор нууцална. Төрийн байгууллага, банк, ААН-үүд нууц мэдээллээ гараар бүдгэрүүлж цаг үрэхийг бүрэн шийднэ.</p>
+      <p class="desc">Screenshot дээрх регистрийн дугаар, утасны дугаар, нэр зэрэг хувийн мэдээллийг автоматаар илрүүлж далдална. Зургаа илгээхээс өмнө нэг товшилтоор нууцална. Төрийн байгууллага, банк, ААН-үүдад нууц мэдээллийг гараар бүдгэрүүлэх шаардлагагүй болно.</p>
       <span class="hotkey">Alt + B</span>
       <div class="blur-preview" id="blur-text">█▓░ НА█░▓</div>
     </div>
@@ -511,7 +482,7 @@ footer{
   <a href="/macro" class="card card-md fade-up" style="--accent:#00ff41">
     <div class="card-top">
       <h3>Текст бэлдэц</h3>
-      <p class="desc">Байнга бичдэг текстээ товчлол болгож хадгална. ";данс" гэж бичээд зай дарахад дансны бүрэн мэдээлэл автоматаар бичигдэнэ. Онлайн худалдаа, хэрэглэгчийн үйлчилгээний ажилтнууд давтан бичдэг урт текстээ секундэд шивнэ.</p>
+      <p class="desc">Байнга бичдэг текстээ товчлол болгож хадгална. ";данс" гэж бичээд зай дарахад дансны бүрэн мэдээлэл автоматаар бичигдэнэ. Онлайн худалдаа, хэрэглэгчийн үйлчилгээний ажилтнууд давтан бичдэг урт текстээ секундэд бичнэ.</p>
       <span class="hotkey">; trigger + space</span>
       <div class="macro-preview" id="macro-text"><span class="macro-cursor">|</span></div>
     </div>
@@ -591,7 +562,7 @@ footer{
     <div style="text-align:center"><span class="bundle-select-all" id="selectAll" onclick="toggleAll()">✓ Бүгдийг сонгох</span></div>
     <div class="bundle-apps" id="bundleApps">
       <label class="bundle-app" onclick="toggleApp(this)"><input type="checkbox" value="AISpeech"><span class="bundle-check">✓</span><span class="bundle-app-icon">🎤</span><div class="bundle-app-info"><div class="bundle-app-name">AISpeech</div><div class="bundle-app-price">9,000₮</div></div></label>
-      <label class="bundle-app" onclick="toggleApp(this)"><input type="checkbox" value="Blur"><span class="bundle-check">✓</span><span class="bundle-app-icon">🔒</span><div class="bundle-app-info"><div class="bundle-app-name">Нууц баллагч</div><div class="bundle-app-price">9,000₮</div></div></label>
+      <label class="bundle-app" onclick="toggleApp(this)"><input type="checkbox" value="Blur"><span class="bundle-check">✓</span><span class="bundle-app-icon">🔒</span><div class="bundle-app-info"><div class="bundle-app-name">Нууцлагч</div><div class="bundle-app-price">9,000₮</div></div></label>
       <label class="bundle-app" onclick="toggleApp(this)"><input type="checkbox" value="Sign"><span class="bundle-check">✓</span><span class="bundle-app-icon">✍️</span><div class="bundle-app-info"><div class="bundle-app-name">Гарын үсэг</div><div class="bundle-app-price">9,000₮</div></div></label>
       <label class="bundle-app" onclick="toggleApp(this)"><input type="checkbox" value="Macro"><span class="bundle-check">✓</span><span class="bundle-app-icon">⌨️</span><div class="bundle-app-info"><div class="bundle-app-name">Текст бэлдэц</div><div class="bundle-app-price">9,000₮</div></div></label>
       <label class="bundle-app" onclick="toggleApp(this)"><input type="checkbox" value="Color"><span class="bundle-check">✓</span><span class="bundle-app-icon">🎨</span><div class="bundle-app-info"><div class="bundle-app-name">Өнгө авагч</div><div class="bundle-app-price">9,000₮</div></div></label>
