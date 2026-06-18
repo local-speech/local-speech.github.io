@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Alex+Brush&family=Great+Vibes&family=Allura&family=Monsieur+La+Doulaise&family=Sacramento&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared/brand.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -28,17 +29,6 @@ body{
   -webkit-font-smoothing:antialiased;
 }
 
-
-/* ---- Header ---- */
-.sp-hdr{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:rgba(255,255,255,.97);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,.06)}
-.sp-hdr::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(232,69,60,.12) 20%,rgba(232,69,60,.25) 50%,rgba(232,69,60,.12) 80%,transparent)}
-.sp-brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:'Segoe UI',system-ui,sans-serif;font-size:17px;font-weight:700;color:#4d4d4d;letter-spacing:-.5px}
-.sp-brand i{font-style:normal;font-size:13px;font-weight:700;color:#fff;background:#e8453c;padding:2px 9px 3px;border-radius:6px;letter-spacing:.3px}
-.sp-brand .sep{display:inline-block;width:1px;height:20px;background:rgba(0,0,0,.12);margin:0 2px;vertical-align:middle}
-.sp-brand em{font-style:normal;font-size:15px;font-weight:500;color:#1a1a2e;letter-spacing:-.3px}
-.sp-nav{display:flex;gap:14px;align-items:center}
-.sp-nav a{font-size:12px;font-weight:500;color:#888;letter-spacing:.2px;text-transform:uppercase;text-decoration:none;transition:color .2s}
-.sp-nav a:hover{color:#1a1a2e}
 
 /* ---- Hero ---- */
 .hero{
@@ -397,17 +387,6 @@ body{
   .ent-card{padding:28px 16px}
 }
 
-/* ---- Footer ---- */
-footer{
-  position:relative;z-index:1;
-  text-align:center;
-  padding:40px 24px;
-  color:var(--text-dim);
-  font-size:13px;
-  border-top:1px solid rgba(0,0,0,.06);
-  background:#f8f9fa;
-}
-
 /* ---- Fade-up animation ---- */
 .fade-up{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
 .fade-up.visible{opacity:1;transform:translateY(0)}
@@ -416,7 +395,6 @@ footer{
 @media(max-width:768px){
   .bento{grid-template-columns:1fr;gap:12px}
   .card-lg,.card-tall{grid-column:span 1;grid-row:span 1}
-  .sp-hdr{padding:12px 16px}
   .hero{padding:120px 16px 48px}
   .bundle-card{padding:32px 20px}
 }
@@ -430,8 +408,7 @@ footer{
 <body>
 
 
-<!-- Header -->
-<div class="sp-hdr"><a href="/sopro" class="sp-brand">So<i>Pro</i></a><nav class="sp-nav"><a href="/aispeech">AISpeech</a><a href="/blur">Нууцлагч</a><a href="/sign">Гарын үсэг</a><a href="/macro">Бэлдэц</a><a href="/color">Өнгө</a><a href="/eyecare">Нүд</a><a href="/mn">MN</a></nav></div>
+<div data-sp-header="hub"></div>
 
 <!-- Hero -->
 <section class="hero">
@@ -641,11 +618,9 @@ footer{
 </section>
 <iframe name="entFrame" style="display:none"></iframe>
 
-<!-- Footer -->
-<footer>
-  <p>&copy; 2025 SoPro. Бүх эрх хуулиар хамгаалагдсан.</p>
-</footer>
+<footer data-sp-footer></footer>
 
+<script src="/shared/brand.js"></script>
 <script>
 // ---- Equalizer bars ----
 (function(){

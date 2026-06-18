@@ -7,6 +7,7 @@
 <meta name="description" content="Дэлгэцийн аль ч пикселийн өнгийг нэг товшилтоор хуулна. HEX, RGB, HSL, CMYK формат. Windows desktop апп.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared/brand.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{--glass:rgba(0,0,0,0.03);--glass-border:rgba(0,0,0,0.08);--glass-card:rgba(0,0,0,0.02);--text:#1a1a2e;--text-dim:#64748b}
@@ -21,17 +22,6 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--text);overflow-x:hidde
 .glass{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:20px}
 .glass-card{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:16px;padding:28px;transition:transform .3s,box-shadow .3s}
 .glass-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.08)}
-
-/* === HEADER === */
-.sp-hdr{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:rgba(255,255,255,.97);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,.06)}
-.sp-hdr::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(232,69,60,.12) 20%,rgba(232,69,60,.25) 50%,rgba(232,69,60,.12) 80%,transparent)}
-.sp-brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:'Segoe UI',system-ui,sans-serif;font-size:17px;font-weight:700;color:#4d4d4d;letter-spacing:-.5px}
-.sp-brand i{font-style:normal;font-size:13px;font-weight:700;color:#fff;background:#e8453c;padding:2px 9px 3px;border-radius:6px;letter-spacing:.3px}
-.sp-brand .sep{display:inline-block;width:1px;height:20px;background:rgba(0,0,0,.12);margin:0 2px;vertical-align:middle}
-.sp-brand em{font-style:normal;font-size:15px;font-weight:500;color:#1a1a2e;letter-spacing:-.3px}
-.sp-nav{display:flex;gap:14px;align-items:center}
-.sp-nav a{font-size:12px;font-weight:500;color:#888;letter-spacing:.2px;text-transform:uppercase;text-decoration:none;transition:color .2s}
-.sp-nav a:hover{color:#1a1a2e}
 
 /* === HERO === */
 .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:120px 24px 80px;position:relative}
@@ -126,11 +116,6 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--text);overflow-x:hidde
 .cta-box h2{font-size:clamp(1.6rem,4vw,2.2rem);font-weight:800;margin-bottom:12px}
 .cta-box p{color:var(--text-dim);margin-bottom:28px;font-size:1.05rem}
 
-/* === FOOTER === */
-footer{padding:32px 24px;text-align:center;color:#94a3b8;font-size:.85rem;border-top:1px solid rgba(0,0,0,0.06)}
-footer a{color:#64748b;text-decoration:none}
-footer a:hover{color:#1a1a2e}
-
 /* === RESPONSIVE === */
 @media(max-width:900px){
 .hero-content{grid-template-columns:1fr;text-align:center}
@@ -165,8 +150,7 @@ footer a:hover{color:#1a1a2e}
 <div class="orb orb-2"></div>
 <div class="orb orb-3"></div>
 
-<!-- HEADER -->
-<div class="sp-hdr"><a href="/sopro" class="sp-brand">So<i>Pro</i><span class="sep"></span><em>Өнгө авагч</em></a><nav class="sp-nav"><a href="/sopro">← Бүх хэрэгсэл</a></nav></div>
+<div data-sp-header="color" data-sp-app="Өнгө авагч"></div>
 
 <!-- HERO -->
 <section class="hero">
@@ -336,14 +320,12 @@ footer a:hover{color:#1a1a2e}
   </div>
 </section>
 
-<!-- FOOTER -->
-<footer>
-  <p>© 2025 SoPro. Бүх эрх хуулиар хамгаалагдсан. &nbsp;|&nbsp; <a href="/">Нүүр хуудас</a></p>
-</footer>
+<footer data-sp-footer></footer>
 
 <!-- TOAST -->
 <div class="toast" id="toast">📋 Хуулагдлаа!</div>
 
+<script src="/shared/brand.js"></script>
 <script>
 // Wheel hex animation
 const hexColors=['#FF6B35','#E91E63','#9C27B0','#2196F3','#00BCD4','#4CAF50','#FFEB3B','#FF5722'];

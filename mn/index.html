@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/shared/brand.css">
     <style>
         :root { --accent: #e8453c; --safe: #16a34a; --dim: #4d4d4d; --bg: #ffffff; --card: #f7f7f7; --border: #e5e5e5; --text: #1a1a1a; --muted: #605f5f; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -97,18 +98,6 @@
         .compress-label { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
         .specs strong { color: var(--text); }
 
-        .sp-hdr{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:rgba(255,255,255,.97);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,.06)}
-        .sp-hdr::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(232,69,60,.12) 20%,rgba(232,69,60,.25) 50%,rgba(232,69,60,.12) 80%,transparent)}
-        .sp-brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:'Segoe UI',system-ui,sans-serif;font-size:17px;font-weight:700;color:#4d4d4d;letter-spacing:-.5px}
-        .sp-brand i{font-style:normal;font-size:13px;font-weight:700;color:#fff;background:#e8453c;padding:2px 9px 3px;border-radius:6px;letter-spacing:.3px}
-        .sp-brand .sep{display:inline-block;width:1px;height:20px;background:rgba(0,0,0,.12);margin:0 2px;vertical-align:middle}
-        .sp-brand em{font-style:normal;font-size:15px;font-weight:500;color:#1a1a2e;letter-spacing:-.3px}
-        .sp-nav{display:flex;gap:14px;align-items:center}
-        .sp-nav a{font-size:12px;font-weight:500;color:#888;letter-spacing:.2px;text-transform:uppercase;text-decoration:none;transition:color .2s}
-        .sp-nav a:hover{color:#1a1a2e}
-
-        footer { border-top: .5px solid var(--border); padding: 20px 0; text-align: center; font-size: 11px; color: var(--muted); }
-        footer span { color: var(--text); font-weight: 600; }
 
         @media (max-width: 600px) {
             .hero h1 { font-size: 2rem; }
@@ -119,7 +108,7 @@
 </head>
 <body>
 
-    <div class="sp-hdr"><a href="/sopro" class="sp-brand">So<i>Pro</i><span class="sep"></span><em>AISpeech</em></a><nav class="sp-nav"><a href="/sopro">← Бүх хэрэгсэл</a></nav></div>
+    <div data-sp-header="aispeech" data-sp-app="AISpeech"></div>
 
     <div class="hero">
         <h1>AISpeech + <span class="aio-word"><span style="animation-delay:0s"><span class="aio-char">A</span><span class="aio-char">l</span><span class="aio-char">l</span><span class="aio-char">-</span></span></span><span class="aio-word"><span style="animation-delay:0.2s"><span class="aio-char">i</span><span class="aio-char">n</span><span class="aio-char">-</span></span></span><span class="aio-word"><span style="animation-delay:0.4s"><span class="aio-char">O</span><span class="aio-char">n</span><span class="aio-char">e</span></span></span> Converter</h1>
@@ -276,12 +265,7 @@
 
     </div>
 
-    <footer>
-        <div class="container">
-            <span>AISpeech</span> · © 2025 <svg width="60" height="22" viewBox="0 0 120 42" style="vertical-align:middle"><text x="0" y="30" font-family="'Segoe UI',system-ui,sans-serif" font-size="28" font-weight="700" fill="#4d4d4d">So</text><path d="M44,22 Q44,42 64,42 L112,42 Q120,42 120,34 L120,8 Q120,0 112,0 L56,0 Q44,0 44,22 Z" fill="#e8453c"/><text x="58" y="30" font-family="'Segoe UI',system-ui,sans-serif" font-size="28" font-weight="700" fill="#fff">Pro</text></svg>. Бүх эрх хуулиар хамгаалагдсан.
-            <div style="margin-top:8px;"><a href="terms.html">Үйлчилгээний нөхцөл</a> · <a href="privacy.html">Нууцлалын бодлого</a> · <a href="refund.html">Буцаалтын бодлого</a></div>
-        </div>
-    </footer>
+    <footer data-sp-footer></footer>
 
 <!-- Payment Modal -->
 <style>
@@ -358,6 +342,7 @@
 </div>
 <iframe name="payFrame" style="display:none"></iframe>
 
+<script src="/shared/brand.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 // Payment modal

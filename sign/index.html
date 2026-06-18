@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/shared/brand.css">
     <style>
         :root {
             --cream: #faf8f3;
@@ -607,20 +608,6 @@
             margin-bottom: 28px;
         }
 
-        /* ========== FOOTER ========== */
-        footer {
-            text-align: center;
-            padding: 40px 24px;
-            font-size: 12px;
-            color: var(--ink-muted);
-            border-top: 1px solid rgba(44,36,23,0.08);
-        }
-        footer a {
-            color: var(--ink-muted);
-            text-decoration: none;
-            transition: color .2s;
-        }
-        footer a:hover { color: var(--gold); }
 
         /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
@@ -661,23 +648,13 @@
             opacity: 0.4;
         }
 
-        /* Unified SoPro header */
-        .sp-hdr{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:rgba(255,255,255,.97);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,.06)}
-        .sp-hdr::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(232,69,60,.12) 20%,rgba(232,69,60,.25) 50%,rgba(232,69,60,.12) 80%,transparent)}
-        .sp-brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:'Segoe UI',system-ui,sans-serif;font-size:17px;font-weight:700;color:#4d4d4d;letter-spacing:-.5px}
-        .sp-brand i{font-style:normal;font-size:13px;font-weight:700;color:#fff;background:#e8453c;padding:2px 9px 3px;border-radius:6px;letter-spacing:.3px}
-        .sp-brand .sep{display:inline-block;width:1px;height:20px;background:rgba(0,0,0,.12);margin:0 2px;vertical-align:middle}
-        .sp-brand em{font-style:normal;font-size:15px;font-weight:500;color:#1a1a2e;letter-spacing:-.3px}
-        .sp-nav{display:flex;gap:14px;align-items:center}
-        .sp-nav a{font-size:12px;font-weight:500;color:#888;letter-spacing:.2px;text-transform:uppercase;text-decoration:none;transition:color .2s}
-        .sp-nav a:hover{color:#1a1a2e}
     </style>
 </head>
 <body>
 <div class="page-content">
 
     <!-- Header -->
-    <div class="sp-hdr"><a href="/sopro" class="sp-brand">So<i>Pro</i><span class="sep"></span><em>Гарын үсэг</em></a><nav class="sp-nav"><a href="/sopro">← Бүх хэрэгсэл</a></nav></div>
+    <div data-sp-header="sign" data-sp-app="Гарын үсэг"></div>
 
     <!-- Hero -->
     <section class="hero">
@@ -868,20 +845,14 @@
     </section>
 
     <!-- Footer -->
-    <footer>
-        <p style="margin-bottom:8px;">
-            <a href="/">Нүүр хуудас</a> &nbsp;·&nbsp;
-            <a href="/terms.html">Үйлчилгээний нөхцөл</a> &nbsp;·&nbsp;
-            <a href="/privacy.html">Нууцлалын бодлого</a>
-        </p>
-        <p>&copy; 2025 SoPro. Бүх эрх хуулиар хамгаалагдсан.</p>
-    </footer>
+    <footer data-sp-footer></footer>
 
 </div>
 
 <!-- Stamp cursor (follows mouse in demo) -->
 <div class="stamp-cursor" id="stampCursor"></div>
 
+<script src="/shared/brand.js"></script>
 <script>
 (function() {
     // Stamp mode
